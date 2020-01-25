@@ -1,15 +1,13 @@
-name,street,city,state,zip
-alliance brewing co, 1130 Sevier Ave, Knoxville, TN, 37920
-printshop beer co, 1532 Island Home Ave, Knoxville, TN, 37920
-hi-wire brewing, 2020 Barber St, Knoxville, TN, 37920
-pretentious beer co, 131 S Central St, Knoxville, TN, 37902
-next level brewing company, 700 N Broadway, Knoxville, TN, 37917
-crafty bastard brewery, 6 Emory Pl, Knoxville, TN, 37917
-geezers brewing co, 225 E 5th Ave, Knoxville, TN, 37917
-last days of autumn brewing, 808 E Magnolia Ave, Knoxville, TN, 37917
-Elkmont Exchange Brewery, 745 N Broadway, Knoxville, TN, 37917
-Schulz Bräu Brewing Company, 126 Bernard Ave, Knoxville, TN, 37917
-Elst Brewing Company, 2419 N Central St, Knoxville, TN, 37917
-Abridged Beer Company, 100 Lockett Rd, Knoxville, TN, 37919
-Albright Grove Brewing Company, 2924 Sutherland Ave, Knoxville, TN, 37919
-Hexagon Brewing Company, 1002 Dutch Valley Dr, Knoxville, TN, 37918
+priority,name,street,city,state,zip
+1,alliance brewing co, 1130 Sevier Ave, Knoxville, TN, 37920
+1,printshop beer co, 1532 Island Home Ave, Knoxville, TN, 37920
+1,pretentious beer co, 131 S Central St, Knoxville, TN, 37902
+1,next level brewing company, 700 N Broadway, Knoxville, TN, 37917
+1,crafty bastard brewery, 6 Emory Pl, Knoxville, TN, 37917
+1,geezers brewing co, 225 E 5th Ave, Knoxville, TN, 37917
+1,last days of autumn brewing, 808 E Magnolia Ave, Knoxville, TN, 37917
+1,Elkmont Exchange Brewery, 745 N Broadway, Knoxville, TN, 37917
+1,Elst Brewing Company, 2419 N Central St, Knoxville, TN, 37917
+1,Albright Grove Brewing Company, 2924 Sutherland Ave, Knoxville, TN, 37919
+1,Hexagon Brewing Company, 1002 Dutch Valley Dr, Knoxville, TN, 37918
+1,home, 1620 Rudder Lane, Knoxville, TN, 37919
