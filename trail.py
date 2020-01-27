@@ -102,7 +102,8 @@ def main():
     # TODO: abstract filenames
     datadir = args.datadir
     breweries = os.path.join(datadir, "breweries.csv")
-    geocoded_breweries = os.path.join(datadir, "breweries_geocoded.csv")
+    geocoded_breweries_csv = os.path.join(datadir, "breweries_geocoded.csv")
+    geocoded_breweries_json = os.path.join(datadir, "breweries_geocoded.json")
     requestfile = os.path.join(datadir, "request.json")
     responsefile = os.path.join(datadir, "response.json")
     geojsonfile = os.path.join(datadir, "route.geojson")
@@ -110,8 +111,8 @@ def main():
     # geocode addresses
     if args.geocode:
         logging.info("Geocoding addresses")
-        
-        outfile = open(geocoded_breweries, "w")
+        csv_lines = []
+        json_lines = {}
         with open(breweries, 'r') as csvfile:
             reader = csv.reader(csvfile, skipinitialspace=True)
             next(reader, None)
@@ -119,14 +120,21 @@ def main():
                 brewery_name = clean_string(row[0])
                 address = clean_string(' '.join(row))
                 lat, lng, address = mapanything_geocoder(address)
-                output_line = ','.join([
+                csv_lines.append(','.join([
                     str(lat),
                     str(lng),
                     brewery_name,
-                    address]
+                    address + "\n"])
                 )
-                outfile.write(output_line + "\n")
-        outfile.close()
+                json_lines[brewery_name] = {}
+                json_lines[brewery_name]['address'] = address
+                json_lines[brewery_name]['latitude'] = lat
+                json_lines[brewery_name]['longitude'] = lng
+        with open(geocoded_breweries_csv, 'w') as f:
+            for line in csv_lines:
+                f.write(line)
+        with open(geocoded_breweries_json, 'w') as f:
+            json.dump(json_lines, f, indent=4)
 
     # send routing opt req
     if args.optimize:
@@ -148,7 +156,7 @@ def main():
         default_linger = 1.0*3600
 
         # create orders
-        with open(geocoded_breweries, 'r') as csvfile:
+        with open(geocoded_breweries_csv, 'r') as csvfile:
             reader = csv.reader(csvfile, skipinitialspace=True)
             locations = []
             orders = []
@@ -236,24 +244,24 @@ def main():
             features.append(geojson.Feature(geometry=geometry, properties={"leg": "leg"+str(n)}))
         
         # add breweries
-        with open(geocoded_breweries, 'r') as csvfile:
-            reader = csv.reader(csvfile, skipinitialspace=True)
-            for row in reader:
-                lat = float(row[0])
-                lng = float(row[1])
-                brewery_name = row[2]
-                address = ' '.join(row[3:])
-                geometry = geojson.Point((lng, lat))
-                features.append(geojson.Feature(geometry=geometry,
-                                                properties={
-                                                    "brewery": brewery_name,
-                                                    "address": address
-                                                }))
+        with open(geocoded_breweries_json) as f:
+            breweries_data = json.load(f)
+        stops = response['Solution']['routes'][0]['stops']
+        for n, stop in enumerate(stops):
+            assert n == stop['position_in_route']
+            loc = stop['location_id']
+            lat = stop['latitude']
+            lng = stop['longitude']
+            stop['address'] = breweries_data[loc]['address']
+            geometry = geojson.Point((lng, lat))
+            features.append(geojson.Feature(geometry=geometry,
+                                            properties=stop)
+            )
         
         # write feature collection to geojson
         feature_collection = geojson.FeatureCollection(features)
         with open(geojsonfile, 'w') as f:
-            geojson.dump(feature_collection, f)
+            geojson.dump(feature_collection, f, indent=4, sort_keys=True)
 
 
 if __name__ == '__main__':
