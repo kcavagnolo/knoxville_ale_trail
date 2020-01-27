@@ -248,12 +248,27 @@ def main():
             breweries_data = json.load(f)
         stops = response['Solution']['routes'][0]['stops']
         for n, stop in enumerate(stops):
+            
+            # make sure ordering of stops in response is correct
             assert n == stop['position_in_route']
+            
+            # capture stop detail
             loc = stop['location_id']
             lat = stop['latitude']
             lng = stop['longitude']
+            
+            # add the original address
             stop['address'] = breweries_data[loc]['address']
+            
+            # mapbox compatible details
+            stop['title'] = "trail stop " + str(stop['position_in_route'])
+            stop['description'] = stop['location_id']
+            stop['marker-size'] = "small"
+            
+            # convert point to geom
             geometry = geojson.Point((lng, lat))
+            
+            # encode feature
             features.append(geojson.Feature(geometry=geometry,
                                             properties=stop)
             )
