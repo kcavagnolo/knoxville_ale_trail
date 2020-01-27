@@ -238,14 +238,12 @@ def main():
         # add breweries
         with open(geocoded_breweries, 'r') as csvfile:
             reader = csv.reader(csvfile, skipinitialspace=True)
-            locations = []
-            orders = []
             for row in reader:
                 lat = float(row[0])
                 lng = float(row[1])
                 brewery_name = row[2]
-            geometry = geojson.Point((lng, lat))
-            features.append(geojson.Feature(geometry=geometry, properties={"brewery": brewery_name}))
+                geometry = geojson.Point((lng, lat))
+                features.append(geojson.Feature(geometry=geometry, properties={"brewery": brewery_name}))
         
         # write feature collection to geojson
         feature_collection = geojson.FeatureCollection(features)
