@@ -251,9 +251,9 @@ def main():
         
         # colors to style stops
         n_stops = len(stops)
-        red = Color("red")
-        blue = Color("blue")
-        colors = list(blue.range_to(red, n_stops))
+        color_start = Color("red")
+        color_end = Color("violet")
+        colors = list(color_start.range_to(color_end, n_stops))
         
         # loop over stops and make geojson
         for n, stop in enumerate(stops):
