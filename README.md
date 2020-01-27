@@ -2,7 +2,7 @@
 
 So you want to traverse the [Knoxville Ale Trail](https://knoxvillebrewers.com/ale-trail/) but are uncertain of the best route to take? If your goal is to visit all of the breweries on the trail, and you have a Friday from 5p until Sunday at 8p, then here is the route you need to take.
 
-A pre-computed solution is [available here](data/route.geojson). The marker colors indicate the order (start with red and end at violet) ROY G. BIV. Click on the markers to get details of each stop.
+A pre-computed solution is [available here](data/route.geojson). The marker colors indicate the order (start with red and end at violet) ROYGBIV. Click on the markers to get details of each stop.
 
 Routes are encoded polyline which is [easy to parse in JS](https://github.com/mapbox/polyline), but GeoJSON is more portable. [Some code that decodes polylines](https://gist.github.com/signed0/2031157). Alternatively, I'm using a polyline lib (see credit below).
 
@@ -30,7 +30,7 @@ python3 trail.py --geocode --optimize --geojson -d data/
 
 ## TODOs
 
-* TODO: Add dynamic time handling:
+* Add dynamic time handling:
 
     ```python
     # set dynamic shift
@@ -40,7 +40,7 @@ python3 trail.py --geocode --optimize --geojson -d data/
     later = now + datetime.timedelta(hours=168)
     ```
 
-* TODO: Add support for appointments:
+* Add support for appointments:
 
     ```python
      if 'elkmont' in brewery_name:
@@ -53,6 +53,9 @@ python3 trail.py --geocode --optimize --geojson -d data/
         order['appointments'] = appointment
         order['duration'] = 2.5*3600
     ```
+
+* Add `time_windows` to each location for hours of operation.
+* Display intinerary as Gantt.
 
 ## Credits
 
