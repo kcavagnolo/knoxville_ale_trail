@@ -6,6 +6,8 @@ A pre-computed solution is [available here](data/route.geojson). The marker colo
 
 Routes are encoded polyline which is [easy to parse in JS](https://github.com/mapbox/polyline), but GeoJSON is more portable. [Some code that decodes polylines](https://gist.github.com/signed0/2031157). Alternatively, I'm using a polyline lib (see credit below).
 
+version: v0.0.0
+
 ## Usage
 
 Right now, this is a dumb command line script:
@@ -63,3 +65,9 @@ python3 trail.py --geocode --optimize --geojson -d data/
 * [hicsail's `polyline` decoder](https://github.com/hicsail/polyline)
 * [jazzband's `geojson` utilities](https://github.com/jazzband/geojson)
 * [vaab's `colour` library](https://github.com/vaab/colour)
+
+## License
+
+This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](LICENSE).
+
+![Creative Commons License](https://i.creativecommons.org/l/by-sa/4.0/88x31.png "license")
