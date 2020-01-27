@@ -4,6 +4,18 @@ So you want to traverse the [Knoxville Ale Trail](https://knoxvillebrewers.com/a
 
 [MapAnything geocoder and routing optimization engine](https://developer.mapanything.com/)
 
+## Usage
+
+Right now, this is a dumb command line script:
+
+```bash
+python3 trail.py --geocode --optimize --geojson -d data/
+```
+
+## Mental Notes
+
+* Routes are encoded polyline which is [easy to parse in JS](https://github.com/mapbox/polyline), but GeoJSON is more portable. [Some code that decodes polylines](https://gist.github.com/signed0/2031157). Alternatively, I'm using 
+
 ## Code Quality
 
 1. Install and configure [Sonarqube](https://docs.sonarqube.org/latest/).

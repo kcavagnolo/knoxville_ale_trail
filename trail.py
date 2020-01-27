@@ -2,8 +2,12 @@
 # coding: utf-8
 
 from tqdm import tqdm
+import traceback
 import datetime
+import polyline
+import argparse
 import requests
+import geojson
 import logging
 import string
 import json
@@ -12,6 +16,21 @@ import csv
 import sys
 import re
 import os
+
+
+class FullPaths(argparse.Action):
+    """Expand user- and relative-paths"""
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
+
+
+def is_dir(dirname):
+    """Checks if a path is an actual directory"""
+    if not os.path.isdir(dirname):
+        msg = "{0} is not a directory".format(dirname)
+        raise argparse.ArgumentTypeError(msg)
+    else:
+        return dirname
 
 
 def clean_string(s):
@@ -31,17 +50,24 @@ def mapanything_geocoder(address):
         'Content-Type': 'application/json',
         'x-api-key': os.getenv("MAPANYTHING_APIKEY")
     }
-    response = requests.request('GET', url, headers=headers, allow_redirects=True)
-    response = response.json()
-    if 'data' in response:
-        lat = response['data']['position']['lat']
-        lng = response['data']['position']['lng']
-        address = response['data']['fullAddress']
-    else:
-        logging.warning('Could not geocode: {}'.format(address))
+    try:
+        response = requests.request('GET', url, headers=headers, allow_redirects=True)
+        response = response.json()
+        if 'data' in response:
+            lat = response['data']['position']['lat']
+            lng = response['data']['position']['lng']
+            address = response['data']['fullAddress']
+        else:
+            logging.warning('Could not geocode: {}'.format(address))
+            lat = 0.0
+            lng = 0.0
+    except Exception as e:
+        logging.exception(e)
+        logging.exception(traceback.format_exc())
         lat = 0.0
         lng = 0.0
-    return lat, lng, address
+    finally:
+        return lat, lng, address
 
 
 def mapanything_routing(payload):
@@ -58,115 +84,158 @@ def mapanything_routing(payload):
 
 def main():
 
+    # parse command line arguments
+    parser = argparse.ArgumentParser(description='Create an optimized route for the Knoxville Ale Trail.')
+    parser.add_argument("-d", "--datadir", help="directory containing data",
+                        action=FullPaths, type=is_dir, required=False)
+    parser.add_argument("--geocode", help="call the geocoder",
+                        action="store_true")
+    parser.add_argument("--optimize", help="call the optimizer",
+                        action="store_true")
+    parser.add_argument("--geojson", help="create geojson file of route",
+                        action="store_true")
+    parser.add_argument("-v", "--verbose", help="increase output verbosity",
+                        action="store_true")
+    args = parser.parse_args()
+    
+    # I/O files
+    # TODO: abstract filenames
+    datadir = args.datadir
+    breweries = os.path.join(datadir, "breweries.csv")
+    geocoded_breweries = os.path.join(datadir, "breweres_geocoded.csv")
+    requestfile = os.path.join(datadir, "request.json")
+    responsefile = os.path.join(datadir, "response.json")
+    geojsonfile = os.path.join(datadir, "route.geojson")
+
     # geocode addresses
-    breweries = "breweries.csv"
-    geocoded_breweries = "breweries_geocoded.csv"
-    outfile = open(geocoded_breweries, "w")
-    logging.info("Geocoding addresses")
-    with open(breweries, 'r') as csvfile:
-        reader = csv.reader(csvfile, skipinitialspace=True)
-        next(reader, None)
-        for row in tqdm(sorted(reader)):
-            brewery_name = clean_string(row[0])
-            address = clean_string(' '.join(row))
-            lat, lng, address = mapanything_geocoder(address)
-            output_line = ','.join([
-                str(lat),
-                str(lng),
-                brewery_name,
-                address]
-            )
-            outfile.write(output_line + "\n")
-    outfile.close()
-
-    # set static shifts
-    shift_times = []
-    shift_times = [
-        "2020-01-24 17:00:00",
-        "2020-01-25 00:00:00",
-        "2020-01-25 15:00:00",
-        "2020-01-26 00:00:00",
-        "2020-01-26 13:00:00",
-        "2020-01-26 20:00:00"
-    ]
-    shift_times = [iso_time(shift_time) for shift_time in shift_times]
-
-    # linger times in hours
-    default_linger = 1.0*3600
-
-    # create orders
-    logging.info('Creating payload')
-    with open(geocoded_breweries, 'r') as csvfile:
-        reader = csv.reader(csvfile, skipinitialspace=True)
-        locations = []
-        orders = []
-        for row in reader:
-            lat = float(row[0])
-            lng = float(row[1])
-            brewery_name = row[2]
-            locations.append({
-                "latitude": lat,
-                "longitude": lng,
-                "location_id": brewery_name
-            })
-            if "home" not in brewery_name:
-                order = {
-                    "order_id": brewery_name,
-                    "location_id": brewery_name,
-                    "duration": default_linger
-                    }
-                orders.append(order)
-
-    # blank payload
-    payload = dict()
-
-    # breweries to visit
-    payload['locations'] = locations
-
-    # places we actually want to visit (all of them)
-    payload['orders'] = orders
-
-    # how we'll move around
-    payload['vehicles'] = [
-        {
-            "vehicle_id": "uber",
-            "type": "car",
-            "shifts": [
-                {
-                    "start_location_id": "home",
-                    "end_location_id": "home",
-                    "shift_start": shift_times[0],
-                    "shift_end": shift_times[-1],
-                    "shift_id": "crawl_shift"
-                }
-            ]
-        }
-    ]
-
-    # constraints
-    payload['constraints'] = [
-        {
-            "constraint_type": "travel_time",
-            "constraint_name": "Minimize travel time",
-            "violation_increment": 1,
-            "penalty_per_violation": 1,
-            "max_travel_time_seconds": 0
-        },
-        {
-            "constraint_type": "visit_range",
-            "constraint_name": "visit as many orders as possible",
-            "violation_increment": 1,
-            "penalty_per_violation": 10000
-        }
-    ]
+    if args.geocode:
+        logging.info("Geocoding addresses")
+        
+        outfile = open(geocoded_breweries, "w")
+        with open(breweries, 'r') as csvfile:
+            reader = csv.reader(csvfile, skipinitialspace=True)
+            next(reader, None)
+            for row in tqdm(sorted(reader)):
+                brewery_name = clean_string(row[0])
+                address = clean_string(' '.join(row))
+                lat, lng, address = mapanything_geocoder(address)
+                output_line = ','.join([
+                    str(lat),
+                    str(lng),
+                    brewery_name,
+                    address]
+                )
+                outfile.write(output_line + "\n")
+        outfile.close()
 
     # send routing opt req
-    logging.info('Solving routing optimization problem')
-    response = mapanything_routing(payload)
-    with open('request.json', 'w') as f:
-        json.dump(payload, f)
-    with open('response.json', 'w') as f:
-        json.dump(response, f)
+    if args.optimize:
+        logging.info('Solving routing optimization problem')
+        
+        # set static shifts
+        shift_times = []
+        shift_times = [
+            "2020-01-24 17:00:00",
+            "2020-01-25 00:00:00",
+            "2020-01-25 15:00:00",
+            "2020-01-26 00:00:00",
+            "2020-01-26 13:00:00",
+            "2020-01-26 20:00:00"
+        ]
+        shift_times = [iso_time(shift_time) for shift_time in shift_times]
+
+        # linger times in hours
+        default_linger = 1.0*3600
+
+        # create orders
+        with open(geocoded_breweries, 'r') as csvfile:
+            reader = csv.reader(csvfile, skipinitialspace=True)
+            locations = []
+            orders = []
+            for row in reader:
+                lat = float(row[0])
+                lng = float(row[1])
+                brewery_name = row[2]
+                locations.append({
+                    "latitude": lat,
+                    "longitude": lng,
+                    "location_id": brewery_name
+                })
+                if "home" not in brewery_name:
+                    order = {
+                        "order_id": brewery_name,
+                        "location_id": brewery_name,
+                        "duration": default_linger
+                        }
+                    orders.append(order)
+
+        # blank payload
+        payload = dict()
+
+        # breweries to visit
+        payload['locations'] = locations
+
+        # places we actually want to visit (all of them)
+        payload['orders'] = orders
+
+        # how we'll move around
+        payload['vehicles'] = [
+            {
+                "vehicle_id": "uber",
+                "type": "car",
+                "shifts": [
+                    {
+                        "start_location_id": "home",
+                        "end_location_id": "home",
+                        "shift_start": shift_times[0],
+                        "shift_end": shift_times[-1],
+                        "shift_id": "crawl_shift"
+                    }
+                ]
+            }
+        ]
+
+        # constraints
+        payload['constraints'] = [
+            {
+                "constraint_type": "travel_time",
+                "constraint_name": "Minimize travel time",
+                "violation_increment": 1,
+                "penalty_per_violation": 1,
+                "max_travel_time_seconds": 0
+            },
+            {
+                "constraint_type": "visit_range",
+                "constraint_name": "visit as many orders as possible",
+                "violation_increment": 1,
+                "penalty_per_violation": 10000
+            }
+        ]
+
+        # call the routing opt engine
+        response = mapanything_routing(payload)
+    
+        # save req/resp
+        with open(requestfile, 'w') as f:
+            json.dump(payload, f)
+        with open(responsefile, 'w') as f:
+            json.dump(response, f)
+
+    # decode polyline to GeoJSON
+    if args.geojson:
+        logging.info('Writing solution to geojson file')
+
+        with open(responsefile) as f:
+            response = json.load(f)
+        route_polyline = response['Solution']['routes'][0]['polylines']
+        features = []
+        for n, leg in enumerate(route_polyline):
+            leg = polyline.decode(leg, 5, geojson=True)
+            geometry = geojson.LineString(leg)
+            features.append(geojson.Feature(geometry=geometry, properties={"leg": "leg"+str(n)}))
+        feature_collection = geojson.FeatureCollection(features)
+        with open(geojsonfile, 'w') as f:
+            geojson.dump(feature_collection, f)
 
 
 if __name__ == '__main__':
