@@ -41,7 +41,6 @@ def mapanything_geocoder(address):
         logging.warning('Could not geocode: {}'.format(address))
         lat = 0.0
         lng = 0.0
-        address = address
     return lat, lng, address
 
 
@@ -80,12 +79,6 @@ def main():
             outfile.write(output_line + "\n")
     outfile.close()
 
-    # set dynamic shift
-    utc_offset_sec = time.altzone if time.localtime().tm_isdst else time.timezone
-    utc_offset = datetime.timedelta(seconds=-utc_offset_sec)
-    now = datetime.datetime.now().replace(tzinfo=datetime.timezone(offset=utc_offset))
-    later = now + datetime.timedelta(hours=168)
-
     # set static shifts
     shift_times = []
     shift_times = [
@@ -122,15 +115,6 @@ def main():
                     "location_id": brewery_name,
                     "duration": default_linger
                     }
-                # if 'elkmont' in brewery_name:
-                #     appointment = [
-                #         {
-                #             "appointment_start": appt_start,
-                #             "appointment_end": appt_end
-                #         }
-                #     ]
-                #     order['appointments'] = appointment
-                #     order['duration'] = 2.5*3600
                 orders.append(order)
 
     # blank payload
