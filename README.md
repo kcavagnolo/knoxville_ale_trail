@@ -16,6 +16,14 @@ Right now, this is a dumb command line script:
 python3 trail.py --geocode --optimize --geojson -d data/
 ```
 
+## Versioning
+
+I like the old school [`bumpversion`](https://github.com/peritus/bumpversion):
+
+```bash
+bumpversion minor --verbose
+```
+
 ## Code Quality
 
 1. Install and configure [Sonarqube](https://docs.sonarqube.org/latest/).
