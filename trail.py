@@ -264,7 +264,7 @@ def main():
             stop['title'] = "trail stop " + str(stop['position_in_route'])
             stop['description'] = stop['location_id']
             stop['marker-size'] = "small"
-            stop['marker-symbol'] = "beer-11"
+            stop['marker-symbol'] = "beer"
             
             # convert point to geom
             geometry = geojson.Point((lng, lat))
