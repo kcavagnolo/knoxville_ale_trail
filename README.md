@@ -2,7 +2,7 @@
 
 So you want to traverse the [Knoxville Ale Trail](https://knoxvillebrewers.com/ale-trail/) but are uncertain of the best route to take? If your goal is to visit all of the breweries on the trail, and you have a Friday from 5p until Sunday at 8p, then here is the route you need to take.
 
-[MapAnything geocoder and routing optimization engine](https://developer.mapanything.com/)
+Routes are encoded polyline which is [easy to parse in JS](https://github.com/mapbox/polyline), but GeoJSON is more portable. [Some code that decodes polylines](https://gist.github.com/signed0/2031157). Alternatively, I'm using a polyline lib (see credit below).
 
 ## Usage
 
@@ -11,10 +11,6 @@ Right now, this is a dumb command line script:
 ```bash
 python3 trail.py --geocode --optimize --geojson -d data/
 ```
-
-## Mental Notes
-
-* Routes are encoded polyline which is [easy to parse in JS](https://github.com/mapbox/polyline), but GeoJSON is more portable. [Some code that decodes polylines](https://gist.github.com/signed0/2031157). Alternatively, I'm using 
 
 ## Code Quality
 
@@ -30,7 +26,7 @@ python3 trail.py --geocode --optimize --geojson -d data/
     -Dsonar.login=$SONARQUBE_TOKEN
     ```
 
-## TODO's
+## TODOs
 
 * TODO: Add dynamic time handling:
 
@@ -55,3 +51,10 @@ python3 trail.py --geocode --optimize --geojson -d data/
         order['appointments'] = appointment
         order['duration'] = 2.5*3600
     ```
+
+## Credits
+
+* [MapAnything geocoder and routing optimization engine](https://developer.mapanything.com/)
+* [hicsail's `polyline` decoder](https://github.com/hicsail/polyline)
+* [jazzband's `geojson` utilities](https://github.com/jazzband/geojson)
+* [vaab's `colour` library](https://github.com/vaab/colour)
