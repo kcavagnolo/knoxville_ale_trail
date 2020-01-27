@@ -242,8 +242,13 @@ def main():
                 lat = float(row[0])
                 lng = float(row[1])
                 brewery_name = row[2]
+                address = ' '.join(row[3:])
                 geometry = geojson.Point((lng, lat))
-                features.append(geojson.Feature(geometry=geometry, properties={"brewery": brewery_name}))
+                features.append(geojson.Feature(geometry=geometry,
+                                                properties={
+                                                    "brewery": brewery_name,
+                                                    "address": address
+                                                }))
         
         # write feature collection to geojson
         feature_collection = geojson.FeatureCollection(features)
