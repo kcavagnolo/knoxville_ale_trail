@@ -102,7 +102,7 @@ def main():
     # TODO: abstract filenames
     datadir = args.datadir
     breweries = os.path.join(datadir, "breweries.csv")
-    geocoded_breweries = os.path.join(datadir, "breweres_geocoded.csv")
+    geocoded_breweries = os.path.join(datadir, "breweries_geocoded.csv")
     requestfile = os.path.join(datadir, "request.json")
     responsefile = os.path.join(datadir, "response.json")
     geojsonfile = os.path.join(datadir, "route.geojson")
@@ -225,6 +225,7 @@ def main():
     if args.geojson:
         logging.info('Writing solution to geojson file')
 
+        # add route polyline
         with open(responsefile) as f:
             response = json.load(f)
         route_polyline = response['Solution']['routes'][0]['polylines']
@@ -233,6 +234,20 @@ def main():
             leg = polyline.decode(leg, 5, geojson=True)
             geometry = geojson.LineString(leg)
             features.append(geojson.Feature(geometry=geometry, properties={"leg": "leg"+str(n)}))
+        
+        # add breweries
+        with open(geocoded_breweries, 'r') as csvfile:
+            reader = csv.reader(csvfile, skipinitialspace=True)
+            locations = []
+            orders = []
+            for row in reader:
+                lat = float(row[0])
+                lng = float(row[1])
+                brewery_name = row[2]
+            geometry = geojson.Point((lng, lat))
+            features.append(geojson.Feature(geometry=geometry, properties={"brewery": brewery_name}))
+        
+        # write feature collection to geojson
         feature_collection = geojson.FeatureCollection(features)
         with open(geojsonfile, 'w') as f:
             geojson.dump(feature_collection, f)
