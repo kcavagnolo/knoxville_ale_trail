@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+from colour import Color
 from tqdm import tqdm
 import traceback
 import datetime
@@ -247,6 +248,14 @@ def main():
         with open(geocoded_breweries_json) as f:
             breweries_data = json.load(f)
         stops = response['Solution']['routes'][0]['stops']
+        
+        # colors to style stops
+        n_stops = len(stops)
+        red = Color("red")
+        blue = Color("blue")
+        colors = list(blue.range_to(red, n_stops))
+        
+        # loop over stops and make geojson
         for n, stop in enumerate(stops):
             
             # make sure ordering of stops in response is correct
@@ -265,6 +274,7 @@ def main():
             stop['description'] = stop['location_id']
             stop['marker-size'] = "small"
             stop['marker-symbol'] = "beer"
+            stop['marker-color'] = colors[n].hex_l
             
             # convert point to geom
             geometry = geojson.Point((lng, lat))
