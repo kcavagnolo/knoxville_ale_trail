@@ -26,16 +26,18 @@ bumpversion minor --verbose
 
 ## Code Quality
 
-1. Install and configure [Sonarqube](https://docs.sonarqube.org/latest/).
+1. Install and configure [Sonarqube](https://docs.sonarqube.org/latest/) or launch a maintained container:
+
+    ```bash
+    docker run -d --name sonarqube -p 9000:9000 sonarqube
+    ```
 
 2. Setup a `sonar-project.properties` file with configurations for scans.
 
 3. Run a scan:
 
     ```bash
-    sonar-scanner \
-    -Dsonar.host.url=$SONAR_SERVER \
-    -Dsonar.login=$SONARQUBE_TOKEN
+    sonar-scanner
     ```
 
 ## TODOs
@@ -69,10 +71,11 @@ bumpversion minor --verbose
 
 ## Credits
 
-* [MapAnything geocoder and routing optimization engine](https://developer.mapanything.com/)
-* [hicsail's `polyline` decoder](https://github.com/hicsail/polyline)
-* [jazzband's `geojson` utilities](https://github.com/jazzband/geojson)
-* [vaab's `colour` library](https://github.com/vaab/colour)
+* [MapAnything routing optimization engine](https://developer.mapanything.com/)
+* [HERE geocoder](https://developer.here.com/documentation/geocoder/dev_guide/topics/what-is.html)
+* [hicsail `polyline` decoder](https://github.com/hicsail/polyline)
+* [jazzband `geojson` utilities](https://github.com/jazzband/geojson)
+* [vaab `colour` library](https://github.com/vaab/colour)
 
 ## License
 
