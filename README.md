@@ -8,12 +8,36 @@ Routes are encoded polyline which is [easy to parse in JS](https://github.com/ma
 
 version: v0.1.0
 
+## Styling
+
+* [load lareg geojson](https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/)
+* [add geojson collection](https://docs.mapbox.com/mapbox-gl-js/example/multiple-geometries/)
+* [geojson line](https://docs.mapbox.com/mapbox-gl-js/example/geojson-line/)
+* [change map style](https://docs.mapbox.com/mapbox-gl-js/example/setstyle/)
+* [toggle layers](https://docs.mapbox.com/mapbox-gl-js/example/toggle-layers/)
+* [display popup](https://docs.mapbox.com/mapbox-gl-js/example/popup-on-click/)
+
+## Setup
+
+You need several Mapbox tools installed if you want to create and upload [Mapbox vector tiles (`mbtiles`)](https://docs.mapbox.com/vector-tiles/reference/):
+
+* [Mapbox CLI](https://github.com/mapbox/mapbox-cli-py)
+* [`tippecanoe`](https://github.com/mapbox/tippecanoe)
+
+Alternatively, Mapbox has a [tilesets CLI](https://github.com/mapbox/tilesets-cli) in beta for interacting with their new tilset source data model and a [step-by-step guide](https://docs.mapbox.com/help/tutorials/get-started-tilesets-api-and-cli/).
+
 ## Usage
 
-Right now, this is a dumb command line script:
+Then run the simplistic command line script:
 
 ```bash
 python3 trail.py --geocode --optimize --geojson -d data/
+```
+
+Finally, create and upload the mbtiles:
+
+```bash
+sh update_mapbox.sh
 ```
 
 ## Versioning
