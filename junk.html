@@ -96,7 +96,7 @@
         };
 
         // Used to increment the value of the point measurement against the route.
-        var steps = 50;
+        var steps = 500;
         var counter = 0;
 
         map.on('load', function () {
@@ -149,7 +149,6 @@
                             counter >= steps ? counter - 1 : counter
                         ]
                     ),
-                    console.log(route.features[0].geometry),
                     turf.point(
                         route.features[0].geometry.coordinates[
                             counter >= steps ? counter : counter + 1
@@ -167,7 +166,6 @@
 
                 counter = counter + 1;
             }
-
             document.getElementById('replay').addEventListener('click', function () {
                 // Set the coordinates of the original point back to origin
                 point.features[0].geometry.coordinates = origin;
