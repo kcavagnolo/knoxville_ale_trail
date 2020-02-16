@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Knoxville Ale Trail Route</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #menu {
+            position: absolute;
+            background: #fff;
+            padding: 10px;
+            font-family: 'Open Sans', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <!-- background map options -->
+    <div id="menu">
+        <input id="streets-v11" type="radio" name="rtoggle" value="streets" checked="checked" />
+        <label for="streets">streets</label>
+        <input id="light-v10" type="radio" name="rtoggle" value="light" />
+        <label for="light">light</label>
+        <input id="dark-v10" type="radio" name="rtoggle" value="dark" />
+        <label for="dark">dark</label>
+        <input id="outdoors-v11" type="radio" name="rtoggle" value="outdoors" />
+        <label for="outdoors">outdoors</label>
+        <input id="satellite-v9" type="radio" name="rtoggle" value="satellite" />
+        <label for="satellite">satellite</label>
+    </div>
+
+    <!-- mpabox styling -->
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoia2NhdmFnbm9sbyIsImEiOiJjamtvOWExZHYydm1xM3BreG9pb3hza3J6In0.yKhLQH7NxC9rbsrCpilLQw';
+
+        // load mapbox gl
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/dark-v10',
+            center: [-83.924137, 35.961671],
+            zoom: 10
+        });
+
+        map.on('load', function () {
+
+            // load hosted geojson
+            var url = 'https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/route.geojson';
+            map.addSource('route', {
+                type: 'geojson',
+                data: url
+            });
+
+            // add the route legs which are LineString
+            map.addLayer({
+                'id': 'route',
+                'type': 'line',
+                'source': 'route',
+                'layout': {
+                    'visibility': 'visible',
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': '#efb63b',
+                    'line-width': 2
+                },
+                'filter': ['==', '$type', 'LineString']
+            });
+
+            // add the breweries which are Point
+            map.addLayer({
+                'id': 'breweries',
+                // 'type': 'symbol',
+                'type': 'circle',
+                'source': 'route',
+                'layout': {
+                    'visibility': 'visible',
+                    /* 'icon-image': 'beer-11',
+                    'icon-allow-overlap': true */
+                },
+                'paint': {
+                    'circle-radius': 6,
+                    'circle-color': '#006885'
+                },
+                'filter': ['==', '$type', 'Point']
+            });
+        });
+
+        // add toggle layers
+        var toggleableLayerIds = ['route', 'breweries'];
+
+        // load map menu options
+        var layerList = document.getElementById('menu');
+
+        // label the map options
+        var inputs = layerList.getElementsByTagName('input');
+
+        // function to switch map background layer
+        function switchLayer(layer) {
+            var layerId = layer.target.id;
+            map.setStyle('mapbox://styles/mapbox/' + layerId + '?optimize=true');
+        }
+
+        // switch the actual layer
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].onclick = switchLayer;
+        }
+
+        // Change the cursor to a pointer when the mouse is over the breweries layer.
+        map.on('mouseenter', 'breweries', function () {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'breweries', function () {
+            map.getCanvas().style.cursor = '';
+        });
+
+        // When a click event occurs on a feature in the breweries layer, open a popup at the
+        // location of the feature, with description HTML from its properties.
+        map.on('click', 'breweries', function (e) {
+            var coordinates = e.features[0].geometry.coordinates.slice();
+            var description = e.features[0].properties.location_id;
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            new mapboxgl.Popup()
+                .setLngLat(coordinates)
+                .setHTML(description)
+                .addTo(map);
+        });
+    </script>
+
+</body>
+
+</html>
