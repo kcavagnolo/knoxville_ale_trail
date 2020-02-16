@@ -96,6 +96,7 @@
         };
 
         // Used to increment the value of the point measurement against the route.
+        var steps = 50000;
         var counter = 0;
 
         map.on('load', function () {
@@ -133,8 +134,6 @@
                 }
             });
 
-            var steps = 50000;
-
             function animate() {
                 // Update point geometry to a new position based on counter denoting
                 // the index to access the arc.
@@ -144,18 +143,19 @@
                 // Calculate the bearing to ensure the icon is rotated to match the route arc
                 // The bearing is calculate between the current point and the next point, except
                 // at the end of the arc use the previous point and the current point
-                point.features[0].properties.bearing = turf.bearing(
+                /* point.features[0].properties.bearing = turf.bearing(
                     turf.point(
                         route.features[0].geometry.coordinates[
                             counter >= steps ? counter - 1 : counter
                         ]
                     ),
+                    console.log(route.features[0].geometry),
                     turf.point(
                         route.features[0].geometry.coordinates[
                             counter >= steps ? counter : counter + 1
                         ]
                     )
-                );
+                ); */
 
                 // Update the source with this new data.
                 map.getSource('point').setData(point);

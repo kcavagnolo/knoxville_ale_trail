@@ -10,12 +10,13 @@ version: v0.1.0
 
 ## Styling
 
-* [load lareg geojson](https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/)
+* [load geojson](https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/)
 * [add geojson collection](https://docs.mapbox.com/mapbox-gl-js/example/multiple-geometries/)
-* [geojson line](https://docs.mapbox.com/mapbox-gl-js/example/geojson-line/)
+* [stylize geojson line](https://docs.mapbox.com/mapbox-gl-js/example/geojson-line/)
 * [change map style](https://docs.mapbox.com/mapbox-gl-js/example/setstyle/)
 * [toggle layers](https://docs.mapbox.com/mapbox-gl-js/example/toggle-layers/)
 * [display popup](https://docs.mapbox.com/mapbox-gl-js/example/popup-on-click/)
+* [animate route](https://docs.mapbox.com/mapbox-gl-js/example/animate-point-along-route/)
 
 ## Setup
 
