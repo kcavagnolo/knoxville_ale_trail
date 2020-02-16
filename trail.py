@@ -261,22 +261,14 @@ def main():
             response = json.load(f)
         route_polyline = response['Solution']['routes'][0]['polylines']
         features = []
-        legs = []
         for n, leg in enumerate(route_polyline):
             leg = polyline.decode(leg, 5, geojson=True)
             
             # individual linestring
             geometry = geojson.LineString(leg)
             
-            # one multilinestring
-            legs.append(geometry)
-
             # save as linestrings
-            # features.append(geojson.Feature(geometry=geometry, properties={"leg": "leg" + str(n)}))
-
-        # save as multilinestring
-        geometry = geojson.MultiLineString(legs)
-        features.append(geojson.Feature(geometry=geometry, properties={"route": "route"}))
+            features.append(geojson.Feature(geometry=geometry, properties={"leg": "leg" + str(n)}))
 
         # add breweries
         with open(geocoded_breweries_json) as f:
