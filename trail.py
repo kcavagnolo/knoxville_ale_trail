@@ -309,6 +309,10 @@ def main():
         feature_collection = geojson.FeatureCollection(features)
         with open(geojsonfile, 'w') as f:
             geojson.dump(feature_collection, f, indent=4, sort_keys=True)
+        with open(geojsonfile, 'r') as f:
+            gdata = json.load(f)
+        with open(geojsonfile, 'w') as f:
+            json.dump(gdata, f, separators=(',', ':'))
 
 
 if __name__ == '__main__':

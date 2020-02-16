@@ -100,6 +100,9 @@ bumpversion minor --verbose
 * [hicsail `polyline` decoder](https://github.com/hicsail/polyline)
 * [jazzband `geojson` utilities](https://github.com/jazzband/geojson)
 * [vaab `colour` library](https://github.com/vaab/colour)
+* [Mapbox](https://www.mapbox.com/about/maps/)
+* [OpenStreetMap](http://www.openstreetmap.org/about/)
+* [Turf.js](https://turfjs.org/)
 
 ## License
 

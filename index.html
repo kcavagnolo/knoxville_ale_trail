@@ -26,6 +26,24 @@
             padding: 10px;
             font-family: 'Open Sans', sans-serif;
         }
+
+        .marker {
+            background-image: url('mapbox-icon.png');
+            background-size: cover;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .mapboxgl-popup {
+            max-width: 200px;
+        }
+
+        .mapboxgl-popup-content {
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+        }
     </style>
 </head>
 
@@ -55,7 +73,8 @@
             container: 'map',
             style: 'mapbox://styles/mapbox/dark-v10',
             center: [-83.924137, 35.961671],
-            zoom: 10
+            zoom: 10,
+            customAttribution: "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>© kcavagnolo</a>"
         });
 
         map.on('load', function () {
@@ -64,7 +83,8 @@
             var url = 'https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/route.geojson';
             map.addSource('route', {
                 type: 'geojson',
-                data: url
+                data: url,
+                buffer: 0
             });
 
             // add the route legs which are LineString
@@ -97,7 +117,9 @@
                 },
                 'paint': {
                     'circle-radius': 6,
-                    'circle-color': '#006885'
+                    'circle-color': '#006885',
+                    'circle-stroke-color': '#ffffff',
+                    'circle-stroke-width': 1
                 },
                 'filter': ['==', '$type', 'Point']
             });
@@ -137,7 +159,8 @@
         // location of the feature, with description HTML from its properties.
         map.on('click', 'breweries', function (e) {
             var coordinates = e.features[0].geometry.coordinates.slice();
-            var description = e.features[0].properties.location_id;
+            var properties = e.features[0].properties;
+            var description = '<h3>' + properties.location_id + '</h3><p>' + properties.address + '</p>'
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
