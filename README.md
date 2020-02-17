@@ -1,10 +1,11 @@
 # Knoxville Ale Trail
 
-So you want to traverse the [Knoxville Ale Trail](https://knoxvillebrewers.com/ale-trail/) but are uncertain of the best route to take? If your goal is to visit all of the breweries on the trail, and you have a Friday from 5p until Sunday at 8p, then here is the route you need to take.
+So you want to traverse the [Knoxville Ale Trail](https://knoxvillebrewers.com/ale-trail/) but are uncertain of the best route to take? If your goal is to visit all of the breweries on the trail, and you have a Friday from 5p until Sunday at 8p, then here is the route you need to take. Existing visualizations:
 
-A pre-computed solution is [available here](data/route.geojson). The marker colors indicate the order (start with red and end at violet) ROYGBIV. Click on the markers to get details of each stop.
+* A pre-computed solution is [available here](data/route.geojson). The marker colors indicate the order (start with red and end at violet) ROYGBIV. Click on the markers to get details of each stop.
+* A draft interactive map is [available here](index.html). Clone this repo and load that HTML locally to interact with the route.
 
-Routes are encoded polyline which is [easy to parse in JS](https://github.com/mapbox/polyline), but GeoJSON is more portable. [Some code that decodes polylines](https://gist.github.com/signed0/2031157). Alternatively, I'm using a polyline lib (see credit below).
+Note that raw legs of the routing solution from the Optimization API are encoded polyline which is [easy to parse in JS](https://github.com/mapbox/polyline), but GeoJSON is more portable. [Some code that decodes polylines](https://gist.github.com/signed0/2031157). Alternatively, I'm using a polyline lib (see credit below).
 
 version: v0.2.0
 
@@ -92,7 +93,9 @@ bumpversion minor --verbose
     ```
 
 * Add `time_windows` to each location for hours of operation.
-* Display intinerary as Gantt.
+* Display itinerary as Gantt.
+* Add animation to markers on arrival.
+* Dig into this [awesome viz](https://github.com/chriswhong/nyctaxi)
 
 ## Credits
 
