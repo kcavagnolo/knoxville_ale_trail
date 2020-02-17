@@ -102,8 +102,19 @@ def mapanything_routing(payload):
         'Content-Type': 'application/json',
         'x-api-key': os.getenv("MAPANYTHING_APIKEY")
     }
-    response = requests.request('POST', url, headers=headers, data=json.dumps(payload), allow_redirects=True)
-    response = response.json()
+    try:
+        response = requests.request('POST', url, headers=headers, data=json.dumps(payload), allow_redirects=True)
+        if response.status_code != 200:
+            logging.error('Optimization failed')
+            msg = response.json()
+            logging.error(msg['JobMessage'])
+            sys.exit(1)
+        else:
+            response = response.json()
+    except Exception as e:
+        logging.exception(e)
+        logging.exception(traceback.format_exc())
+
     return response
 
 
@@ -171,7 +182,11 @@ def main():
         shifts = [
             ["2020-01-24 17:00:00", "2020-01-25 00:00:00"],
             ["2020-01-25 15:00:00", "2020-01-26 00:00:00"],
-            ["2020-01-26 13:00:00", "2020-01-26 20:00:00"]
+            ["2020-01-26 13:00:00", "2020-01-26 20:00:00"],
+            ["2020-02-14 17:00:00", "2020-02-15 00:00:00"],
+            ["2020-02-15 15:00:00", "2020-02-16 00:00:00"],
+            ["2020-02-16 13:00:00", "2020-02-17 00:00:00"],
+            ["2020-02-17 13:00:00", "2020-02-17 20:00:00"]
         ]
         shifts = [[iso_time(shift_time) for shift_time in shift] for shift in shifts]
 
@@ -229,7 +244,6 @@ def main():
             {
                 "vehicle_id": "uber",
                 "type": "car",
-                # TODO: obey the array of shift times
                 "shifts": vehicle_shifts
             }
         ]
