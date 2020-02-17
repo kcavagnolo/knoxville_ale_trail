@@ -178,15 +178,16 @@ def main():
     if args.optimize:
         logging.info('Solving routing optimization problem')
 
+        # TODO: abstract shift time input
         # set static shifts
         shifts = [
-            ["2020-01-24 17:00:00", "2020-01-25 00:00:00"],
-            ["2020-01-25 15:00:00", "2020-01-26 00:00:00"],
-            ["2020-01-26 13:00:00", "2020-01-26 20:00:00"],
-            ["2020-02-14 17:00:00", "2020-02-15 00:00:00"],
-            ["2020-02-15 15:00:00", "2020-02-16 00:00:00"],
-            ["2020-02-16 13:00:00", "2020-02-17 00:00:00"],
-            ["2020-02-17 13:00:00", "2020-02-17 20:00:00"]
+            ["2020-01-24 17:00:00", "2020-01-28 00:00:00"]#,
+            #["2020-01-25 15:00:00", "2020-01-26 00:00:00"],
+            #["2020-01-26 13:00:00", "2020-01-26 20:00:00"],
+            #["2020-02-14 17:00:00", "2020-02-15 00:00:00"],
+            #["2020-02-15 15:00:00", "2020-02-16 00:00:00"],
+            #["2020-02-16 13:00:00", "2020-02-17 00:00:00"],
+            #["2020-02-17 13:00:00", "2020-02-17 20:00:00"]
         ]
         shifts = [[iso_time(shift_time) for shift_time in shift] for shift in shifts]
 
@@ -275,6 +276,7 @@ def main():
             json.dump(response, f)
 
     # decode polyline to GeoJSON
+    # TODO: handle multiple routes instead of one grand route
     if args.geojson:
         logging.info('Writing solution to geojson file')
         uuid = 0
