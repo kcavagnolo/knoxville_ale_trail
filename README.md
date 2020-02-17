@@ -8,14 +8,15 @@ Routes are encoded polyline which is [easy to parse in JS](https://github.com/ma
 
 version: v0.1.0
 
-## Styling
+## Mapbox Styling HowTo's
 
-* [load lareg geojson](https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/)
-* [add geojson collection](https://docs.mapbox.com/mapbox-gl-js/example/multiple-geometries/)
-* [geojson line](https://docs.mapbox.com/mapbox-gl-js/example/geojson-line/)
-* [change map style](https://docs.mapbox.com/mapbox-gl-js/example/setstyle/)
-* [toggle layers](https://docs.mapbox.com/mapbox-gl-js/example/toggle-layers/)
-* [display popup](https://docs.mapbox.com/mapbox-gl-js/example/popup-on-click/)
+* [Loading options for GeoJSON](https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/)
+* [Add multiple geometries in GeoJSON](https://docs.mapbox.com/mapbox-gl-js/example/multiple-geometries/)
+* [Stylize a GeoJSON line](https://docs.mapbox.com/mapbox-gl-js/example/geojson-line/)
+* [Interactively change a map style](https://docs.mapbox.com/mapbox-gl-js/example/setstyle/)
+* [Toggle visible layers](https://docs.mapbox.com/mapbox-gl-js/example/toggle-layers/)
+* [Display a popup with data](https://docs.mapbox.com/mapbox-gl-js/example/popup-on-click/)
+* [Animate a point along a route](https://docs.mapbox.com/mapbox-gl-js/example/animate-point-along-route/)
 
 ## Setup
 
@@ -100,6 +101,9 @@ bumpversion minor --verbose
 * [hicsail `polyline` decoder](https://github.com/hicsail/polyline)
 * [jazzband `geojson` utilities](https://github.com/jazzband/geojson)
 * [vaab `colour` library](https://github.com/vaab/colour)
+* [Mapbox](https://www.mapbox.com/about/maps/)
+* [OpenStreetMap](http://www.openstreetmap.org/about/)
+* [Turf.js](https://turfjs.org/)
 
 ## License
 
