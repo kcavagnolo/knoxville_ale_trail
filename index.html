@@ -6,6 +6,7 @@
     <title>Knoxville Ale Trail Route</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+    <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js" charset="utf-8"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
     <style>
         body {
@@ -20,11 +21,26 @@
             width: 100%;
         }
 
-        #menu {
+        .overlay {
             position: absolute;
-            background: #fff;
-            padding: 10px;
-            font-family: 'Open Sans', sans-serif;
+            top: 10px;
+            left: 10px;
+        }
+
+        .overlay button {
+            font: 600 12px/20px 'Open Sans', sans-serif;
+            background-color: #006885;
+            color: #fff;
+            display: inline-block;
+            margin: 0;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .overlay button:hover {
+            background-color: #efb63b;
         }
 
         .marker {
@@ -48,23 +64,18 @@
 </head>
 
 <body>
+
+    <!-- the actual map layer -->
     <div id="map"></div>
 
-    <!-- background map options -->
-    <div id="menu">
-        <input id="streets-v11" type="radio" name="rtoggle" value="streets" checked="checked" />
-        <label for="streets">streets</label>
-        <input id="light-v10" type="radio" name="rtoggle" value="light" />
-        <label for="light">light</label>
-        <input id="dark-v10" type="radio" name="rtoggle" value="dark" />
-        <label for="dark">dark</label>
-        <input id="outdoors-v11" type="radio" name="rtoggle" value="outdoors" />
-        <label for="outdoors">outdoors</label>
-        <input id="satellite-v9" type="radio" name="rtoggle" value="satellite" />
-        <label for="satellite">satellite</label>
+    <!-- animation controls -->
+    <div class="overlay">
+        <button id="reset-animation">Reset</button>
+        <button id="next-leg">Next</button>
+        <button id="prev-leg">Prev</button>
     </div>
 
-    <!-- mpabox styling -->
+    <!-- mapbox styling -->
     <script>
         mapboxgl.accessToken = 'pk.eyJ1Ijoia2NhdmFnbm9sbyIsImEiOiJjamtvOWExZHYydm1xM3BreG9pb3hza3J6In0.yKhLQH7NxC9rbsrCpilLQw';
 
@@ -77,14 +88,61 @@
             customAttribution: "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>© kcavagnolo</a>"
         });
 
+
+        // dummy start/end
+        var origin = [-86.714413, 36.187302];
+        var destination = [-83.924735, 35.943685];
+
+        // get the route geojson
+        let route;
+        var url = 'https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/mapbox-map/data/route.geojson';
+        fetch(url)
+            .then((response) => {
+                return response.json();
+            })
+            .then((json) => {
+                route = json;
+            })
+            .catch((err) => {
+                console.log("Err: ", err)
+            });
+
+        // A single point that animates along the route.
+        // Coordinates are initially set to origin.
+        var point = {
+            'type': 'FeatureCollection',
+            'features': [{
+                'type': 'Feature',
+                'properties': {},
+                'geometry': {
+                    'type': 'Point',
+                    'coordinates': origin
+                }
+            }]
+        };
+
+        // Used to increment the value of the point measurement against the route.
+        var steps = 0;
+        var counter = 0;
+        var leg = 0;
+
+        // load the map
         map.on('load', function () {
 
-            // load hosted geojson
-            var url = 'https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/route.geojson';
+            // debugging
+            console.log("the route json >>> ", route)
+
+            // load route geojson
             map.addSource('route', {
                 type: 'geojson',
-                data: url,
+                data: route,
                 buffer: 0
+            });
+
+            // add a point to move along route
+            map.addSource('point', {
+                'type': 'geojson',
+                'data': point
             });
 
             // add the route legs which are LineString
@@ -107,13 +165,10 @@
             // add the breweries which are Point
             map.addLayer({
                 'id': 'breweries',
-                // 'type': 'symbol',
                 'type': 'circle',
                 'source': 'route',
                 'layout': {
                     'visibility': 'visible',
-                    /* 'icon-image': 'beer-11',
-                    'icon-allow-overlap': true */
                 },
                 'paint': {
                     'circle-radius': 6,
@@ -123,27 +178,101 @@
                 },
                 'filter': ['==', '$type', 'Point']
             });
+
+            // add the moving point
+            map.addLayer({
+                'id': 'point',
+                'source': 'point',
+                'type': 'symbol',
+                'layout': {
+                    'icon-image': 'beer-15',
+                    'icon-rotate': ['get', 'bearing'],
+                    'icon-rotation-alignment': 'map',
+                    'icon-allow-overlap': true,
+                    'icon-ignore-placement': true
+                }
+            });
+
+            //function to animate a point on route
+            function animate() {
+
+                console.log(leg, counter, steps)
+
+                // Update point geometry to a new position based on counter denoting
+                // the index to access the arc.
+                point.features[0].geometry.coordinates =
+                    route.features[leg].geometry.coordinates[counter];
+
+                // Calculate the bearing to ensure the icon is rotated to match the route arc
+                // The bearing is calculate between the current point and the next point, except
+                // at the end of the arc use the previous point and the current point
+                point.features[0].properties.bearing = turf.bearing(
+                    turf.point(
+                        route.features[leg].geometry.coordinates[
+                            counter >= steps ? counter - 1 : counter
+                        ]
+                    ),
+                    turf.point(
+                        route.features[leg].geometry.coordinates[
+                            counter >= steps ? counter : counter + 1
+                        ]
+                    )
+                );
+
+                // Update the source with this new data.
+                map.getSource('point').setData(point);
+
+                // Request the next frame of animation so long the end has not been reached.
+                if (counter < steps) {
+                    requestAnimationFrame(animate);
+                }
+
+                counter = counter + 1;
+            }
+
+            // setup an animate button
+            document.getElementById('reset-animation').addEventListener('click', function () {
+                // Set the coordinates of the original point back to origin
+                point.features[0].geometry.coordinates = origin;
+
+                // Update the source layer
+                map.getSource('point').setData(point);
+
+                // Reset the counter
+                leg = 0;
+                counter = 0;
+                steps = route.features[leg].geometry.coordinates.length
+                console.log(leg, counter, steps)
+
+                // Restart the animation.
+                animate(counter, leg, steps);
+            });
+
+            // setup an animate button
+            document.getElementById('next-leg').addEventListener('click', function () {
+                // Reset the counter
+                leg = leg + 1;
+                counter = 0;
+                steps = route.features[leg].geometry.coordinates.length
+                console.log(leg, counter, steps)
+
+                // Restart the animation.
+                animate(counter, leg, steps);
+            });
+
+            // setup an animate button
+            document.getElementById('prev-leg').addEventListener('click', function () {
+                // Reset the counter
+                leg = leg - 1;
+                counter = 0;
+                steps = route.features[leg].geometry.coordinates.length
+                console.log(leg, counter, steps)
+
+                // Restart the animation.
+                animate(counter, leg, steps);
+            });
+
         });
-
-        // add toggle layers
-        var toggleableLayerIds = ['route', 'breweries'];
-
-        // load map menu options
-        var layerList = document.getElementById('menu');
-
-        // label the map options
-        var inputs = layerList.getElementsByTagName('input');
-
-        // function to switch map background layer
-        function switchLayer(layer) {
-            var layerId = layer.target.id;
-            map.setStyle('mapbox://styles/mapbox/' + layerId + '?optimize=true');
-        }
-
-        // switch the actual layer
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].onclick = switchLayer;
-        }
 
         // Change the cursor to a pointer when the mouse is over the breweries layer.
         map.on('mouseenter', 'breweries', function () {
