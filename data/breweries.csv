@@ -1,24 +1,24 @@
-#name,street,city,state,zip
-Abridged Beer Company, 100 Lockett Rd, Knoxville, TN, 37919
-Albright Grove Brewing Company, 2924 Sutherland Ave, Knoxville, TN, 37919
-alliance brewing co, 1130 Sevier Ave, Knoxville, TN, 37920
-balter beerworks, 100 S Broadway, Knoxville, TN, 37902
-Blackberry Farm Brewery, 108 Everett Avenue, Maryville, TN, 37804
-Blackhorse Brewery,430 S Gay St, Knoxville, TN, 37902
-Clinch River Brewing,2045 Norris Fwy, Norris, TN, 37828
-crafty bastard brewery, 6 Emory Pl, Knoxville, TN, 37917
-Downtown Grill & Brewery, 424 S Gay St, Knoxville, TN, 37902
-Elkmont Exchange Brewery, 745 N Broadway, Knoxville, TN, 37917
-Elst Brewing Company, 2419 N Central St, Knoxville, TN, 37917
-Fanatic Brewing Co.,2735 N Central St, Knoxville, TN, 37917
-geezers brewing co, 225 E 5th Ave, Knoxville, TN, 37917
-Hexagon Brewing Company, 1002 Dutch Valley Dr, Knoxville, TN, 37918
-home, 10936 Parkside Dr, Knoxville, TN, 37934
-last days of autumn brewing, 808 E Magnolia Ave, Knoxville, TN, 37917
-next level brewing company, 700 N Broadway, Knoxville, TN, 37917
-pretentious beer co, 131 S Central St, Knoxville, TN, 37902
-printshop beer co, 1532 Island Home Ave, Knoxville, TN, 37920
-round 6 brewing, 427 Whitecrest Dr, Maryville, TN, 37801
-Schulz Bräu Brewing Company,126 Bernard Ave, Knoxville, TN, 37917
-Smoky Mountain Brewery,1004 Parkway, Gatlinburg, TN, 37738
-Yee-Haw Brewing Co.,131 The Island Dr, Pigeon Forge, TN, 37863
+#visited,name,street,city,state,zip,visited
+no,Abridged Beer Company, 100 Lockett Rd, Knoxville, TN, 37919
+no,Albright Grove Brewing Company, 2924 Sutherland Ave, Knoxville, TN, 37919
+no,alliance brewing co, 1130 Sevier Ave, Knoxville, TN, 37920
+yes,balter beerworks, 100 S Broadway, Knoxville, TN, 37902
+no,Blackberry Farm Brewery, 108 Everett Avenue, Maryville, TN, 37804
+no,Blackhorse Brewery,430 S Gay St, Knoxville, TN, 37902
+no,Clinch River Brewing,2045 Norris Fwy, Norris, TN, 37828
+yes,crafty bastard brewery, 6 Emory Pl, Knoxville, TN, 37917
+no,Downtown Grill & Brewery, 424 S Gay St, Knoxville, TN, 37902
+yes,Elkmont Exchange Brewery, 745 N Broadway, Knoxville, TN, 37917
+yes,Elst Brewing Company, 2419 N Central St, Knoxville, TN, 37917
+no,Fanatic Brewing Co.,2735 N Central St, Knoxville, TN, 37917
+no,geezers brewing co, 225 E 5th Ave, Knoxville, TN, 37917
+yes,Hexagon Brewing Company, 1002 Dutch Valley Dr, Knoxville, TN, 37918
+no,home, 10936 Parkside Dr, Knoxville, TN, 37934
+yes,last days of autumn brewing, 808 E Magnolia Ave, Knoxville, TN, 37917
+no,next level brewing company, 700 N Broadway, Knoxville, TN, 37917
+yes,pretentious beer co, 131 S Central St, Knoxville, TN, 37902
+no,printshop beer co, 1532 Island Home Ave, Knoxville, TN, 37920
+no,round 6 brewing, 427 Whitecrest Dr, Maryville, TN, 37801
+no,Schulz Bräu Brewing Company,126 Bernard Ave, Knoxville, TN, 37917
+no,Smoky Mountain Brewery,1004 Parkway, Gatlinburg, TN, 37738
+no,Yee-Haw Brewing Co.,131 The Island Dr, Pigeon Forge, TN, 37863

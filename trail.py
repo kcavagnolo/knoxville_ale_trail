@@ -141,16 +141,19 @@ def main():
             reader = csv.reader(csvfile, skipinitialspace=True)
             next(reader, None)
             for row in tqdm(sorted(reader)):
-                brewery_name = clean_string(row[0])
+                visited = row[0]
+                brewery_name = clean_string(row[1])
                 address = clean_string(' '.join(row))
                 lat, lng, address = here_geocoder(address)
                 csv_lines.append(','.join([
+                    visited,
                     str(lat),
                     str(lng),
                     brewery_name,
                     address + "\n"])
                 )
                 json_lines[brewery_name] = {}
+                json_lines[brewery_name]['visited'] = visited
                 json_lines[brewery_name]['address'] = address
                 json_lines[brewery_name]['latitude'] = lat
                 json_lines[brewery_name]['longitude'] = lng
@@ -165,15 +168,12 @@ def main():
         logging.info('Solving routing optimization problem')
 
         # set static shifts
-        shift_times = [
-            "2020-01-24 17:00:00",
-            "2020-01-25 00:00:00",
-            "2020-01-25 15:00:00",
-            "2020-01-26 00:00:00",
-            "2020-01-26 13:00:00",
-            "2020-01-26 20:00:00"
+        shifts = [
+            ["2020-01-24 17:00:00", "2020-01-25 00:00:00"],
+            ["2020-01-25 15:00:00", "2020-01-26 00:00:00"],
+            ["2020-01-26 13:00:00", "2020-01-26 20:00:00"]
         ]
-        shift_times = [iso_time(shift_time) for shift_time in shift_times]
+        shifts = [[iso_time(shift_time) for shift_time in shift] for shift in shifts]
 
         # linger times in hours
         default_linger = 1.0 * 3600
@@ -184,21 +184,24 @@ def main():
             locations = []
             orders = []
             for row in reader:
-                lat = float(row[0])
-                lng = float(row[1])
-                brewery_name = row[2]
-                locations.append({
-                    "latitude": lat,
-                    "longitude": lng,
-                    "location_id": brewery_name
-                })
-                if "home" not in brewery_name:
-                    order = {
-                        "order_id": brewery_name,
-                        "location_id": brewery_name,
-                        "duration": default_linger
-                    }
-                    orders.append(order)
+                if row[0] != "yes":
+                    lat = float(row[1])
+                    lng = float(row[2])
+                    brewery_name = row[3]
+                    locations.append({
+                        "latitude": lat,
+                        "longitude": lng,
+                        "location_id": brewery_name
+                    })
+                    if "home" not in brewery_name:
+                        order = {
+                            "order_id": brewery_name,
+                            "location_id": brewery_name,
+                            "duration": default_linger
+                        }
+                        orders.append(order)
+                else:
+                    logging.warning('Skipping {}'.format(row[3]))
 
         # blank payload
         payload = dict()
@@ -210,20 +213,24 @@ def main():
         payload['orders'] = orders
 
         # how we'll move around
+        vehicle_shifts = []
+        for i, shift in enumerate(shifts):
+            vehicle_shifts.append(
+                {
+                    "start_location_id": "home",
+                    "end_location_id": "home",
+                    "shift_start": shift[0],
+                    "shift_end": shift[-1],
+                    "shift_id": "crawl_shift_{}".format(i)
+                }
+            )
+
         payload['vehicles'] = [
             {
                 "vehicle_id": "uber",
                 "type": "car",
                 # TODO: obey the array of shift times
-                "shifts": [
-                    {
-                        "start_location_id": "home",
-                        "end_location_id": "home",
-                        "shift_start": shift_times[0],
-                        "shift_end": shift_times[-1],
-                        "shift_id": "crawl_shift"
-                    }
-                ]
+                "shifts": vehicle_shifts
             }
         ]
 
@@ -265,10 +272,10 @@ def main():
         features = []
         for n, leg in enumerate(route_polyline):
             leg = polyline.decode(leg, 5, geojson=True)
-            
+
             # individual linestring
             geometry = geojson.LineString(leg)
-            
+
             # save as linestrings
             features.append(geojson.Feature(geometry=geometry, properties={"leg": "leg" + str(n)}, id=uuid))
             uuid += 1

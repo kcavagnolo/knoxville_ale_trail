@@ -1,117 +1,140 @@
 {
     "abridged beer company": {
+        "visited": "no",
         "address": "100 Lockett Rd, Knoxville, TN 37919, United States",
         "latitude": 35.93154,
         "longitude": -84.01588
     },
     "albright grove brewing company": {
+        "visited": "no",
         "address": "2924 Sutherland Ave, Knoxville, TN 37919, United States",
         "latitude": 35.95316,
         "longitude": -83.96377
     },
     "blackberry farm brewery": {
+        "visited": "no",
         "address": "108 Everett Ave, Maryville, TN 37804, United States",
         "latitude": 35.76191,
         "longitude": -83.96586
     },
     "blackhorse brewery": {
+        "visited": "no",
         "address": "430 S Gay St, Knoxville, TN 37902, United States",
         "latitude": 35.96543,
         "longitude": -83.91842
     },
     "clinch river brewing": {
+        "visited": "no",
         "address": "2045 Norris Fwy, Norris, TN 37705, United States",
         "latitude": 36.211719,
         "longitude": -84.0731926
     },
     "downtown grill brewery": {
+        "visited": "no",
         "address": "424 S Gay St, Knoxville, TN 37902, United States",
         "latitude": 35.96557,
         "longitude": -83.91849
     },
-    "elkmont exchange brewery": {
-        "address": "745 N Broadway St, Knoxville, TN 37917, United States",
-        "latitude": 35.97776,
-        "longitude": -83.92358
-    },
-    "elst brewing company": {
-        "address": "2419 N Central St, Knoxville, TN 37917, United States",
-        "latitude": 35.99062,
-        "longitude": -83.94067
-    },
     "fanatic brewing co ": {
+        "visited": "no",
         "address": "2735 N Central St, Knoxville, TN 37917, United States",
         "latitude": 35.99217,
         "longitude": -83.94267
     },
-    "hexagon brewing company": {
-        "address": "1002 Dutch Valley Dr, Knoxville, TN 37918, United States",
-        "latitude": 36.00828,
-        "longitude": -83.94812
-    },
     "schulz br\u00e4u brewing company": {
+        "visited": "no",
         "address": "126 Bernard Ave, Knoxville, TN 37917, United States",
         "latitude": 35.97731,
         "longitude": -83.92634
     },
     "smoky mountain brewery": {
+        "visited": "no",
         "address": "1004 Parkway, Gatlinburg, TN 37738, United States",
         "latitude": 35.7085336,
         "longitude": -83.521008
     },
     "yee haw brewing co ": {
+        "visited": "no",
         "address": "131 The Island Dr, Pigeon Forge, TN 37863, United States",
         "latitude": 35.8022648,
         "longitude": -83.5710745
     },
     "alliance brewing co": {
+        "visited": "no",
         "address": "1130 Sevier Ave, Knoxville, TN 37920, United States",
         "latitude": 35.95975,
         "longitude": -83.90311
     },
-    "balter beerworks": {
-        "address": "100 Broadway SW, Knoxville, TN 37902, United States",
-        "latitude": 35.96658,
-        "longitude": -83.92441
-    },
-    "crafty bastard brewery": {
-        "address": "6 Emory Pl, Knoxville, TN 37917, United States",
-        "latitude": 35.97463,
-        "longitude": -83.9226
-    },
     "geezers brewing co": {
+        "visited": "no",
         "address": "225 E 5th Ave, Knoxville, TN 37917, United States",
         "latitude": 35.97432,
         "longitude": -83.92033
     },
     "home": {
+        "visited": "no",
         "address": "10936 Parkside Dr, Knoxville, TN 37934, United States",
         "latitude": 35.9028866,
         "longitude": -84.1482036
     },
-    "last days of autumn brewing": {
-        "address": "808 E Magnolia Ave, Knoxville, TN 37917, United States",
-        "latitude": 35.9760533,
-        "longitude": -83.9149333
-    },
     "next level brewing company": {
+        "visited": "no",
         "address": "700 N Broadway NE, Knoxville, TN 37917, United States",
         "latitude": 35.97626,
         "longitude": -83.92371
     },
-    "pretentious beer co": {
-        "address": "131 S Central St, Knoxville, TN 37902, United States",
-        "latitude": 35.96934,
-        "longitude": -83.91802
-    },
     "printshop beer co": {
+        "visited": "no",
         "address": "1532 Island Home Ave, Knoxville, TN 37920, United States",
         "latitude": 35.96062,
         "longitude": -83.89669
     },
     "round 6 brewing": {
+        "visited": "no",
         "address": "427 Whitecrest Dr, Maryville, TN 37801, United States",
         "latitude": 35.75608,
         "longitude": -83.99436
+    },
+    "elkmont exchange brewery": {
+        "visited": "yes",
+        "address": "745 N Broadway St, Knoxville, TN 37917, United States",
+        "latitude": 35.97776,
+        "longitude": -83.92358
+    },
+    "elst brewing company": {
+        "visited": "yes",
+        "address": "2419 N Central St, Knoxville, TN 37917, United States",
+        "latitude": 35.99062,
+        "longitude": -83.94067
+    },
+    "hexagon brewing company": {
+        "visited": "yes",
+        "address": "1002 Dutch Valley Dr, Knoxville, TN 37918, United States",
+        "latitude": 36.00828,
+        "longitude": -83.94812
+    },
+    "balter beerworks": {
+        "visited": "yes",
+        "address": "100 Broadway SW, Knoxville, TN 37902, United States",
+        "latitude": 35.96658,
+        "longitude": -83.92441
+    },
+    "crafty bastard brewery": {
+        "visited": "yes",
+        "address": "6 Emory Pl, Knoxville, TN 37917, United States",
+        "latitude": 35.97463,
+        "longitude": -83.9226
+    },
+    "last days of autumn brewing": {
+        "visited": "yes",
+        "address": "808 E Magnolia Ave, Knoxville, TN 37917, United States",
+        "latitude": 35.9760533,
+        "longitude": -83.9149333
+    },
+    "pretentious beer co": {
+        "visited": "yes",
+        "address": "131 S Central St, Knoxville, TN 37902, United States",
+        "latitude": 35.96934,
+        "longitude": -83.91802
     }
 }
