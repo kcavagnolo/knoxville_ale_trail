@@ -214,6 +214,7 @@ def main():
             {
                 "vehicle_id": "uber",
                 "type": "car",
+                # TODO: obey the array of shift times
                 "shifts": [
                     {
                         "start_location_id": "home",
@@ -255,6 +256,7 @@ def main():
     # decode polyline to GeoJSON
     if args.geojson:
         logging.info('Writing solution to geojson file')
+        uuid = 0
 
         # add route polyline
         with open(responsefile) as f:
@@ -268,7 +270,8 @@ def main():
             geometry = geojson.LineString(leg)
             
             # save as linestrings
-            features.append(geojson.Feature(geometry=geometry, properties={"leg": "leg" + str(n)}))
+            features.append(geojson.Feature(geometry=geometry, properties={"leg": "leg" + str(n)}, id=uuid))
+            uuid += 1
 
         # add breweries
         with open(geocoded_breweries_json) as f:
@@ -306,8 +309,9 @@ def main():
 
             # encode feature
             features.append(geojson.Feature(geometry=geometry,
-                                            properties=stop)
+                                            properties=stop, id=uuid)
                             )
+            uuid += 1
 
         # write feature collection to geojson
         feature_collection = geojson.FeatureCollection(features)

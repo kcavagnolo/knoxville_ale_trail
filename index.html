@@ -7,6 +7,10 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
     <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js" charset="utf-8"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
     <style>
         body {
@@ -43,15 +47,6 @@
             background-color: #efb63b;
         }
 
-        .marker {
-            background-image: url('mapbox-icon.png');
-            background-size: cover;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
         .mapboxgl-popup {
             max-width: 200px;
         }
@@ -70,7 +65,7 @@
 
     <!-- animation controls -->
     <div class="overlay">
-        <button id="reset-animation">Reset</button>
+        <button id="reset-animation">Start</button>
         <button id="next-leg">Next</button>
         <button id="prev-leg">Prev</button>
     </div>
@@ -82,16 +77,22 @@
         // load mapbox gl
         var map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/dark-v10',
+            style: 'mapbox://styles/mapbox/dark-v10?optimize=true',
             center: [-83.924137, 35.961671],
             zoom: 10,
             customAttribution: "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>© kcavagnolo</a>"
         });
 
+        // add geocoder
+        map.addControl(
+            new MapboxGeocoder({
+                accessToken: mapboxgl.accessToken,
+                mapboxgl: mapboxgl
+            })
+        );
 
-        // dummy start/end
-        var origin = [-86.714413, 36.187302];
-        var destination = [-83.924735, 35.943685];
+        // Add zoom and rotation controls to the map.
+        map.addControl(new mapboxgl.NavigationControl());
 
         // get the route geojson
         let route;
@@ -116,15 +117,16 @@
                 'properties': {},
                 'geometry': {
                     'type': 'Point',
-                    'coordinates': origin
+                    'coordinates': [0, 0]
                 }
             }]
         };
 
-        // Used to increment the value of the point measurement against the route.
+        // initialize some vars
         var steps = 0;
         var counter = 0;
         var leg = 0;
+        var hoverId = null;
 
         // load the map
         map.on('load', function () {
@@ -174,7 +176,13 @@
                     'circle-radius': 6,
                     'circle-color': '#006885',
                     'circle-stroke-color': '#ffffff',
-                    'circle-stroke-width': 1
+                    'circle-stroke-width': 1,
+                    'circle-opacity': [
+                        'case',
+                        ['boolean', ['feature-state', 'hover'], false],
+                        1,
+                        0.5
+                    ]
                 },
                 'filter': ['==', '$type', 'Point']
             });
@@ -193,10 +201,15 @@
                 }
             });
 
+            // collect features
+            /* route.features.forEach(function (feature) {
+                console.log(feature.properties)
+            }); */
+
             //function to animate a point on route
             function animate() {
 
-                console.log(leg, counter, steps)
+                console.log("leg: " + leg, "counter: " + counter, "step: " + steps)
 
                 // Update point geometry to a new position based on counter denoting
                 // the index to access the arc.
@@ -206,7 +219,7 @@
                 // Calculate the bearing to ensure the icon is rotated to match the route arc
                 // The bearing is calculate between the current point and the next point, except
                 // at the end of the arc use the previous point and the current point
-                point.features[0].properties.bearing = turf.bearing(
+                /* point.features[0].properties.bearing = turf.bearing(
                     turf.point(
                         route.features[leg].geometry.coordinates[
                             counter >= steps ? counter - 1 : counter
@@ -217,23 +230,22 @@
                             counter >= steps ? counter : counter + 1
                         ]
                     )
-                );
+                ); */
 
                 // Update the source with this new data.
                 map.getSource('point').setData(point);
 
                 // Request the next frame of animation so long the end has not been reached.
+                counter = counter + 1;
                 if (counter < steps) {
                     requestAnimationFrame(animate);
                 }
-
-                counter = counter + 1;
             }
 
             // setup an animate button
             document.getElementById('reset-animation').addEventListener('click', function () {
                 // Set the coordinates of the original point back to origin
-                point.features[0].geometry.coordinates = origin;
+                point.features[0].geometry.coordinates = [0, 0];
 
                 // Update the source layer
                 map.getSource('point').setData(point);
@@ -250,14 +262,28 @@
 
             // setup an animate button
             document.getElementById('next-leg').addEventListener('click', function () {
+
                 // Reset the counter
                 leg = leg + 1;
                 counter = 0;
-                steps = route.features[leg].geometry.coordinates.length
-                console.log(leg, counter, steps)
 
+                // get coordinates
+                var coordinates = route.features[leg].geometry.coordinates
+                steps = coordinates.length
+
+                // get bbox of linestring
+                var bounds = coordinates.reduce(function (bounds, coord) {
+                    return bounds.extend(coord);
+                }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+                // fit linestring to zoom
+                map.fitBounds(bounds, {
+                    padding: 200
+                });
+
+                // TODO: Wait on zoom to complete before starting animation
                 // Restart the animation.
-                animate(counter, leg, steps);
+                animate(counter, leg, steps)
             });
 
             // setup an animate button
@@ -284,12 +310,41 @@
             map.getCanvas().style.cursor = '';
         });
 
+        // When the user moves their mouse over the state-fill layer, we'll update the
+        // feature state for the feature under the mouse.
+        map.on('mousemove', 'breweries', function (e) {
+            if (e.features.length > 0) {
+                if (hoverId) {
+                    map.setFeatureState({
+                        source: 'route',
+                        id: hoverId
+                    }, {
+                        hover: false
+                    });
+                }
+                hoverId = e.features[0].location_id;
+                console.log(hoverId)
+                map.setFeatureState({
+                    source: 'route',
+                    id: hoverId
+                }, {
+                    hover: true
+                });
+            }
+        });
+
         // When a click event occurs on a feature in the breweries layer, open a popup at the
         // location of the feature, with description HTML from its properties.
         map.on('click', 'breweries', function (e) {
             var coordinates = e.features[0].geometry.coordinates.slice();
             var properties = e.features[0].properties;
-            var description = '<h3>' + properties.location_id + '</h3><p>' + properties.address + '</p>'
+            var description_elements = [
+                properties.address,
+                "arrive: " + new Date(properties.arrival_time).toLocaleString(),
+                "depart: " + new Date(properties.departure_time).toLocaleString()
+            ]
+            var brewery = properties.location_id.toUpperCase();
+            var description = '<h3>' + brewery + '</h3><p>' + description_elements.join('<br>') + '</p>'
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
