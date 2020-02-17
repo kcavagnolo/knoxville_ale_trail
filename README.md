@@ -6,7 +6,7 @@ A pre-computed solution is [available here](data/route.geojson). The marker colo
 
 Routes are encoded polyline which is [easy to parse in JS](https://github.com/mapbox/polyline), but GeoJSON is more portable. [Some code that decodes polylines](https://gist.github.com/signed0/2031157). Alternatively, I'm using a polyline lib (see credit below).
 
-version: v0.1.0
+version: v0.2.0
 
 ## Mapbox Styling HowTo's
 
