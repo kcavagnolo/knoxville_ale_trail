@@ -74,11 +74,15 @@
     <script>
         mapboxgl.accessToken = 'pk.eyJ1Ijoia2NhdmFnbm9sbyIsImEiOiJjamtvOWExZHYydm1xM3BreG9pb3hza3J6In0.yKhLQH7NxC9rbsrCpilLQw';
 
+        // TODO: abstract the origin based on view
+        // set an origin
+        var origin = [-83.924137, 35.961671]
+
         // load mapbox gl
         var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/dark-v10?optimize=true',
-            center: [-83.924137, 35.961671],
+            center: origin,
             zoom: 10,
             customAttribution: "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>© kcavagnolo</a>"
         });
@@ -87,7 +91,14 @@
         map.addControl(
             new MapboxGeocoder({
                 accessToken: mapboxgl.accessToken,
-                mapboxgl: mapboxgl
+                mapboxgl: mapboxgl,
+                placeholder: 'Search for breweries',
+                countries: 'us',
+                proximity: {
+                    longitude: origin[0],
+                    latitude: origin[1]
+                },
+                marker: false
             })
         );
 
@@ -173,15 +184,21 @@
                     'visibility': 'visible',
                 },
                 'paint': {
-                    'circle-radius': 6,
-                    'circle-color': '#006885',
+                    'circle-radius': 8,
+                    'circle-color': [
+                        'case',
+                        ['boolean', ['feature-state', 'hover'], false],
+                        "#efb63b",
+                        "#006885"
+                    ],
+                    //'#006885',
                     'circle-stroke-color': '#ffffff',
                     'circle-stroke-width': 1,
                     'circle-opacity': [
                         'case',
                         ['boolean', ['feature-state', 'hover'], false],
-                        1,
-                        0.5
+                        0.8,
+                        1.0
                     ]
                 },
                 'filter': ['==', '$type', 'Point']
@@ -253,8 +270,20 @@
                 // Reset the counter
                 leg = 0;
                 counter = 0;
-                steps = route.features[leg].geometry.coordinates.length
-                console.log(leg, counter, steps)
+
+                // get coordinates
+                var coordinates = route.features[leg].geometry.coordinates
+                steps = coordinates.length
+
+                // get bbox of linestring
+                var bounds = coordinates.reduce(function (bounds, coord) {
+                    return bounds.extend(coord);
+                }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+                // fit linestring to zoom
+                map.fitBounds(bounds, {
+                    padding: 200
+                });
 
                 // Restart the animation.
                 animate(counter, leg, steps);
@@ -291,8 +320,20 @@
                 // Reset the counter
                 leg = leg - 1;
                 counter = 0;
-                steps = route.features[leg].geometry.coordinates.length
-                console.log(leg, counter, steps)
+
+                // get coordinates
+                var coordinates = route.features[leg].geometry.coordinates
+                steps = coordinates.length
+
+                // get bbox of linestring
+                var bounds = coordinates.reduce(function (bounds, coord) {
+                    return bounds.extend(coord);
+                }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+                // fit linestring to zoom
+                map.fitBounds(bounds, {
+                    padding: 200
+                });
 
                 // Restart the animation.
                 animate(counter, leg, steps);
@@ -322,8 +363,7 @@
                         hover: false
                     });
                 }
-                hoverId = e.features[0].location_id;
-                console.log(hoverId)
+                hoverId = e.features[0].id;
                 map.setFeatureState({
                     source: 'route',
                     id: hoverId
@@ -331,6 +371,20 @@
                     hover: true
                 });
             }
+        });
+
+        // When the mouse leaves the state-fill layer, update the feature state of the
+        // previously hovered feature.
+        map.on('mouseleave', 'breweries', function () {
+            if (hoverId) {
+                map.setFeatureState({
+                    source: 'route',
+                    id: hoverId
+                }, {
+                    hover: false
+                });
+            }
+            hoverId = null;
         });
 
         // When a click event occurs on a feature in the breweries layer, open a popup at the

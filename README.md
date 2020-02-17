@@ -18,6 +18,8 @@ version: v0.2.0
 * [Toggle visible layers](https://docs.mapbox.com/mapbox-gl-js/example/toggle-layers/)
 * [Display a popup with data](https://docs.mapbox.com/mapbox-gl-js/example/popup-on-click/)
 * [Animate a point along a route](https://docs.mapbox.com/mapbox-gl-js/example/animate-point-along-route/)
+* [Change style on hover](https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/)
+* [Localized search](https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/)
 
 ## Setup
 
