@@ -50,36 +50,38 @@
 
     <div id="map"></div>
     <div class="overlay">
-        <button id="replay">Replay</button>
+        <button id="reset-animation">Reset</button>
+        <button id="next-leg">Next</button>
+        <button id="prev-leg">Prev</button>
     </div>
 
     <script>
         mapboxgl.accessToken = 'pk.eyJ1Ijoia2NhdmFnbm9sbyIsImEiOiJjamtvOWExZHYydm1xM3BreG9pb3hza3J6In0.yKhLQH7NxC9rbsrCpilLQw';
         var map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [-85.504812, 36.099812],
-            zoom: 7
+            style: 'mapbox://styles/mapbox/dark-v10',
+            center: [-83.924137, 35.961671],
+            zoom: 10,
+            customAttribution: "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>© kcavagnolo</a>"
         });
 
+        // dummy start/end
         var origin = [-86.714413, 36.187302];
         var destination = [-83.924735, 35.943685];
 
-        // A simple line from origin to destination.
+        // get the route geojson
         let route;
         var url = 'https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/mapbox-map/data/route.geojson';
-        fetch(url).then(
-            function (u) {
-                return u.json();
-            }
-        ).then(
-            function (json) {
+        fetch(url)
+            .then((response) => {
+                return response.json();
+            })
+            .then((json) => {
                 route = json;
-            }
-        )
-        /* fetch(url)
-            .then(response => response.json())
-            .then(json => console.log(json)); */
+            })
+            .catch((err) => {
+                console.log("Err: ", err)
+            });
 
         // A single point that animates along the route.
         // Coordinates are initially set to origin.
@@ -96,10 +98,14 @@
         };
 
         // Used to increment the value of the point measurement against the route.
-        var steps = 500;
+        var steps = 0;
         var counter = 0;
+        var leg = 0;
 
         map.on('load', function () {
+
+            console.log("the route json >>> ", route)
+
             // Add a source and layer displaying a point which will be animated in a circle.
             map.addSource('route', {
                 'type': 'geojson',
@@ -126,7 +132,7 @@
                 'source': 'point',
                 'type': 'symbol',
                 'layout': {
-                    'icon-image': 'airport-15',
+                    'icon-image': 'beer-15',
                     'icon-rotate': ['get', 'bearing'],
                     'icon-rotation-alignment': 'map',
                     'icon-allow-overlap': true,
@@ -134,23 +140,27 @@
                 }
             });
 
+            //function to animate a point on route
             function animate() {
+
+                console.log(leg, counter, steps)
+
                 // Update point geometry to a new position based on counter denoting
                 // the index to access the arc.
                 point.features[0].geometry.coordinates =
-                    route.features[0].geometry.coordinates[counter];
+                    route.features[leg].geometry.coordinates[counter];
 
                 // Calculate the bearing to ensure the icon is rotated to match the route arc
                 // The bearing is calculate between the current point and the next point, except
                 // at the end of the arc use the previous point and the current point
                 point.features[0].properties.bearing = turf.bearing(
                     turf.point(
-                        route.features[0].geometry.coordinates[
+                        route.features[leg].geometry.coordinates[
                             counter >= steps ? counter - 1 : counter
                         ]
                     ),
                     turf.point(
-                        route.features[0].geometry.coordinates[
+                        route.features[leg].geometry.coordinates[
                             counter >= steps ? counter : counter + 1
                         ]
                     )
@@ -166,7 +176,9 @@
 
                 counter = counter + 1;
             }
-            document.getElementById('replay').addEventListener('click', function () {
+
+            // setup an animate button
+            document.getElementById('reset-animation').addEventListener('click', function () {
                 // Set the coordinates of the original point back to origin
                 point.features[0].geometry.coordinates = origin;
 
@@ -174,14 +186,41 @@
                 map.getSource('point').setData(point);
 
                 // Reset the counter
+                leg = 0;
                 counter = 0;
+                steps = route.features[leg].geometry.coordinates.length
+                console.log(leg, counter, steps)
 
                 // Restart the animation.
-                animate(counter);
+                animate(counter, leg, steps);
+            });
+
+            // setup an animate button
+            document.getElementById('next-leg').addEventListener('click', function () {
+                // Reset the counter
+                leg = leg + 1;
+                counter = 0;
+                steps = route.features[leg].geometry.coordinates.length
+                console.log(leg, counter, steps)
+
+                // Restart the animation.
+                animate(counter, leg, steps);
+            });
+
+            // setup an animate button
+            document.getElementById('prev-leg').addEventListener('click', function () {
+                // Reset the counter
+                leg = leg - 1;
+                counter = 0;
+                steps = route.features[leg].geometry.coordinates.length
+                console.log(leg, counter, steps)
+
+                // Restart the animation.
+                animate(counter, leg, steps);
             });
 
             // Start the animation.
-            animate(counter);
+            //animate(counter);
         });
     </script>
 
