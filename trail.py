@@ -145,9 +145,8 @@ def main():
     # I/O files
     # TODO: abstract filenames
     datadir = args.datadir
-    breweries = os.path.join(datadir, "json/breweries.csv")
-    geocoded_breweries_csv = os.path.join(datadir, "geocoded/breweries.csv")
-    geocoded_breweries_json = os.path.join(datadir, "json/breweries.json")
+    breweries = os.path.join(datadir, "csv/breweries.csv")
+    geocoded_breweries = os.path.join(datadir, "json/breweries.json")
     requestfile = os.path.join(datadir, "json/request.json")
     responsefile = os.path.join(datadir, "json/response.json")
 
@@ -176,10 +175,7 @@ def main():
                 json_lines[brewery_name]['address'] = address
                 json_lines[brewery_name]['latitude'] = lat
                 json_lines[brewery_name]['longitude'] = lng
-        with open(geocoded_breweries_csv, 'w') as f:
-            for line in csv_lines:
-                f.write(line)
-        with open(geocoded_breweries_json, 'w') as f:
+        with open(geocoded_breweries, 'w') as f:
             json.dump(json_lines, f, indent=4)
 
     # send routing opt req
@@ -203,18 +199,15 @@ def main():
         default_linger = 1.0 * 3600
 
         # create orders
-        with open(geocoded_breweries_csv, 'r') as csvfile:
-            reader = csv.reader(csvfile, skipinitialspace=True)
+        with open(geocoded_breweries) as jsonfile:
+            brewery_data = json.load(jsonfile)
             locations = []
             orders = []
-            for row in reader:
-                if row[0] != "yes":
-                    lat = float(row[1])
-                    lng = float(row[2])
-                    brewery_name = row[3]
+            for brewery_name, brewery_info in brewery_data.items():
+                if brewery_info['visited'] == "no":
                     locations.append({
-                        "latitude": lat,
-                        "longitude": lng,
+                        "latitude": brewery_info['latitude'],
+                        "longitude": brewery_info['longitude'],
                         "location_id": brewery_name
                     })
                     if "home" not in brewery_name:
@@ -225,7 +218,7 @@ def main():
                         }
                         orders.append(order)
                 else:
-                    logging.warning('Skipping {}'.format(row[3]))
+                    logging.warning('Skipping {}'.format(brewery_name))
 
         # blank payload
         payload = dict()
@@ -355,7 +348,7 @@ def main():
             stop_features = []
 
             # get the saved brewery data
-            with open(geocoded_breweries_json) as f:
+            with open(geocoded_breweries) as f:
                 breweries_data = json.load(f)
 
             # colors to style stops
