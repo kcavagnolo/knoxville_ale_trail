@@ -107,7 +107,7 @@
 
         // get the route geojson
         let route;
-        var url = 'https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/knx-ale-trail.geojson';
+        var url = 'https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/route_0.geojson';
         fetch(url)
             .then((response) => {
                 return response.json();
@@ -143,13 +143,12 @@
         map.on('load', function () {
 
             // debugging
-            console.log("the route json >>> ", route)
+            //console.log("the route json >>> ", route)
 
             // load route geojson
             map.addSource('route', {
-                type: 'geojson',
-                data: route,
-                buffer: 0
+                type: 'vector',
+                url: 'mapbox://kcavagnolo.knx-ale-trail'
             });
 
             // add a point to move along route
@@ -163,6 +162,7 @@
                 'id': 'route',
                 'type': 'line',
                 'source': 'route',
+                'source-layer': 'route_0',
                 'layout': {
                     'visibility': 'visible',
                     'line-join': 'round',
@@ -171,8 +171,7 @@
                 'paint': {
                     'line-color': '#efb63b',
                     'line-width': 2
-                },
-                'filter': ['==', '$type', 'LineString']
+                }
             });
 
             // add the breweries which are Point
@@ -180,6 +179,7 @@
                 'id': 'breweries',
                 'type': 'circle',
                 'source': 'route',
+                'source-layer': 'route_0_stops',
                 'layout': {
                     'visibility': 'visible',
                 },
@@ -200,8 +200,7 @@
                         0.8,
                         1.0
                     ]
-                },
-                'filter': ['==', '$type', 'Point']
+                }
             });
 
             // add the moving point
@@ -358,6 +357,7 @@
                 if (hoverId) {
                     map.setFeatureState({
                         source: 'route',
+                        sourceLayer: 'route_0_stops',
                         id: hoverId
                     }, {
                         hover: false
@@ -366,6 +366,7 @@
                 hoverId = e.features[0].id;
                 map.setFeatureState({
                     source: 'route',
+                    sourceLayer: 'route_0_stops',
                     id: hoverId
                 }, {
                     hover: true
@@ -379,6 +380,7 @@
             if (hoverId) {
                 map.setFeatureState({
                     source: 'route',
+                    sourceLayer: 'route_0_stops',
                     id: hoverId
                 }, {
                     hover: false
@@ -390,6 +392,7 @@
         // When a click event occurs on a feature in the breweries layer, open a popup at the
         // location of the feature, with description HTML from its properties.
         map.on('click', 'breweries', function (e) {
+            console.log("the data >>>", e.features[0])
             var coordinates = e.features[0].geometry.coordinates.slice();
             var properties = e.features[0].properties;
             var description_elements = [
