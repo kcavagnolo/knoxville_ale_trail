@@ -146,9 +146,9 @@ def main():
     # TODO: abstract filenames
     datadir = args.datadir
     breweries = os.path.join(datadir, "csv/breweries.csv")
-    geocoded_breweries = os.path.join(datadir, "json/breweries.json")
-    requestfile = os.path.join(datadir, "json/request.json")
-    responsefile = os.path.join(datadir, "json/response.json")
+    geocoded_breweries = os.path.join(datadir, "json/geocoded_breweries.json")
+    requestfile = os.path.join(datadir, "json/routing_opt_request.json")
+    responsefile = os.path.join(datadir, "json/routing_opt_response.json")
 
     # geocode addresses
     if args.geocode:
