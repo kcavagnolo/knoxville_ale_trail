@@ -143,8 +143,9 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
             logging.exception(e)
             logging.exception(traceback.format_exc())
 
+    # TODO: Abstract master tile filename
     # create a layered master tile
-    outtile = mbtiledir + '/' + 'routes.mbtiles'
+    outtile = mbtiledir + '/' + 'knx-ale-trail.mbtiles'
     logging.debug("Processing combined routes")
     unique_tippecanoe = tippecanoe + ["-o", outtile] + layers + ["-n", "routes"]
     try:
