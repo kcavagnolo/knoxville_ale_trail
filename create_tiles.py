@@ -7,10 +7,10 @@ import glob
 import logging
 import os
 import shutil
+import subprocess
 import sys
 import time
 import traceback
-from subprocess import call
 
 
 class FullPaths(argparse.Action):
@@ -78,10 +78,10 @@ def shapefile_to_geojson(shapesdir, geojsondir):
         try:
             logging.debug(
                 "Converting shapefile to geojson: {}".format(shapefile))
-            call(["ogr2ogr",
-                  "-f", "GeoJSON",
-                  "-progress",
-                  outjson, shapefile])
+            subprocess.call(["ogr2ogr",
+                             "-f", "GeoJSON",
+                             "-progress",
+                             outjson, shapefile])
         except Exception as e:
             logging.exception(e)
             logging.exception(traceback.format_exc())
@@ -106,8 +106,20 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
     geojsonfiles = glob_files(geojsondir, filepattern + '.geojson')
     logging.debug('Found files: {}'.format(geojsonfiles))
 
+    # define base tippecanoe command params
+    attribution = '"<a href="https://github.com/kcavagnolo/knoxville_ale_trail" target="_blank">© kcavagnolo</a>"'
+    tippecanoe = ["tippecanoe",
+                  "--read-parallel",  # https://github.com/mapbox/tippecanoe#parallel-processing-of-input
+                  "-f",  # https://github.com/mapbox/tippecanoe#output-tileset
+                  "-A", attribution,  # https://github.com/mapbox/tippecanoe#tileset-description-and-attribution
+                  "-N", '"routing optimization solution"',
+                  "-Z", "0", "-z", "14",  # https://github.com/mapbox/tippecanoe#zoom-levels
+                  "-pf",  # https://github.com/mapbox/tippecanoe#setting-or-disabling-tile-size-limits
+                  "-q"  # https://github.com/mapbox/tippecanoe#progress-indicator
+                  ]
+
     # iterate over each shapefile
-    combined_geojson = []
+    layers = []
     for geojsonfile in sorted(geojsonfiles):
 
         # check disk space
@@ -115,27 +127,32 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
 
         # create output file name
         outroot = str(os.path.basename(geojsonfile).split('.')[0])
-        combined_geojson.append('-L {}:"{}"'.format(outroot, geojsonfile))
-        outtile = mbtiledir + '/' + outroot + '.mbtiles'
+        layers.extend(['-L', '{}:{}'.format(outroot, geojsonfile)])
+        outtile = os.path.join(mbtiledir, outroot + '.mbtiles')
         logging.debug("Processing {}".format(outroot))
 
         # convert to tile using tippecanoe
+        unique_tippecanoe = tippecanoe + ["-o", outtile,
+                                          geojsonfile,
+                                          "-l", outroot,
+                                          "-n", outroot]
         try:
             logging.debug("Converting geojson to mapbox tile.")
-            call(["tippecanoe",
-                  "--read-parallel",
-                  "-f",
-                  "-o", outtile, geojsonfile,
-                  "-l", outroot,
-                  "-n", outroot,
-                  "-A", "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>© kcavagnolo</a>",
-                  "-N", "routing optimization solution",
-                  "-Z", "0", "-z", "14",
-                  "-pf"])
+            subprocess.call(unique_tippecanoe)
         except Exception as e:
             logging.exception(e)
             logging.exception(traceback.format_exc())
-    print(' '.join(combined_geojson))
+
+    # create a layered master tile
+    outtile = mbtiledir + '/' + 'routes.mbtiles'
+    logging.debug("Processing combined routes")
+    unique_tippecanoe = tippecanoe + ["-o", outtile] + layers + ["-n", "routes"]
+    try:
+        logging.debug("Converting all geojson to layered mapbox tile.")
+        subprocess.call(unique_tippecanoe)
+    except Exception as e:
+        logging.exception(e)
+        logging.exception(traceback.format_exc())
 
 
 def upload_mbtiles(mbtiledir):
@@ -174,10 +191,10 @@ def upload_mbtiles(mbtiledir):
         # upload to mapbox account
         logging.debug("Uploading file Mapbox servers: {}".format(mbtilefile))
         try:
-            call(["mapbox",
-                  "upload",
-                  mapboxuser + "." + outroot,
-                  mbtilefile])
+            subprocess.call(["mapbox",
+                             "upload",
+                             mapboxuser + "." + outroot,
+                             mbtilefile])
         except Exception as e:
             logging.exception(e)
             logging.exception(traceback.format_exc())
