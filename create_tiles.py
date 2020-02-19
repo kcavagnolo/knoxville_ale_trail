@@ -127,7 +127,7 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
                   "-l", outroot,
                   "-n", outroot,
                   "-A", "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>© kcavagnolo</a>",
-                  "-N", "routing optimization solution"
+                  "-N", "routing optimization solution",
                   "-Z", "0", "-z", "14",
                   "-pf"])
         except Exception as e:
