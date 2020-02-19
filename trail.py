@@ -118,6 +118,15 @@ def mapanything_routing(payload):
     return response
 
 
+def write_geojson(outfile, features, bbox, crs, metadata=None):
+    feature_collection = geojson.FeatureCollection(features)
+    feature_collection['metadata'] = metadata
+    feature_collection['bbox'] = bbox
+    feature_collection['crs'] = crs
+    with open(outfile, 'w') as f:
+        json.dump(feature_collection, f, separators=(',', ':'), sort_keys=True)
+
+
 def main():
     # parse command line arguments
     parser = argparse.ArgumentParser(description='Create an optimized route for the Knoxville Ale Trail.')
@@ -141,7 +150,6 @@ def main():
     geocoded_breweries_json = os.path.join(datadir, "raw/breweries.json")
     requestfile = os.path.join(datadir, "raw/request.json")
     responsefile = os.path.join(datadir, "raw/response.json")
-    geojsonfile = os.path.join(datadir, "geojson/knx-ale-trail.geojson")
 
     # geocode addresses
     if args.geocode:
@@ -181,13 +189,13 @@ def main():
         # TODO: abstract shift time input
         # set static shifts
         shifts = [
-            ["2020-01-24 17:00:00", "2020-01-28 00:00:00"]#,
-            #["2020-01-25 15:00:00", "2020-01-26 00:00:00"],
-            #["2020-01-26 13:00:00", "2020-01-26 20:00:00"],
-            #["2020-02-14 17:00:00", "2020-02-15 00:00:00"],
-            #["2020-02-15 15:00:00", "2020-02-16 00:00:00"],
-            #["2020-02-16 13:00:00", "2020-02-17 00:00:00"],
-            #["2020-02-17 13:00:00", "2020-02-17 20:00:00"]
+            ["2020-01-24 17:00:00", "2020-01-28 00:00:00"]  # ,
+            # ["2020-01-25 15:00:00", "2020-01-26 00:00:00"],
+            # ["2020-01-26 13:00:00", "2020-01-26 20:00:00"],
+            # ["2020-02-14 17:00:00", "2020-02-15 00:00:00"],
+            # ["2020-02-15 15:00:00", "2020-02-16 00:00:00"],
+            # ["2020-02-16 13:00:00", "2020-02-17 00:00:00"],
+            # ["2020-02-17 13:00:00", "2020-02-17 20:00:00"]
         ]
         shifts = [[iso_time(shift_time) for shift_time in shift] for shift in shifts]
 
@@ -275,75 +283,114 @@ def main():
         with open(responsefile, 'w') as f:
             json.dump(response, f)
 
-    # decode polyline to GeoJSON
-    # TODO: handle multiple routes instead of one grand route
+    # create an IETF geojson complying to rfc7946
+    # https://tools.ietf.org/html/rfc7946
     if args.geojson:
         logging.info('Writing solution to geojson file')
-        uuid = 0
 
-        # add route polyline
+        # routing opt json
         with open(responsefile) as f:
             response = json.load(f)
-        route_polyline = response['Solution']['routes'][0]['polylines']
-        features = []
-        for n, leg in enumerate(route_polyline):
-            leg = polyline.decode(leg, 5, geojson=True)
 
-            # individual linestring
-            geometry = geojson.LineString(leg)
+        # routing opt solution
+        solution = response['Solution']
 
-            # save as linestrings
-            features.append(geojson.Feature(geometry=geometry, properties={"leg": "leg" + str(n)}, id=uuid))
-            uuid += 1
+        # bounding box
+        # note: bbox = [min Longitude , min Latitude , max Longitude , max Latitude]
+        soln_bbox = solution['bounding_box']
+        bbox = [
+            soln_bbox['min_long'],
+            soln_bbox['min_lat'],
+            soln_bbox['max_long'],
+            soln_bbox['max_lat']
+        ]
 
-        # add breweries
-        with open(geocoded_breweries_json) as f:
-            breweries_data = json.load(f)
-        stops = response['Solution']['routes'][0]['stops']
+        # coordinate reference system
+        # HERE data is WGS84 -- http://www.opengis.net/def/crs/OGC/1.3/CRS84
+        coord_ref_sys = {
+            "type": "name",
+            "properties": {
+                "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+            }
+        }
 
-        # colors to style stops
-        n_stops = len(stops)
-        color_start = Color("red")
-        color_end = Color("violet")
-        colors = list(color_start.range_to(color_end, n_stops))
+        # parse the routes
+        routes = solution['routes']
+        for i, route in enumerate(routes):
 
-        # loop over stops and make geojson
-        for n, stop in enumerate(stops):
-            # make sure ordering of stops in response is correct
-            assert n == stop['position_in_route']
+            # store desirable geo features and remove globally
+            route_polylines = route['polylines']
+            del route['polylines']
+            route_stops = route['stops']
+            del route['stops']
+            route_directions = route['directions']['trip']['legs']
+            del route['directions']
 
-            # capture stop detail
-            loc = stop['location_id']
-            lat = stop['latitude']
-            lng = stop['longitude']
+            # initialize route params
+            routefile = os.path.join(datadir, "geojson/route_{}.geojson".format(i))
+            route_features = []
 
-            # add the original address
-            stop['address'] = breweries_data[loc]['address']
+            # loop over legs in route
+            # note that route is already a nice dict
+            leg_geoid = 0
+            for n, leg in enumerate(route_polylines):
+                # annotate the leg
+                leg_properties = route_directions[n]
+                leg_properties["leg"] = str(n)
 
-            # mapbox compatible details
-            stop['title'] = "trail stop " + str(stop['position_in_route'])
-            stop['description'] = stop['location_id']
-            stop['marker-size'] = "small"
-            stop['marker-symbol'] = "beer"
-            stop['marker-color'] = colors[n].hex_l
+                # decode the polyline
+                leg = polyline.decode(leg, 5, geojson=True)
 
-            # convert point to geom
-            geometry = geojson.Point((lng, lat))
+                # individual linestring
+                geometry = geojson.LineString(leg)
 
-            # encode feature
-            features.append(geojson.Feature(geometry=geometry,
-                                            properties=stop, id=uuid)
-                            )
-            uuid += 1
+                # save as linestrings
+                route_features.append(
+                    geojson.Feature(geometry=geometry, properties=leg_properties, id=leg_geoid))
+                leg_geoid += 1
+            write_geojson(routefile, route_features, bbox, coord_ref_sys, metadata=route)
 
-        # write feature collection to geojson
-        feature_collection = geojson.FeatureCollection(features)
-        with open(geojsonfile, 'w') as f:
-            geojson.dump(feature_collection, f, indent=4, sort_keys=True)
-        with open(geojsonfile, 'r') as f:
-            gdata = json.load(f)
-        with open(geojsonfile, 'w') as f:
-            json.dump(gdata, f, separators=(',', ':'))
+            # initialize stop params
+            stopsfile = os.path.join(datadir, "geojson/route_{}_stops.geojson".format(i))
+            stop_features = []
+
+            # get the saved brewery data
+            with open(geocoded_breweries_json) as f:
+                breweries_data = json.load(f)
+
+            # colors to style stops
+            n_stops = len(route_stops)
+            color_start = Color("red")
+            color_end = Color("violet")
+            colors = list(color_start.range_to(color_end, n_stops))
+
+            # loop over stops
+            # note: a stop is already a nice dict
+            stop_geoid = 0
+            for n, stop in enumerate(route_stops):
+                # make sure ordering of stops in response is correct
+                assert n == stop['position_in_route']
+
+                # add the original address
+                loc = stop['location_id']
+                stop['address'] = breweries_data[loc]['address']
+
+                # mapbox compatible details
+                stop['title'] = "trail stop " + str(stop['position_in_route'])
+                stop['description'] = stop['location_id']
+                stop['marker-size'] = "small"
+                stop['marker-symbol'] = "beer"
+                stop['marker-color'] = colors[n].hex_l
+
+                # convert point to geom
+                lat = stop['latitude']
+                lng = stop['longitude']
+                geometry = geojson.Point((lng, lat))
+
+                # encode feature
+                stop_features.append(geojson.Feature(geometry=geometry, properties=stop, id=stop_geoid))
+                stop_geoid += 1
+            write_geojson(stopsfile, stop_features, bbox, coord_ref_sys, metadata=route)
 
 
 if __name__ == '__main__':

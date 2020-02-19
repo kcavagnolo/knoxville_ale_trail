@@ -17,7 +17,8 @@ class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
 
     def __call__(self, parser, namespace, values, option_string=None):
-        setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
+        setattr(namespace, self.dest, os.path.abspath(
+            os.path.expanduser(values)))
 
 
 def is_dir(dirname):
@@ -33,7 +34,8 @@ def disk_check():
     disk_stat = os.statvfs(os.getcwd())
     disk_free = (disk_stat.f_bsize * disk_stat.f_bavail) / 1.0e9
     if disk_free < 1.0:
-        logging.exception('Less than 1G of disk space. Cowardly refusing to continue.')
+        logging.exception(
+            'Less than 1G of disk space. Cowardly refusing to continue.')
         sys.exit(1)
 
 
@@ -74,7 +76,8 @@ def shapefile_to_geojson(shapesdir, geojsondir):
 
         # convert to geojson; for speed use ogr directly
         try:
-            logging.debug("Converting shapefile to geojson: {}".format(shapefile))
+            logging.debug(
+                "Converting shapefile to geojson: {}".format(shapefile))
             call(["ogr2ogr",
                   "-f", "GeoJSON",
                   "-progress",
@@ -95,11 +98,13 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
 
     # check for tippecanoe
     if shutil.which('tippecanoe') is None:
-        logging.exception('Tippecanoe not detected. Is it installed? https://github.com/mapbox/tippecanoe')
+        logging.exception(
+            'Tippecanoe not detected. Is it installed? https://github.com/mapbox/tippecanoe')
         raise RuntimeError
 
     # get files
     geojsonfiles = glob_files(geojsondir, filepattern + '.geojson')
+    logging.debug('Found files: {}'.format(geojsonfiles))
 
     # iterate over each shapefile
     for geojsonfile in sorted(geojsonfiles):
@@ -109,7 +114,7 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
 
         # create output file name
         outroot = str(os.path.basename(geojsonfile).split('.')[0])
-        outtile = mbtiledir + '/' + outroot + '.mbtile'
+        outtile = mbtiledir + '/' + outroot + '.mbtiles'
         logging.debug("Processing {}".format(outroot))
 
         # convert to tile using tippecanoe
@@ -121,7 +126,8 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
                   "-o", outtile, geojsonfile,
                   "-l", outroot,
                   "-n", outroot,
-                  "-A", "kcavagnolo",
+                  "-A", "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>© kcavagnolo</a>",
+                  "-N", "routing optimization solution"
                   "-Z", "0", "-z", "14",
                   "-pf"])
         except Exception as e:
@@ -138,20 +144,23 @@ def upload_mbtiles(mbtiledir):
 
     # check for mapbox cli
     if shutil.which('mapbox') is None:
-        logging.exception('Mapbox command line interface not detected. Is mapbox cli installed?')
+        logging.exception(
+            'Mapbox command line interface not detected. Is mapbox cli installed?')
         raise RuntimeError
 
     # check for mapbox account credentials
     if os.getenv('MAPBOX_ACCESS_TOKEN') is None:
-        logging.exception('No Mapbox token detected. Is MAPBOX_ACCESS_TOKEN env var set?')
+        logging.exception(
+            'No Mapbox token detected. Is MAPBOX_ACCESS_TOKEN env var set?')
         raise RuntimeError
     mapboxuser = os.getenv('MAPBOX_USERNAME')
     if mapboxuser is None:
-        logging.exception('No Mapbox account detected. Is MAPBOX_USERNAME env var set?')
+        logging.exception(
+            'No Mapbox account detected. Is MAPBOX_USERNAME env var set?')
         raise RuntimeError
 
     # get files
-    mbtilefiles = glob_files(mbtiledir, filepattern + '.mbtile')
+    mbtilefiles = glob_files(mbtiledir, filepattern + '.mbtiles')
 
     # iterate over each tilefile
     for mbtilefile in mbtilefiles:
@@ -179,8 +188,12 @@ def main():
 
     # parse command line arguments
     parser = argparse.ArgumentParser(description='Download HPMS data.')
-    parser.add_argument("-sd", "--shapesdir", help="directory containing shapefiles",
-                        action=FullPaths, type=is_dir, required=False)
+    parser.add_argument(
+        "-sd",
+        "--shapesdir",
+        help="directory containing shapefiles",
+        action=FullPaths, type=is_dir,
+        required=False)
     parser.add_argument("-gd", "--geojsondir", help="directory containing geojson files",
                         action=FullPaths, type=is_dir, required=False)
     parser.add_argument("-td", "--tilesdir", help="directory containing Mapbox tiles",
@@ -193,9 +206,20 @@ def main():
                         action="store_true")
     parser.add_argument("-p", "--pattern", help="match files with this pattern",
                         required=False)
-    parser.add_argument("-v", "--verbose", help="increase output verbosity",
-                        action="store_true")
+    parser.add_argument(
+        '-d', '--debug',
+        help="Print lots of debugging statements",
+        action="store_const", dest="loglevel", const=logging.DEBUG,
+        default=logging.WARNING,
+    )
+    parser.add_argument(
+        '-v', '--verbose',
+        help="Be verbose",
+        action="store_const", dest="loglevel", const=logging.INFO,
+    )
     args = parser.parse_args()
+    # FIX: dynamically changing logging level not working
+    logging.getLogger('').setLevel(level=args.loglevel)
 
     # match file patterns
     global filepattern
@@ -211,7 +235,8 @@ def main():
             except Exception as e:
                 logging.exception(e)
         else:
-            logging.error('One or both of --shapesdir (-sd) and --geojsondir (-gd) are missing.')
+            logging.error(
+                'One or both of --shapesdir (-sd) and --geojsondir (-gd) are missing.')
             sys.exit(1)
 
     # convert geojson to tiles using tippecanoe
@@ -222,7 +247,8 @@ def main():
             except Exception as e:
                 logging.exception(e)
         else:
-            logging.error('One or both of --geojsondir (-gd) and --tilesdir (-td) are missing.')
+            logging.error(
+                'One or both of --geojsondir (-gd) and --tilesdir (-td) are missing.')
             sys.exit(1)
 
     # upload tiles to mapbox
@@ -236,7 +262,7 @@ def main():
 if __name__ == "__main__":
     # setup file logger
     script_name = os.path.splitext(os.path.basename(__file__))[0]
-    logging.basicConfig(level=logging.DEBUG,
+    logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(name)-22s %(levelname)-8s %(message)s',
                         datefmt='%d-%m-%Y %H:%M:%S',
                         filename=script_name + '.log')

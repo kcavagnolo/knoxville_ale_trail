@@ -122,7 +122,6 @@ bumpversion minor --verbose
 - [vaab `colour` library](https://github.com/vaab/colour)
 - [Mapbox](https://www.mapbox.com/about/maps/)
 - [OpenStreetMap](http://www.openstreetmap.org/about/)
-- [Turf.js](https://turfjs.org/)
 
 ## License
 
