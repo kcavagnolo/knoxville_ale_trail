@@ -107,6 +107,7 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
     logging.debug('Found files: {}'.format(geojsonfiles))
 
     # iterate over each shapefile
+    combined_geojson = []
     for geojsonfile in sorted(geojsonfiles):
 
         # check disk space
@@ -114,6 +115,7 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
 
         # create output file name
         outroot = str(os.path.basename(geojsonfile).split('.')[0])
+        combined_geojson.append('-L {}:"{}"'.format(outroot, geojsonfile))
         outtile = mbtiledir + '/' + outroot + '.mbtiles'
         logging.debug("Processing {}".format(outroot))
 
@@ -133,6 +135,7 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
         except Exception as e:
             logging.exception(e)
             logging.exception(traceback.format_exc())
+    print(' '.join(combined_geojson))
 
 
 def upload_mbtiles(mbtiledir):
