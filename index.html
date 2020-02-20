@@ -131,20 +131,6 @@
             showInspectButton: true,
         });
 
-        // get the route geojson
-        let route;
-        var url = 'https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/route_0.geojson';
-        fetch(url)
-            .then((response) => {
-                return response.json();
-            })
-            .then((json) => {
-                route = json;
-            })
-            .catch((err) => {
-                console.log("Err: ", err)
-            });
-
         // A single tracker point that animates along the route.
         // Coordinates are initially set to origin.
         var tracker = {
@@ -206,8 +192,6 @@
         // function to add route layers
         function addRoutes(i, random_color) {
 
-            // assign a random color for this route
-
             // add the route legs as lines
             map.addLayer({
                 'id': 'route_' + i,
@@ -223,7 +207,7 @@
                     'line-color': random_color,
                     'line-width': 2
                 }
-            }, 'settlement-label');
+            });
         }
 
         // function to add stop layers
@@ -256,7 +240,7 @@
                 }
             });
 
-            // Change the cursor to a pointer when the mouse is over the breweries layer.
+            // hovering stops opens popup and changes symbol
             map.on('mouseenter', 'route_' + i + '_stops', function (e) {
 
                 // change cursor to indicator
@@ -287,11 +271,8 @@
                 popup.setLngLat(coordinates)
                     .setHTML(description)
                     .addTo(map);
-            });
 
-            // When the user moves their mouse over the state-fill layer, we'll update the
-            // feature state for the feature under the mouse.
-            map.on('mousemove', 'route_' + i + '_stops', function (e) {
+                // change the symbol color and opacity
                 if (e.features.length > 0) {
                     if (hoverId) {
                         map.setFeatureState({
@@ -313,8 +294,7 @@
                 }
             });
 
-            // When the mouse leaves the state-fill layer, update the feature state of the
-            // previously hovered feature.
+            // no hover reverts state
             map.on('mouseleave', 'route_' + i + '_stops', function () {
                 if (hoverId) {
                     map.setFeatureState({
@@ -356,10 +336,8 @@
                 var layerList = document.getElementById('layerList');
                 layerList.innerHTML = '';
                 Object.keys(inspect.sources).forEach(function (sourceId) {
-                    console.log("Found source:", sourceId)
                     var layerIds = inspect.sources[sourceId];
                     layerIds.forEach(function (layerId) {
-                        console.log("Found layer:", layerId)
                         var item = document.createElement('div');
                         item.innerHTML = '<div style="' +
                             'background:' + inspect.assignLayerColor(layerId) + ';' +
@@ -368,6 +346,24 @@
                     });
                 })
             });
+        }
+
+        // get a route geojson
+        function getRoute(i) {
+            // get the route geojson
+            let route;
+            var url = 'https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/route_${i}.geojson';
+            fetch(url)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((json) => {
+                    route = json;
+                })
+                .catch((err) => {
+                    console.log("Err: ", err)
+                });
+
         }
 
         //function to animate tracker on route
@@ -427,7 +423,6 @@
             // add routes
             setLayers(10);
 
-            console.log("made it")
             // add the moving point
             addTracker();
 
