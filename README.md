@@ -122,6 +122,7 @@ bumpversion minor --verbose
 - [vaab `colour` library](https://github.com/vaab/colour)
 - [Mapbox](https://www.mapbox.com/about/maps/)
 - [OpenStreetMap](http://www.openstreetmap.org/about/)
+- [lukasmartinelli `mapbox-gl-inspect` plugin](https://github.com/lukasmartinelli/mapbox-gl-inspect)
 
 ## License
 

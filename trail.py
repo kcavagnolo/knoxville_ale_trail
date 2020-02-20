@@ -8,6 +8,7 @@ import json
 import logging
 import os
 import re
+import shutil
 import sys
 import time
 import traceback
@@ -23,7 +24,8 @@ class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
 
     def __call__(self, parser, namespace, values, option_string=None):
-        setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
+        setattr(namespace, self.dest, os.path.abspath(
+            os.path.expanduser(values)))
 
 
 def is_dir(dirname):
@@ -70,7 +72,8 @@ def here_geocoder(address):
 
 
 def mapanything_geocoder(address):
-    url = 'https://api.mapanything.io/services/core/geocoding/v2?address={}'.format(address)
+    url = 'https://api.mapanything.io/services/core/geocoding/v2?address={}'.format(
+        address)
     headers = {
         'Accept-Encoding': 'application/gzip',
         'Content-Type': 'application/json',
@@ -78,7 +81,8 @@ def mapanything_geocoder(address):
     }
     lat, lng = 0.0, 0.0
     try:
-        response = requests.request('GET', url, headers=headers, allow_redirects=True)
+        response = requests.request(
+            'GET', url, headers=headers, allow_redirects=True)
         response = response.json()
         if 'data' in response:
             lat = response['data']['position']['lat']
@@ -103,7 +107,8 @@ def mapanything_routing(payload):
         'x-api-key': os.getenv("MAPANYTHING_APIKEY")
     }
     try:
-        response = requests.request('POST', url, headers=headers, data=json.dumps(payload), allow_redirects=True)
+        response = requests.request(
+            'POST', url, headers=headers, data=json.dumps(payload), allow_redirects=True)
         if response.status_code != 200:
             logging.error('Optimization failed')
             msg = response.json()
@@ -129,7 +134,8 @@ def write_geojson(outfile, features, bbox, crs, metadata=None):
 
 def main():
     # parse command line arguments
-    parser = argparse.ArgumentParser(description='Create an optimized route for the Knoxville Ale Trail.')
+    parser = argparse.ArgumentParser(
+        description='Create an optimized route for the Knoxville Ale Trail.')
     parser.add_argument("-d", "--datadir", help="directory containing data",
                         action=FullPaths, type=is_dir, required=True)
     parser.add_argument("--geocode", help="call the geocoder",
@@ -142,8 +148,7 @@ def main():
                         action="store_true")
     args = parser.parse_args()
 
-    # I/O files
-    # TODO: abstract filenames
+    # I/O files -- TODO: abstract filenames
     datadir = args.datadir
     breweries = os.path.join(datadir, "csv/breweries.csv")
     geocoded_breweries = os.path.join(datadir, "json/geocoded_breweries.json")
@@ -185,15 +190,16 @@ def main():
         # TODO: abstract shift time input
         # set static shifts
         shifts = [
-            ["2020-01-24 17:00:00", "2020-01-28 00:00:00"]  # ,
-            # ["2020-01-25 15:00:00", "2020-01-26 00:00:00"],
-            # ["2020-01-26 13:00:00", "2020-01-26 20:00:00"],
-            # ["2020-02-14 17:00:00", "2020-02-15 00:00:00"],
-            # ["2020-02-15 15:00:00", "2020-02-16 00:00:00"],
-            # ["2020-02-16 13:00:00", "2020-02-17 00:00:00"],
-            # ["2020-02-17 13:00:00", "2020-02-17 20:00:00"]
+            ["2020-01-24 17:00:00", "2020-01-25 00:00:00"],
+            ["2020-01-25 15:00:00", "2020-01-26 00:00:00"],
+            ["2020-01-26 13:00:00", "2020-01-26 20:00:00"],
+            ["2020-02-14 17:00:00", "2020-02-15 00:00:00"],
+            ["2020-02-15 15:00:00", "2020-02-16 00:00:00"],
+            ["2020-02-16 13:00:00", "2020-02-17 00:00:00"],
+            ["2020-02-17 13:00:00", "2020-02-17 20:00:00"]
         ]
-        shifts = [[iso_time(shift_time) for shift_time in shift] for shift in shifts]
+        shifts = [[iso_time(shift_time) for shift_time in shift]
+                  for shift in shifts]
 
         # linger times in hours
         default_linger = 1.0 * 3600
@@ -276,10 +282,22 @@ def main():
         with open(responsefile, 'w') as f:
             json.dump(response, f)
 
-    # create an IETF geojson complying to rfc7946
-    # https://tools.ietf.org/html/rfc7946
+    # create an IETF geojson complying to rfc7946: https://tools.ietf.org/html/rfc7946
     if args.geojson:
         logging.info('Writing solution to geojson file')
+
+        # empty the geojson dir
+        folder = os.path.join(datadir, 'geojson')
+        for filename in os.listdir(folder):
+            file_path = os.path.join(folder, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print('Failed to delete %s. Reason: %s' % (file_path, e))
+            logging.info('Removed {}'.format(filename))
 
         # routing opt json
         with open(responsefile) as f:
@@ -309,7 +327,16 @@ def main():
 
         # parse the routes
         routes = solution['routes']
-        for i, route in enumerate(routes):
+
+        # due to empty routes, enumerate can get out of sync
+        route_num = 0
+        for route in routes:
+
+            # check for no where routes
+            if route['route_distance'] == 0:
+                logging.warning('Empty route; unused shift {}, skipping'.format(route['shift_id']))
+                route_num += 1
+                continue
 
             # store desirable geo features and remove globally
             route_polylines = route['polylines']
@@ -320,7 +347,8 @@ def main():
             del route['directions']
 
             # initialize route params
-            routefile = os.path.join(datadir, "geojson/route_{}.geojson".format(i))
+            routefile = os.path.join(
+                datadir, "geojson/route_{}.geojson".format(route_num))
             route_features = []
 
             # loop over legs in route
@@ -341,10 +369,12 @@ def main():
                 route_features.append(
                     geojson.Feature(geometry=geometry, properties=leg_properties, id=leg_geoid))
                 leg_geoid += 1
-            write_geojson(routefile, route_features, bbox, coord_ref_sys, metadata=route)
+            write_geojson(routefile, route_features, bbox,
+                          coord_ref_sys, metadata=route)
 
             # initialize stop params
-            stopsfile = os.path.join(datadir, "geojson/route_{}_stops.geojson".format(i))
+            stopsfile = os.path.join(
+                datadir, "geojson/route_{}_stops.geojson".format(route_num))
             stop_features = []
 
             # get the saved brewery data
@@ -369,7 +399,7 @@ def main():
                 stop['address'] = breweries_data[loc]['address']
 
                 # mapbox compatible details
-                stop['title'] = "trail stop " + str(stop['position_in_route'])
+                stop['title'] = "route {} stop {}".format(route_num, str(stop['position_in_route']))
                 stop['description'] = stop['location_id']
                 stop['marker-size'] = "small"
                 stop['marker-symbol'] = "beer"
@@ -381,9 +411,14 @@ def main():
                 geometry = geojson.Point((lng, lat))
 
                 # encode feature
-                stop_features.append(geojson.Feature(geometry=geometry, properties=stop, id=stop_geoid))
+                stop_features.append(geojson.Feature(
+                    geometry=geometry, properties=stop, id=stop_geoid))
                 stop_geoid += 1
-            write_geojson(stopsfile, stop_features, bbox, coord_ref_sys, metadata=route)
+            write_geojson(stopsfile, stop_features, bbox,
+                          coord_ref_sys, metadata=route)
+
+        # increment routenum
+        route_num += 1
 
 
 if __name__ == '__main__':

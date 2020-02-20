@@ -12,6 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
+    <script src='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.js'></script>
+    <link href='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.css' rel='stylesheet' />
     <style>
         body {
             margin: 0;
@@ -47,13 +49,23 @@
             background-color: #efb63b;
         }
 
-        .mapboxgl-popup {
-            max-width: 200px;
+        .mapboxgl-popup-content {
+            font-family: 'Open Sans', sans-serif;
         }
 
-        .mapboxgl-popup-content {
-            text-align: center;
-            font-family: 'Open Sans', sans-serif;
+        #layerList {
+            position: absolute;
+            top: 300px;
+            right: 0;
+            bottom: 0;
+            width: 240px;
+            overflow: auto;
+        }
+
+        #layerList div div {
+            width: 15px;
+            height: 15px;
+            display: inline-block;
         }
     </style>
 </head>
@@ -70,6 +82,10 @@
         <button id="prev-leg">Prev</button>
     </div>
 
+    <!-- debugging layers
+    <div id="layerList"></div>
+    -->
+
     <!-- mapbox styling -->
     <script>
         mapboxgl.accessToken = 'pk.eyJ1Ijoia2NhdmFnbm9sbyIsImEiOiJjamtvOWExZHYydm1xM3BreG9pb3hza3J6In0.yKhLQH7NxC9rbsrCpilLQw';
@@ -78,13 +94,17 @@
         // set an origin
         var origin = [-83.924137, 35.961671]
 
+        // initialize number of layers
+        var num_layers = 0;
+
         // load mapbox gl
         var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/dark-v10?optimize=true',
             center: origin,
             zoom: 10,
-            customAttribution: "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>© kcavagnolo</a>"
+            customAttribution: "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>© kcavagnolo</a>",
+            failIfMajorPerformanceCaveat: true
         });
 
         // add geocoder
@@ -105,6 +125,12 @@
         // Add zoom and rotation controls to the map.
         map.addControl(new mapboxgl.NavigationControl());
 
+        // add map inspection
+        var inspect = new MapboxInspect({
+            showInspectMap: false,
+            showInspectButton: true,
+        });
+
         // get the route geojson
         let route;
         var url = 'https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/route_0.geojson';
@@ -119,9 +145,9 @@
                 console.log("Err: ", err)
             });
 
-        // A single point that animates along the route.
+        // A single tracker point that animates along the route.
         // Coordinates are initially set to origin.
-        var point = {
+        var tracker = {
             'type': 'FeatureCollection',
             'features': [{
                 'type': 'Feature',
@@ -139,47 +165,75 @@
         var leg = 0;
         var hoverId = null;
 
-        // load the map
-        map.on('load', function () {
+        // Create a popup, but don't add it to the map yet.
+        var popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+        });
 
-            // debugging
-            //console.log("the route json >>> ", route)
-
-            // load route geojson
-            map.addSource('route', {
+        // function to add sources
+        function addSources() {
+            // load route tiles
+            map.addSource('routes_source', {
                 type: 'vector',
                 url: 'mapbox://kcavagnolo.knx-ale-trail'
             });
 
-            // add a point to move along route
-            map.addSource('point', {
+            // add a tracking point to move along route
+            map.addSource('tracker_source', {
                 'type': 'geojson',
-                'data': point
+                'data': tracker
+            });
+        }
+
+        // add the tracker
+        function addTracker() {
+            map.addLayer({
+                'id': 'tracker',
+                'source': 'tracker_source',
+                'type': 'symbol',
+                'layout': {
+                    'icon-image': 'beer-15',
+                    'icon-rotate': ['get', 'bearing'],
+                    'icon-rotation-alignment': 'map',
+                    'icon-allow-overlap': true,
+                    'icon-ignore-placement': true
+                }
             });
 
-            // add the route legs which are LineString
+        }
+
+        // function to add route layers
+        function addRoutes(i, random_color) {
+
+            // assign a random color for this route
+
+            // add the route legs as lines
             map.addLayer({
-                'id': 'route',
+                'id': 'route_' + i,
                 'type': 'line',
-                'source': 'route',
-                'source-layer': 'route_0',
+                'source': 'routes_source',
+                'source-layer': 'route_' + i,
                 'layout': {
                     'visibility': 'visible',
                     'line-join': 'round',
                     'line-cap': 'round'
                 },
                 'paint': {
-                    'line-color': '#efb63b',
+                    'line-color': random_color,
                     'line-width': 2
                 }
-            });
+            }, 'settlement-label');
+        }
 
-            // add the breweries which are Point
+        // function to add stop layers
+        function addStops(i, random_color) {
+            // add the route stops as circles
             map.addLayer({
-                'id': 'breweries',
+                'id': 'route_' + i + '_stops',
                 'type': 'circle',
-                'source': 'route',
-                'source-layer': 'route_0_stops',
+                'source': 'routes_source',
+                'source-layer': 'route_' + i + '_stops',
                 'layout': {
                     'visibility': 'visible',
                 },
@@ -188,10 +242,9 @@
                     'circle-color': [
                         'case',
                         ['boolean', ['feature-state', 'hover'], false],
-                        "#efb63b",
-                        "#006885"
+                        "#ffffff",
+                        random_color
                     ],
-                    //'#006885',
                     'circle-stroke-color': '#ffffff',
                     'circle-stroke-width': 1,
                     'circle-opacity': [
@@ -203,68 +256,188 @@
                 }
             });
 
-            // add the moving point
-            map.addLayer({
-                'id': 'point',
-                'source': 'point',
-                'type': 'symbol',
-                'layout': {
-                    'icon-image': 'beer-15',
-                    'icon-rotate': ['get', 'bearing'],
-                    'icon-rotation-alignment': 'map',
-                    'icon-allow-overlap': true,
-                    'icon-ignore-placement': true
+            // Change the cursor to a pointer when the mouse is over the breweries layer.
+            map.on('mouseenter', 'route_' + i + '_stops', function (e) {
+
+                // change cursor to indicator
+                map.getCanvas().style.cursor = 'pointer';
+
+                // set the html description
+                console.log("the data >>>", e.features[0])
+                var coordinates = e.features[0].geometry.coordinates.slice();
+                var properties = e.features[0].properties;
+                var layer = e.features[0].layer;
+                var description_elements = [
+                    layer.id,
+                    properties.address,
+                    "arrive: " + new Date(properties.arrival_time).toLocaleString(),
+                    "depart: " + new Date(properties.departure_time).toLocaleString()
+                ]
+                var brewery = properties.location_id.toUpperCase();
+                var description = '<h3>' + brewery + '</h3><p>' + description_elements.join('<br>') + '</p>'
+
+                // Ensure that if the map is zoomed out such that multiple
+                // copies of the feature are visible, the popup appears
+                // over the copy being pointed to.
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+
+                // load the hover popup
+                popup.setLngLat(coordinates)
+                    .setHTML(description)
+                    .addTo(map);
+            });
+
+            // When the user moves their mouse over the state-fill layer, we'll update the
+            // feature state for the feature under the mouse.
+            map.on('mousemove', 'route_' + i + '_stops', function (e) {
+                if (e.features.length > 0) {
+                    if (hoverId) {
+                        map.setFeatureState({
+                            source: 'routes_source',
+                            sourceLayer: 'route_' + i + '_stops',
+                            id: hoverId
+                        }, {
+                            hover: false
+                        });
+                    }
+                    hoverId = e.features[0].id;
+                    map.setFeatureState({
+                        source: 'routes_source',
+                        sourceLayer: 'route_' + i + '_stops',
+                        id: hoverId
+                    }, {
+                        hover: true
+                    });
                 }
             });
 
-            // collect features
-            /* route.features.forEach(function (feature) {
-                console.log(feature.properties)
-            }); */
-
-            //function to animate a point on route
-            function animate() {
-
-                console.log("leg: " + leg, "counter: " + counter, "step: " + steps)
-
-                // Update point geometry to a new position based on counter denoting
-                // the index to access the arc.
-                point.features[0].geometry.coordinates =
-                    route.features[leg].geometry.coordinates[counter];
-
-                // Calculate the bearing to ensure the icon is rotated to match the route arc
-                // The bearing is calculate between the current point and the next point, except
-                // at the end of the arc use the previous point and the current point
-                /* point.features[0].properties.bearing = turf.bearing(
-                    turf.point(
-                        route.features[leg].geometry.coordinates[
-                            counter >= steps ? counter - 1 : counter
-                        ]
-                    ),
-                    turf.point(
-                        route.features[leg].geometry.coordinates[
-                            counter >= steps ? counter : counter + 1
-                        ]
-                    )
-                ); */
-
-                // Update the source with this new data.
-                map.getSource('point').setData(point);
-
-                // Request the next frame of animation so long the end has not been reached.
-                counter = counter + 1;
-                if (counter < steps) {
-                    requestAnimationFrame(animate);
+            // When the mouse leaves the state-fill layer, update the feature state of the
+            // previously hovered feature.
+            map.on('mouseleave', 'route_' + i + '_stops', function () {
+                if (hoverId) {
+                    map.setFeatureState({
+                        source: 'routes_source',
+                        sourceLayer: 'route_' + i + '_stops',
+                        id: hoverId
+                    }, {
+                        hover: false
+                    });
                 }
+                hoverId = null;
+
+                // change cursor back to pointer
+                map.getCanvas().style.cursor = '';
+
+                // remove the hover popup
+                popup.remove();
+            });
+        }
+
+        // function to iteratively add as many layers as in tileset
+        function setLayers(new_num_layers) {
+            for (let i = new_num_layers; i < num_layers; ++i) {
+                map.removeLayer('route_' + i);
+                map.removeLayer('route_' + i + '_stops');
             }
+            for (let i = num_layers; i < new_num_layers; ++i) {
+                var random_color = '#' + Math.random().toString(16).slice(2, 8).toUpperCase();
+                addRoutes(i, random_color);
+                addStops(i, random_color);
+            }
+            num_layers = new_num_layers;
+        };
+
+        // function to add map inspection
+        function addInspection() {
+            map.addControl(inspect);
+            map.on('styledata', function () {
+                var layerList = document.getElementById('layerList');
+                layerList.innerHTML = '';
+                Object.keys(inspect.sources).forEach(function (sourceId) {
+                    console.log("Found source:", sourceId)
+                    var layerIds = inspect.sources[sourceId];
+                    layerIds.forEach(function (layerId) {
+                        console.log("Found layer:", layerId)
+                        var item = document.createElement('div');
+                        item.innerHTML = '<div style="' +
+                            'background:' + inspect.assignLayerColor(layerId) + ';' +
+                            '"></div> ' + layerId;
+                        layerList.appendChild(item);
+                    });
+                })
+            });
+        }
+
+        //function to animate tracker on route
+        function animate() {
+
+            // debugging
+            //console.log("leg: " + leg, "counter: " + counter, "step: " + steps)
+
+            // Update tracker geometry to a new position based on counter denoting
+            // the index to access the arc.
+            tracker.features[0].geometry.coordinates =
+                route.features[leg].geometry.coordinates[counter];
+
+            // Calculate the bearing to ensure the icon is rotated to match the route arc
+            // The bearing is calculate between the current point and the next point, except
+            // at the end of the arc use the previous point and the current point
+            /* tracker.features[0].properties.bearing = turf.bearing(
+                turf.point(
+                    route.features[leg].geometry.coordinates[
+                        counter >= steps ? counter - 1 : counter
+                    ]
+                ),
+                turf.point(
+                    route.features[leg].geometry.coordinates[
+                        counter >= steps ? counter : counter + 1
+                    ]
+                )
+            ); */
+
+            // Update the source with this new data.
+            map.getSource('tracker_source').setData(tracker);
+
+            // Request the next frame of animation so long the end has not been reached.
+            counter = counter + 1;
+            if (counter < steps) {
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // count number of layers
+        function count_layers() {
+            Object.keys(inspect.sources).forEach(function (sourceId) {
+                console.log("Found source:", sourceId)
+                var layerIds = inspect.sources[sourceId];
+                layerIds.forEach(function (layerId) {
+                    console.log("Found layer:", layerId)
+                });
+            })
+        }
+
+        // load the map
+        map.on('load', function () {
+
+            // add sources
+            addSources();
+
+            // add routes
+            setLayers(10);
+
+            console.log("made it")
+            // add the moving point
+            addTracker();
 
             // setup an animate button
             document.getElementById('reset-animation').addEventListener('click', function () {
-                // Set the coordinates of the original point back to origin
-                point.features[0].geometry.coordinates = [0, 0];
+                // Set the coordinates of the original tracker back to origin
+                tracker.features[0].geometry.coordinates = [0, 0];
 
                 // Update the source layer
-                map.getSource('point').setData(point);
+                map.getSource('tracker_source').setData(tracker);
 
                 // Reset the counter
                 leg = 0;
@@ -338,82 +511,14 @@
                 animate(counter, leg, steps);
             });
 
-        });
+            // debugging
+            // addInspection();
+            // console.log("the route json >>> ", route)
+            /* route.features.forEach(function (feature) {
+                console.log(feature.properties)
+            }); */
 
-        // Change the cursor to a pointer when the mouse is over the breweries layer.
-        map.on('mouseenter', 'breweries', function () {
-            map.getCanvas().style.cursor = 'pointer';
-        });
 
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'breweries', function () {
-            map.getCanvas().style.cursor = '';
-        });
-
-        // When the user moves their mouse over the state-fill layer, we'll update the
-        // feature state for the feature under the mouse.
-        map.on('mousemove', 'breweries', function (e) {
-            if (e.features.length > 0) {
-                if (hoverId) {
-                    map.setFeatureState({
-                        source: 'route',
-                        sourceLayer: 'route_0_stops',
-                        id: hoverId
-                    }, {
-                        hover: false
-                    });
-                }
-                hoverId = e.features[0].id;
-                map.setFeatureState({
-                    source: 'route',
-                    sourceLayer: 'route_0_stops',
-                    id: hoverId
-                }, {
-                    hover: true
-                });
-            }
-        });
-
-        // When the mouse leaves the state-fill layer, update the feature state of the
-        // previously hovered feature.
-        map.on('mouseleave', 'breweries', function () {
-            if (hoverId) {
-                map.setFeatureState({
-                    source: 'route',
-                    sourceLayer: 'route_0_stops',
-                    id: hoverId
-                }, {
-                    hover: false
-                });
-            }
-            hoverId = null;
-        });
-
-        // When a click event occurs on a feature in the breweries layer, open a popup at the
-        // location of the feature, with description HTML from its properties.
-        map.on('click', 'breweries', function (e) {
-            console.log("the data >>>", e.features[0])
-            var coordinates = e.features[0].geometry.coordinates.slice();
-            var properties = e.features[0].properties;
-            var description_elements = [
-                properties.address,
-                "arrive: " + new Date(properties.arrival_time).toLocaleString(),
-                "depart: " + new Date(properties.departure_time).toLocaleString()
-            ]
-            var brewery = properties.location_id.toUpperCase();
-            var description = '<h3>' + brewery + '</h3><p>' + description_elements.join('<br>') + '</p>'
-
-            // Ensure that if the map is zoomed out such that multiple
-            // copies of the feature are visible, the popup appears
-            // over the copy being pointed to.
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-            }
-
-            new mapboxgl.Popup()
-                .setLngLat(coordinates)
-                .setHTML(description)
-                .addTo(map);
         });
     </script>
 
