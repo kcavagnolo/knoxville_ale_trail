@@ -296,7 +296,7 @@ def main():
                 elif os.path.isdir(file_path):
                     shutil.rmtree(file_path)
             except Exception as e:
-                print('Failed to delete %s. Reason: %s' % (file_path, e))
+                print('Failed to delete {}. Reason: {}'.format(file_path, e))
             logging.info('Removed {}'.format(filename))
 
         # routing opt json
@@ -335,7 +335,6 @@ def main():
             # check for no where routes
             if route['route_distance'] == 0:
                 logging.warning('Empty route; unused shift {}, skipping'.format(route['shift_id']))
-                route_num += 1
                 continue
 
             # store desirable geo features and remove globally
@@ -417,8 +416,8 @@ def main():
             write_geojson(stopsfile, stop_features, bbox,
                           coord_ref_sys, metadata=route)
 
-        # increment routenum
-        route_num += 1
+            # increment routenum
+            route_num += 1
 
 
 if __name__ == '__main__':
