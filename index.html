@@ -76,7 +76,7 @@
     <div id="map"></div>
 
     <!-- animation controls -->
-    <div class="overlay">
+    <div id="menu" class="overlay">
         <button id="reset-animation">Start</button>
         <button id="next-leg">Next</button>
         <button id="prev-leg">Prev</button>
@@ -192,12 +192,15 @@
         // function to add route layers
         function addRoutes(i, random_color) {
 
+            // set the id
+            var routeLayerId = 'route_' + i;
+
             // add the route legs as lines
             map.addLayer({
-                'id': 'route_' + i,
+                'id': routeLayerId,
                 'type': 'line',
                 'source': 'routes_source',
-                'source-layer': 'route_' + i,
+                'source-layer': routeLayerId,
                 'layout': {
                     'visibility': 'visible',
                     'line-join': 'round',
@@ -208,16 +211,23 @@
                     'line-width': 2
                 }
             });
+
+            // make visibility toggle
+            toggleVisibility(routeLayerId);
         }
 
         // function to add stop layers
         function addStops(i, random_color) {
+
+            // set the id
+            var stopLayerId = 'route_' + i + '_stops';
+
             // add the route stops as circles
             map.addLayer({
-                'id': 'route_' + i + '_stops',
+                'id': stopLayerId,
                 'type': 'circle',
                 'source': 'routes_source',
-                'source-layer': 'route_' + i + '_stops',
+                'source-layer': stopLayerId,
                 'layout': {
                     'visibility': 'visible',
                 },
@@ -241,7 +251,7 @@
             });
 
             // hovering stops opens popup and changes symbol
-            map.on('mouseenter', 'route_' + i + '_stops', function (e) {
+            map.on('mouseenter', stopLayerId, function (e) {
 
                 // change cursor to indicator
                 map.getCanvas().style.cursor = 'pointer';
@@ -277,7 +287,7 @@
                     if (hoverId) {
                         map.setFeatureState({
                             source: 'routes_source',
-                            sourceLayer: 'route_' + i + '_stops',
+                            sourceLayer: stopLayerId,
                             id: hoverId
                         }, {
                             hover: false
@@ -286,7 +296,7 @@
                     hoverId = e.features[0].id;
                     map.setFeatureState({
                         source: 'routes_source',
-                        sourceLayer: 'route_' + i + '_stops',
+                        sourceLayer: stopLayerId,
                         id: hoverId
                     }, {
                         hover: true
@@ -295,11 +305,11 @@
             });
 
             // no hover reverts state
-            map.on('mouseleave', 'route_' + i + '_stops', function () {
+            map.on('mouseleave', stopLayerId, function () {
                 if (hoverId) {
                     map.setFeatureState({
                         source: 'routes_source',
-                        sourceLayer: 'route_' + i + '_stops',
+                        sourceLayer: stopLayerId,
                         id: hoverId
                     }, {
                         hover: false
@@ -313,6 +323,38 @@
                 // remove the hover popup
                 popup.remove();
             });
+
+            // make visibility toggle
+            toggleVisibility(stopLayerId);
+
+        }
+
+        // toggle layer visibility
+        function toggleVisibility(layerId) {
+
+            var link = document.createElement('a');
+            link.href = '#';
+            link.className = 'active';
+            link.textContent = layerId;
+
+            link.onclick = function (e) {
+                var clickedLayer = this.textContent;
+                e.preventDefault();
+                e.stopPropagation();
+
+                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                }
+            };
+
+            var layers = document.getElementById('menu');
+            layers.appendChild(link);
         }
 
         // function to iteratively add as many layers as in tileset
@@ -421,7 +463,8 @@
             addSources();
 
             // add routes
-            setLayers(10);
+            numRoutes = 4;
+            setLayers(numRoutes);
 
             // add the moving point
             addTracker();
