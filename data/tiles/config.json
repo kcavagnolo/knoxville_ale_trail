@@ -13,9 +13,6 @@
         },
         "osm-bright": {
             "style": "osm-bright/style.json"
-        },
-        "blueprint": {
-            "style": "blueprint.json"
         }
     },
     "data": {

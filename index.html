@@ -33,13 +33,14 @@
             left: 10px;
         }
 
+        /* TOOD: Make button color same as each route */
         .overlay button {
             font: 600 12px/20px 'Open Sans', sans-serif;
             background-color: #006885;
             color: #fff;
-            display: inline-block;
-            margin: 0;
-            padding: 10px 20px;
+            display: block;
+            margin: 5px;
+            padding: 5px 10px;
             border: none;
             cursor: pointer;
             border-radius: 3px;
@@ -77,9 +78,9 @@
 
     <!-- animation controls -->
     <div id="menu" class="overlay">
-        <button id="reset-animation">Start</button>
+        <!-- <button id="reset-animation">Start</button>
         <button id="next-leg">Next</button>
-        <button id="prev-leg">Prev</button>
+        <button id="prev-leg">Prev</button> -->
     </div>
 
     <!-- debugging layers
@@ -232,7 +233,7 @@
                     'visibility': 'visible',
                 },
                 'paint': {
-                    'circle-radius': 8,
+                    'circle-radius': 6,
                     'circle-color': [
                         'case',
                         ['boolean', ['feature-state', 'hover'], false],
@@ -326,18 +327,20 @@
 
             // make visibility toggle
             toggleVisibility(stopLayerId);
-
         }
 
         // toggle layer visibility
         function toggleVisibility(layerId) {
 
-            var link = document.createElement('a');
-            link.href = '#';
-            link.className = 'active';
-            link.textContent = layerId;
+            // TODO: Give buttons an obvious name
+            // create a clickable button
+            var button = document.createElement('button');
+            button.id = layerId + "_toggle";
+            button.className = 'active';
+            button.textContent = layerId;
 
-            link.onclick = function (e) {
+            // toggle visibility when clicked
+            button.onclick = function (e) {
                 var clickedLayer = this.textContent;
                 e.preventDefault();
                 e.stopPropagation();
@@ -353,8 +356,9 @@
                 }
             };
 
+            // add button to menu div
             var layers = document.getElementById('menu');
-            layers.appendChild(link);
+            layers.appendChild(button);
         }
 
         // function to iteratively add as many layers as in tileset
@@ -364,6 +368,7 @@
                 map.removeLayer('route_' + i + '_stops');
             }
             for (let i = num_layers; i < new_num_layers; ++i) {
+                // TODO: change random color to... not random
                 var random_color = '#' + Math.random().toString(16).slice(2, 8).toUpperCase();
                 addRoutes(i, random_color);
                 addStops(i, random_color);
@@ -408,7 +413,7 @@
 
         }
 
-        //function to animate tracker on route
+        // function to animate tracker on route
         function animate() {
 
             // debugging
@@ -445,31 +450,8 @@
             }
         }
 
-        // count number of layers
-        function count_layers() {
-            Object.keys(inspect.sources).forEach(function (sourceId) {
-                console.log("Found source:", sourceId)
-                var layerIds = inspect.sources[sourceId];
-                layerIds.forEach(function (layerId) {
-                    console.log("Found layer:", layerId)
-                });
-            })
-        }
-
-        // load the map
-        map.on('load', function () {
-
-            // add sources
-            addSources();
-
-            // add routes
-            numRoutes = 4;
-            setLayers(numRoutes);
-
-            // add the moving point
-            addTracker();
-
-            // setup an animate button
+        // function to reset animation
+        function animateResetRoute() {
             document.getElementById('reset-animation').addEventListener('click', function () {
                 // Set the coordinates of the original tracker back to origin
                 tracker.features[0].geometry.coordinates = [0, 0];
@@ -498,8 +480,10 @@
                 // Restart the animation.
                 animate(counter, leg, steps);
             });
+        }
 
-            // setup an animate button
+        // function to start next route leg animation
+        function animateNextLeg() {
             document.getElementById('next-leg').addEventListener('click', function () {
 
                 // Reset the counter
@@ -525,7 +509,10 @@
                 animate(counter, leg, steps)
             });
 
-            // setup an animate button
+        }
+
+        // function to start previous route leg animation
+        function animatePreviousLeg() {
             document.getElementById('prev-leg').addEventListener('click', function () {
                 // Reset the counter
                 leg = leg - 1;
@@ -549,13 +536,41 @@
                 animate(counter, leg, steps);
             });
 
-            // debugging
-            // addInspection();
-            // console.log("the route json >>> ", route)
-            /* route.features.forEach(function (feature) {
+        }
+
+        // count number of layers
+        function count_layers() {
+            Object.keys(inspect.sources).forEach(function (sourceId) {
+                console.log("Found source:", sourceId)
+                var layerIds = inspect.sources[sourceId];
+                layerIds.forEach(function (layerId) {
+                    console.log("Found layer:", layerId)
+                });
+            })
+        }
+
+        // load the map
+        map.on('load', function () {
+
+            // add sources
+            addSources();
+
+            // add routes
+            numRoutes = 4;
+            setLayers(numRoutes);
+
+            // add animation and controls
+            /* addTracker();
+               animateResetRoute();
+               animateNextLeg();
+               animatePreviousLeg(); */
+
+            // for debugging
+            /* addInspection();
+               console.log("the route json >>> ", route)
+               route.features.forEach(function (feature) {
                 console.log(feature.properties)
             }); */
-
 
         });
     </script>

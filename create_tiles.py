@@ -107,15 +107,18 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
     logging.debug('Found files: {}'.format(geojsonfiles))
 
     # define base tippecanoe command params
-    attribution = '"<a href="https://github.com/kcavagnolo/knoxville_ale_trail" target="_blank">© kcavagnolo</a>"'
+    attribution = '<a href="https://github.com/kcavagnolo/knoxville_ale_trail" target="_blank">© kcavagnolo</a>'
     tippecanoe = ["tippecanoe",
                   "--read-parallel",  # https://github.com/mapbox/tippecanoe#parallel-processing-of-input
                   "-f",  # https://github.com/mapbox/tippecanoe#output-tileset
-                  "-A", attribution,  # https://github.com/mapbox/tippecanoe#tileset-description-and-attribution
+                  #"-A", attribution,  # https://github.com/mapbox/tippecanoe#tileset-description-and-attribution
                   "-N", '"routing optimization solution"',
                   "-Z", "0", "-z", "14",  # https://github.com/mapbox/tippecanoe#zoom-levels
+                  "-ah",  # https://github.com/mapbox/tippecanoe#reordering-features-within-each-tile
+                  "-ai",  # https://github.com/mapbox/tippecanoe#adding-calculated-attributes
                   "-pf",  # https://github.com/mapbox/tippecanoe#setting-or-disabling-tile-size-limits
-                  "-q"  # https://github.com/mapbox/tippecanoe#progress-indicator
+                  "-pk", 
+                  "-Q"  # https://github.com/mapbox/tippecanoe#progress-indicator
                   ]
 
     # iterate over each shapefile
