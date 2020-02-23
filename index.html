@@ -214,7 +214,7 @@
             });
 
             // make visibility toggle
-            toggleVisibility(routeLayerId);
+            toggleVisibility(routeLayerId, random_color);
         }
 
         // function to add stop layers
@@ -326,11 +326,11 @@
             });
 
             // make visibility toggle
-            toggleVisibility(stopLayerId);
+            toggleVisibility(stopLayerId, random_color);
         }
 
         // toggle layer visibility
-        function toggleVisibility(layerId) {
+        function toggleVisibility(layerId, random_color) {
 
             // TODO: Give buttons an obvious name
             // create a clickable button
@@ -338,23 +338,39 @@
             button.id = layerId + "_toggle";
             button.className = 'active';
             button.textContent = layerId;
+            button.style.opacity = 1.0;
+            button.style.background = random_color;
 
             // toggle visibility when clicked
             button.onclick = function (e) {
                 var clickedLayer = this.textContent;
                 e.preventDefault();
                 e.stopPropagation();
-
                 var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-
+                var target = document.getElementById(button.id);
                 if (visibility === 'visible') {
                     map.setLayoutProperty(clickedLayer, 'visibility', 'none');
                     this.className = '';
+                    target.style.background = '#ffffff';
                 } else {
                     this.className = 'active';
                     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                    target.style.background = random_color;
                 }
+                console.log(target);
             };
+
+            // change button color to be that of route
+            /* var style = document.createElement('style');
+            var button_custom = `#${button.id} { background: ${random_color}!important; }` +
+                `#${button.id}:hover { opacity: 0.5!important; }` +
+                `#${button.id}:active { background: #fff; opacity: 0.5!important; }`;
+            if (style.styleSheet) {
+                style.styleSheet.cssText = button_custom;
+            } else {
+                style.appendChild(document.createTextNode(button_custom));
+            }
+            document.getElementsByTagName('head')[0].appendChild(style); */
 
             // add button to menu div
             var layers = document.getElementById('menu');
