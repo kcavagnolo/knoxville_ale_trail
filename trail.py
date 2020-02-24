@@ -6,6 +6,7 @@ import csv
 import datetime
 import json
 import logging
+import math
 import os
 import re
 import shutil
@@ -15,6 +16,7 @@ import traceback
 
 import geojson
 import polyline
+import pyproj
 import requests
 from colour import Color
 from tqdm import tqdm
@@ -130,6 +132,15 @@ def write_geojson(outfile, features, bbox, crs, metadata=None):
     feature_collection['crs'] = crs
     with open(outfile, 'w') as f:
         json.dump(feature_collection, f, separators=(',', ':'), sort_keys=True)
+
+
+def degrees_to_cardinal(d):
+    dirs = ['N', 'NbE', 'NNE', 'NEbN', 'NE', 'NEbE', 'ENE', 'EbN',
+            'E', 'EbS', 'ESE', 'SEbE', 'SE', 'SEbS', 'SSE', 'SbE',
+            'S', 'SbW', 'SSW', 'SWbS', 'SW', 'SWbW', 'WSW', 'WbS',
+            'W', 'WbN', 'WNW', 'NWbW', 'NW', 'NWbN', 'NNW', 'NbW']
+    ix = round(d / (360. / len(dirs)))
+    return dirs[ix % len(dirs)]
 
 
 def main():
@@ -306,8 +317,7 @@ def main():
         # routing opt solution
         solution = response['Solution']
 
-        # bounding box
-        # note: bbox = [min Longitude , min Latitude , max Longitude , max Latitude]
+        # bounding box; note: bbox = [min Longitude , min Latitude , max Longitude , max Latitude]
         soln_bbox = solution['bounding_box']
         bbox = [
             soln_bbox['min_long'],
@@ -316,8 +326,7 @@ def main():
             soln_bbox['max_lat']
         ]
 
-        # coordinate reference system
-        # HERE data is WGS84 -- http://www.opengis.net/def/crs/OGC/1.3/CRS84
+        # coordinate reference system; HERE data is WGS84 -- http://www.opengis.net/def/crs/OGC/1.3/CRS84
         coord_ref_sys = {
             "type": "name",
             "properties": {
@@ -331,6 +340,9 @@ def main():
         # due to empty routes, enumerate can get out of sync
         route_num = 0
         for route in routes:
+
+            # define a geodetic for calculations
+            geodesic = pyproj.Geod(ellps='WGS84')
 
             # check for no where routes
             if route['route_distance'] == 0:
@@ -350,8 +362,7 @@ def main():
                 datadir, "geojson/route_{}.geojson".format(route_num))
             route_features = []
 
-            # loop over legs in route
-            # note that route is already a nice dict
+            # loop over legs in route; note that route is already a nice dict
             leg_geoid = 0
             for n, leg in enumerate(route_polylines):
                 # annotate the leg
@@ -368,8 +379,6 @@ def main():
                 route_features.append(
                     geojson.Feature(geometry=geometry, properties=leg_properties, id=leg_geoid))
                 leg_geoid += 1
-            write_geojson(routefile, route_features, bbox,
-                          coord_ref_sys, metadata=route)
 
             # initialize stop params
             stopsfile = os.path.join(
@@ -386,10 +395,12 @@ def main():
             color_end = Color("violet")
             colors = list(color_start.range_to(color_end, n_stops))
 
-            # loop over stops
-            # note: a stop is already a nice dict
+            # loop over stops; note: a stop is already a nice dict
             stop_geoid = 0
+            route_bearing = []
+            origin = [route_stops[0]['longitude'], route_stops[0]['latitude']]
             for n, stop in enumerate(route_stops):
+
                 # make sure ordering of stops in response is correct
                 assert n == stop['position_in_route']
 
@@ -409,10 +420,29 @@ def main():
                 lng = stop['longitude']
                 geometry = geojson.Point((lng, lat))
 
+                # calculate bearing origin -> stop
+                fwd_azimuth, back_azimuth, distance = geodesic.inv(origin[0], origin[1],
+                                                                   stop['longitude'], stop['latitude'])
+                if fwd_azimuth < 0:
+                    fwd_azimuth += 360
+                route_bearing.append(fwd_azimuth)
+
                 # encode feature
                 stop_features.append(geojson.Feature(
                     geometry=geometry, properties=stop, id=stop_geoid))
                 stop_geoid += 1
+
+            # average route bearing
+            route_bearing = route_bearing[1:-1]
+            xs = sum([math.sin(math.radians(x)) for x in route_bearing])
+            ys = sum([math.cos(math.radians(x)) for x in route_bearing])
+            route['average_bearing'] = degrees_to_cardinal(math.degrees(math.atan2(xs, ys)))
+
+            # write the route geojson
+            write_geojson(routefile, route_features, bbox,
+                          coord_ref_sys, metadata=route)
+
+            # write the route stops geojson
             write_geojson(stopsfile, stop_features, bbox,
                           coord_ref_sys, metadata=route)
 

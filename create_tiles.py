@@ -113,6 +113,8 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
                   "-f",  # https://github.com/mapbox/tippecanoe#output-tileset
                   #"-A", attribution,  # https://github.com/mapbox/tippecanoe#tileset-description-and-attribution
                   "-N", '"routing optimization solution"',
+                  "-b", "0",  # http://bit.ly/32qRNuK
+                  "-r1",  # http://bit.ly/32xd7Pj
                   "-Z", "0", "-z", "14",  # https://github.com/mapbox/tippecanoe#zoom-levels
                   "-ah",  # https://github.com/mapbox/tippecanoe#reordering-features-within-each-tile
                   "-ai",  # https://github.com/mapbox/tippecanoe#adding-calculated-attributes

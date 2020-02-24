@@ -263,7 +263,6 @@
                 var properties = e.features[0].properties;
                 var layer = e.features[0].layer;
                 var description_elements = [
-                    layer.id,
                     properties.address,
                     "arrive: " + new Date(properties.arrival_time).toLocaleString(),
                     "depart: " + new Date(properties.departure_time).toLocaleString()
@@ -332,7 +331,9 @@
         // toggle layer visibility
         function toggleVisibility(layerId, random_color) {
 
-            // TODO: Give buttons an obvious name
+            // test
+            getRoute(layerId);
+
             // create a clickable button
             var button = document.createElement('button');
             button.id = layerId + "_toggle";
@@ -351,26 +352,14 @@
                 if (visibility === 'visible') {
                     map.setLayoutProperty(clickedLayer, 'visibility', 'none');
                     this.className = '';
-                    target.style.background = '#ffffff';
+                    target.style.background = '#808080';
+                    target.style.color = '#ffffff';
                 } else {
                     this.className = 'active';
                     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
                     target.style.background = random_color;
                 }
-                console.log(target);
             };
-
-            // change button color to be that of route
-            /* var style = document.createElement('style');
-            var button_custom = `#${button.id} { background: ${random_color}!important; }` +
-                `#${button.id}:hover { opacity: 0.5!important; }` +
-                `#${button.id}:active { background: #fff; opacity: 0.5!important; }`;
-            if (style.styleSheet) {
-                style.styleSheet.cssText = button_custom;
-            } else {
-                style.appendChild(document.createTextNode(button_custom));
-            }
-            document.getElementsByTagName('head')[0].appendChild(style); */
 
             // add button to menu div
             var layers = document.getElementById('menu');
@@ -412,21 +401,22 @@
         }
 
         // get a route geojson
-        function getRoute(i) {
+        function getRoute(fileId) {
             // get the route geojson
-            let route;
-            var url = 'https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/route_${i}.geojson';
+            let route_data;
+            var url = `https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/${fileId}.geojson`;
+            console.log(url);
             fetch(url)
                 .then((response) => {
                     return response.json();
                 })
                 .then((json) => {
-                    route = json;
+                    route_data = json;
                 })
                 .catch((err) => {
                     console.log("Err: ", err)
                 });
-
+            console.log(route_data);
         }
 
         // function to animate tracker on route
