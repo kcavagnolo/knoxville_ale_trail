@@ -213,7 +213,7 @@ def main():
                   for shift in shifts]
 
         # linger times in hours
-        default_linger = 1.0 * 3600
+        default_linger = 1.5 * 3600
 
         # create orders
         with open(geocoded_breweries) as jsonfile:

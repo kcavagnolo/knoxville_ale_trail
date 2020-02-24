@@ -35,13 +35,13 @@ Alternatively, Mapbox has a [tilesets CLI](https://github.com/mapbox/tilesets-cl
 Then run the simplistic command line script:
 
 ```bash
-python3 trail.py --geocode --optimize --geojson -d data/
+python3 trail.py --geocode --optimize --geojson -d data/ -vv
 ```
 
 Convert geojson to Mapbox tile and upload to Mapbox:
 
 ```sh
-python3 create_tiles.py -gd data/geojson -td data/tiles --mbtiles --upload
+python3 create_tiles.py -gd data/geojson -td data/tiles --mbtiles --upload -vv
 ```
 
 ## Maintenance
