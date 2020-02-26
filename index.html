@@ -1,74 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 7 ]><html lang="en-US" class="no-js ie ie6 lte7 lte8 lte9"><![endif]-->
+<!--[if IE 7 ]><html lang="en-US" class="no-js ie ie7 lte7 lte8 lte9"><![endif]-->
+<!--[if IE 8 ]><html lang="en-US" class="no-js ie ie8 lte8 lte9"><![endif]-->
+<!--[if IE 9 ]><html lang="en-US" class="no-js ie ie9 lte9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en-US" class="no-js">
+<!--<![endif]-->
 
 <head>
-    <meta charset="utf-8" />
-    <title>Knoxville Ale Trail Route</title>
+
+    <!-- metadata -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
-    <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js" charset="utf-8"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
-    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css" type="text/css" />
-    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
-    <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
-    <script src='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.js'></script>
-    <link href='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.css' rel='stylesheet' />
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="kcavagnolo.com" />
 
-        #map {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-        }
+    <!-- site info -->
+    <title>Knoxville Ale Trail Route</title>
+    <meta name="description" content="Ken Cavagnolo is a human first.">
+    <meta name="author" content="Ken Cavagnolo">
+    <meta name="keywords" content="Ken, Kenneth, Cavagnolo, scientist, product, manager, astrophysicist, physics,
+    developer, data, programmer, engineer, Atlanta, Knoxville, Austin, Michigan State, Georgia Tech, PhD, Ph.D.,
+    resume, CV, publications, speaker, python, R, C++, C, SQL, NoSQL, Hadoop, Spark, JavaScript, Cassandra, node.js,
+    d3.js, machine learning, analytics, math, statistics, science">
 
-        .overlay {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
+    <!-- site functionality -->
+    <link rel="canonical" href="https://kcavagnolo.com">
+    <link rel="profile" href="https://gmpg.org/xfn/11">
+    <link rel="pingback" href="https://www.kcavagnolo.com/xmlrpc.php">
 
-        /* TOOD: Make button color same as each route */
-        .overlay button {
-            font: 600 12px/20px 'Open Sans', sans-serif;
-            background-color: #006885;
-            color: #fff;
-            display: block;
-            margin: 5px;
-            padding: 5px 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 3px;
-        }
+    <!-- stylesheets -->
+    <link rel="preload" href="css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
-        .overlay button:hover {
-            background-color: #efb63b;
-        }
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
-        .mapboxgl-popup-content {
-            font-family: 'Open Sans', sans-serif;
-        }
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="57x57" href="public/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="public/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="public/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="public/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="public/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="public/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="public/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="public/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="public/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="public/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="public/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="public/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="public/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="public/manifest.json">
+    <link rel="shortcut icon" href="public/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="public/mstile-144x144.png">
+    <meta name="msapplication-config" content="public/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
 
-        #layerList {
-            position: absolute;
-            top: 300px;
-            right: 0;
-            bottom: 0;
-            width: 240px;
-            overflow: auto;
-        }
+    <!-- seo -->
+    <link rel='dns-prefetch' href='//fonts.googleapis.com' />
+    <link rel='dns-prefetch' href='//s.w.org' />
 
-        #layerList div div {
-            width: 15px;
-            height: 15px;
-            display: inline-block;
-        }
-    </style>
 </head>
 
 <body>
@@ -76,8 +78,20 @@
     <!-- the actual map layer -->
     <div id="map"></div>
 
-    <!-- animation controls -->
+    <!-- controls -->
     <div id="menu" class="overlay">
+        <div class='overlay-inner'>
+            <fieldset>
+                <label for="jobid">Fetch a solution:</label>
+                <input type="text" id="job_input" name="jobid" value="enter a jobid" onfocus="this.value=''">
+                <input type="button" value="Submit" onclick="loadSolutionFromJob()">
+            </fieldset>
+            <fieldset>
+                <label for="file_select">Open a solution:</label>
+                <input type="file" id="file_input" name="file_select" onchange="loadSolutionFile(this.files[0])">
+            </fieldset>
+            <hr>
+        </div>
         <!-- <button id="reset-animation">Start</button>
         <button id="next-leg">Next</button>
         <button id="prev-leg">Prev</button> -->
@@ -87,474 +101,16 @@
     <div id="layerList"></div>
     -->
 
-    <!-- mapbox styling -->
-    <script>
-        mapboxgl.accessToken = 'pk.eyJ1Ijoia2NhdmFnbm9sbyIsImEiOiJjamtvOWExZHYydm1xM3BreG9pb3hza3J6In0.yKhLQH7NxC9rbsrCpilLQw';
-
-        // TODO: abstract the origin based on view
-        // set an origin
-        var origin = [-83.924137, 35.961671]
-
-        // initialize number of layers
-        var num_layers = 0;
-
-        // load mapbox gl
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/dark-v10?optimize=true',
-            center: origin,
-            zoom: 10,
-            customAttribution: "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>© kcavagnolo</a>",
-            failIfMajorPerformanceCaveat: true
-        });
-
-        // add geocoder
-        map.addControl(
-            new MapboxGeocoder({
-                accessToken: mapboxgl.accessToken,
-                mapboxgl: mapboxgl,
-                placeholder: 'Search for breweries',
-                countries: 'us',
-                proximity: {
-                    longitude: origin[0],
-                    latitude: origin[1]
-                },
-                marker: false
-            })
-        );
-
-        // Add zoom and rotation controls to the map.
-        map.addControl(new mapboxgl.NavigationControl());
-
-        // add map inspection
-        var inspect = new MapboxInspect({
-            showInspectMap: false,
-            showInspectButton: true,
-        });
-
-        // A single tracker point that animates along the route.
-        // Coordinates are initially set to origin.
-        var tracker = {
-            'type': 'FeatureCollection',
-            'features': [{
-                'type': 'Feature',
-                'properties': {},
-                'geometry': {
-                    'type': 'Point',
-                    'coordinates': [0, 0]
-                }
-            }]
-        };
-
-        // initialize some vars
-        var steps = 0;
-        var counter = 0;
-        var leg = 0;
-        var hoverId = null;
-
-        // Create a popup, but don't add it to the map yet.
-        var popup = new mapboxgl.Popup({
-            closeButton: false,
-            closeOnClick: false
-        });
-
-        // function to add sources
-        function addSources() {
-            // load route tiles
-            map.addSource('routes_source', {
-                type: 'vector',
-                url: 'mapbox://kcavagnolo.knx-ale-trail'
-            });
-
-            // add a tracking point to move along route
-            map.addSource('tracker_source', {
-                'type': 'geojson',
-                'data': tracker
-            });
-        }
-
-        // add the tracker
-        function addTracker() {
-            map.addLayer({
-                'id': 'tracker',
-                'source': 'tracker_source',
-                'type': 'symbol',
-                'layout': {
-                    'icon-image': 'beer-15',
-                    'icon-rotate': ['get', 'bearing'],
-                    'icon-rotation-alignment': 'map',
-                    'icon-allow-overlap': true,
-                    'icon-ignore-placement': true
-                }
-            });
-
-        }
-
-        // function to add route layers
-        function addRoutes(i, random_color) {
-
-            // set the id
-            var routeLayerId = 'route_' + i;
-
-            // add the route legs as lines
-            map.addLayer({
-                'id': routeLayerId,
-                'type': 'line',
-                'source': 'routes_source',
-                'source-layer': routeLayerId,
-                'layout': {
-                    'visibility': 'visible',
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                'paint': {
-                    'line-color': random_color,
-                    'line-width': 2
-                }
-            });
-
-            // make visibility toggle
-            toggleVisibility(routeLayerId, random_color);
-        }
-
-        // function to add stop layers
-        function addStops(i, random_color) {
-
-            // set the id
-            var stopLayerId = 'route_' + i + '_stops';
-
-            // add the route stops as circles
-            map.addLayer({
-                'id': stopLayerId,
-                'type': 'circle',
-                'source': 'routes_source',
-                'source-layer': stopLayerId,
-                'layout': {
-                    'visibility': 'visible',
-                },
-                'paint': {
-                    'circle-radius': 6,
-                    'circle-color': [
-                        'case',
-                        ['boolean', ['feature-state', 'hover'], false],
-                        "#ffffff",
-                        random_color
-                    ],
-                    'circle-stroke-color': '#ffffff',
-                    'circle-stroke-width': 1,
-                    'circle-opacity': [
-                        'case',
-                        ['boolean', ['feature-state', 'hover'], false],
-                        0.8,
-                        1.0
-                    ]
-                }
-            });
-
-            // hovering stops opens popup and changes symbol
-            map.on('mouseenter', stopLayerId, function (e) {
-
-                // change cursor to indicator
-                map.getCanvas().style.cursor = 'pointer';
-
-                // set the html description
-                console.log("the data >>>", e.features[0])
-                var coordinates = e.features[0].geometry.coordinates.slice();
-                var properties = e.features[0].properties;
-                var layer = e.features[0].layer;
-                var description_elements = [
-                    properties.address,
-                    "arrive: " + new Date(properties.arrival_time).toLocaleString(),
-                    "depart: " + new Date(properties.departure_time).toLocaleString()
-                ]
-                var brewery = properties.location_id.toUpperCase();
-                var description = '<h3>' + brewery + '</h3><p>' + description_elements.join('<br>') + '</p>'
-
-                // Ensure that if the map is zoomed out such that multiple
-                // copies of the feature are visible, the popup appears
-                // over the copy being pointed to.
-                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                }
-
-                // load the hover popup
-                popup.setLngLat(coordinates)
-                    .setHTML(description)
-                    .addTo(map);
-
-                // change the symbol color and opacity
-                if (e.features.length > 0) {
-                    if (hoverId) {
-                        map.setFeatureState({
-                            source: 'routes_source',
-                            sourceLayer: stopLayerId,
-                            id: hoverId
-                        }, {
-                            hover: false
-                        });
-                    }
-                    hoverId = e.features[0].id;
-                    map.setFeatureState({
-                        source: 'routes_source',
-                        sourceLayer: stopLayerId,
-                        id: hoverId
-                    }, {
-                        hover: true
-                    });
-                }
-            });
-
-            // no hover reverts state
-            map.on('mouseleave', stopLayerId, function () {
-                if (hoverId) {
-                    map.setFeatureState({
-                        source: 'routes_source',
-                        sourceLayer: stopLayerId,
-                        id: hoverId
-                    }, {
-                        hover: false
-                    });
-                }
-                hoverId = null;
-
-                // change cursor back to pointer
-                map.getCanvas().style.cursor = '';
-
-                // remove the hover popup
-                popup.remove();
-            });
-
-            // make visibility toggle
-            toggleVisibility(stopLayerId, random_color);
-        }
-
-        // toggle layer visibility
-        function toggleVisibility(layerId, random_color) {
-
-            // test of fetching json data
-            var url = `https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/${layerId}.geojson`;
-            fetch(url)
-                .then(response => response.json())
-                .then(route_data => {
-                    var route_name = route_data['metadata']['average_bearing'];
-                });
-
-            // create a clickable button
-            var button = document.createElement('button');
-            button.id = layerId + "_toggle";
-            button.className = 'active';
-            button.textContent = layerId;
-            button.style.opacity = 1.0;
-            button.style.background = random_color;
-
-            // toggle visibility when clicked
-            button.onclick = function (e) {
-                var clickedLayer = this.textContent;
-                e.preventDefault();
-                e.stopPropagation();
-                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-                var target = document.getElementById(button.id);
-                if (visibility === 'visible') {
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                    this.className = '';
-                    target.style.background = '#808080';
-                    target.style.color = '#ffffff';
-                } else {
-                    this.className = 'active';
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-                    target.style.background = random_color;
-                }
-            };
-
-            // add button to menu div
-            var layers = document.getElementById('menu');
-            layers.appendChild(button);
-        }
-
-        // function to iteratively add as many layers as in tileset
-        function setLayers(new_num_layers) {
-            for (let i = new_num_layers; i < num_layers; ++i) {
-                map.removeLayer('route_' + i);
-                map.removeLayer('route_' + i + '_stops');
-            }
-            for (let i = num_layers; i < new_num_layers; ++i) {
-                // TODO: change random color to... not random
-                var random_color = '#' + Math.random().toString(16).slice(2, 8).toUpperCase();
-                addRoutes(i, random_color);
-                addStops(i, random_color);
-            }
-            num_layers = new_num_layers;
-        };
-
-        // function to add map inspection
-        function addInspection() {
-            map.addControl(inspect);
-            map.on('styledata', function () {
-                var layerList = document.getElementById('layerList');
-                layerList.innerHTML = '';
-                Object.keys(inspect.sources).forEach(function (sourceId) {
-                    var layerIds = inspect.sources[sourceId];
-                    layerIds.forEach(function (layerId) {
-                        var item = document.createElement('div');
-                        item.innerHTML = '<div style="' +
-                            'background:' + inspect.assignLayerColor(layerId) + ';' +
-                            '"></div> ' + layerId;
-                        layerList.appendChild(item);
-                    });
-                })
-            });
-        }
-
-        // function to animate tracker on route
-        function animate() {
-
-            // debugging
-            //console.log("leg: " + leg, "counter: " + counter, "step: " + steps)
-
-            // Update tracker geometry to a new position based on counter denoting
-            // the index to access the arc.
-            tracker.features[0].geometry.coordinates =
-                route.features[leg].geometry.coordinates[counter];
-
-            // Calculate the bearing to ensure the icon is rotated to match the route arc
-            // The bearing is calculate between the current point and the next point, except
-            // at the end of the arc use the previous point and the current point
-            /* tracker.features[0].properties.bearing = turf.bearing(
-                turf.point(
-                    route.features[leg].geometry.coordinates[
-                        counter >= steps ? counter - 1 : counter
-                    ]
-                ),
-                turf.point(
-                    route.features[leg].geometry.coordinates[
-                        counter >= steps ? counter : counter + 1
-                    ]
-                )
-            ); */
-
-            // Update the source with this new data.
-            map.getSource('tracker_source').setData(tracker);
-
-            // Request the next frame of animation so long the end has not been reached.
-            counter = counter + 1;
-            if (counter < steps) {
-                requestAnimationFrame(animate);
-            }
-        }
-
-        // function to reset animation
-        function animateResetRoute() {
-            document.getElementById('reset-animation').addEventListener('click', function () {
-                // Set the coordinates of the original tracker back to origin
-                tracker.features[0].geometry.coordinates = [0, 0];
-
-                // Update the source layer
-                map.getSource('tracker_source').setData(tracker);
-
-                // Reset the counter
-                leg = 0;
-                counter = 0;
-
-                // get coordinates
-                var coordinates = route.features[leg].geometry.coordinates
-                steps = coordinates.length
-
-                // get bbox of linestring
-                var bounds = coordinates.reduce(function (bounds, coord) {
-                    return bounds.extend(coord);
-                }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
-
-                // fit linestring to zoom
-                map.fitBounds(bounds, {
-                    padding: 200
-                });
-
-                // Restart the animation.
-                animate(counter, leg, steps);
-            });
-        }
-
-        // function to start next route leg animation
-        function animateNextLeg() {
-            document.getElementById('next-leg').addEventListener('click', function () {
-
-                // Reset the counter
-                leg = leg + 1;
-                counter = 0;
-
-                // get coordinates
-                var coordinates = route.features[leg].geometry.coordinates
-                steps = coordinates.length
-
-                // get bbox of linestring
-                var bounds = coordinates.reduce(function (bounds, coord) {
-                    return bounds.extend(coord);
-                }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
-
-                // fit linestring to zoom
-                map.fitBounds(bounds, {
-                    padding: 200
-                });
-
-                // TODO: Wait on zoom to complete before starting animation
-                // Restart the animation.
-                animate(counter, leg, steps)
-            });
-
-        }
-
-        // function to start previous route leg animation
-        function animatePreviousLeg() {
-            document.getElementById('prev-leg').addEventListener('click', function () {
-                // Reset the counter
-                leg = leg - 1;
-                counter = 0;
-
-                // get coordinates
-                var coordinates = route.features[leg].geometry.coordinates
-                steps = coordinates.length
-
-                // get bbox of linestring
-                var bounds = coordinates.reduce(function (bounds, coord) {
-                    return bounds.extend(coord);
-                }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
-
-                // fit linestring to zoom
-                map.fitBounds(bounds, {
-                    padding: 200
-                });
-
-                // Restart the animation.
-                animate(counter, leg, steps);
-            });
-
-        }
-
-        // load the map
-        map.on('load', function () {
-
-            // add sources
-            addSources();
-
-            // add routes
-            numRoutes = 5;
-            setLayers(numRoutes);
-
-            // add animation and controls
-            /* addTracker();
-               animateResetRoute();
-               animateNextLeg();
-               animatePreviousLeg(); */
-
-            // for debugging
-            /* addInspection();
-               console.log("the route json >>> ", route)
-               route.features.forEach(function (feature) {
-                console.log(feature.properties)
-            }); */
-
-        });
-    </script>
+    <!-- javascript -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+    <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js" charset="utf-8"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+    <script src='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.js'></script>
+    <script src="js/goptimize.js"></script>
+    <script src="js/ganalytics.js"></script>
+    <script src="js/route-viz.js"></script>
 
 </body>
 

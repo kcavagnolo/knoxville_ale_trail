@@ -112,6 +112,7 @@ bumpversion minor --verbose
 - Display itinerary as Gantt.
 - Add animation to markers on arrival.
 - Dig into this [awesome viz](https://github.com/chriswhong/nyctaxi)
+- Add minify of css and js
 
 ## Credits
 
