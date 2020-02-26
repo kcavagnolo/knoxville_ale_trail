@@ -3,7 +3,7 @@
 
 import argparse
 import csv
-import datetime
+import datetime as dt
 import json
 import logging
 import math
@@ -47,7 +47,7 @@ def clean_string(s):
 
 
 def iso_time(intime, time_format="%Y-%m-%d %H:%M:%S"):
-    return datetime.datetime.strptime(intime, time_format).isoformat()
+    return dt.datetime.strptime(intime, time_format).isoformat()
 
 
 def here_geocoder(address):
@@ -155,6 +155,24 @@ def write_geojson(outfile, features, bbox, crs, metadata=None):
         json.dump(feature_collection, f, separators=(',', ':'), sort_keys=True)
 
 
+def parse_hours(hours):
+    days = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
+    hours_operation = {'open': None, 'close': None}
+    weekly_hours = {}
+    for day in days:
+        weekly_hours[day] = hours_operation.copy()
+    periods = hours['structured']
+    for period in periods:
+        open_time = dt.datetime.strptime(period['start'][1:], '%H%M%S')
+        hours, minutes = period['duration'][2:-1].split('H')
+        close_time = open_time + dt.timedelta(hours=int(hours), minutes=int(minutes))
+        recurrence = dict(x.split(":") for x in period['recurrence'].split(";"))
+        for day in recurrence['BYDAY'].split(','):
+            weekly_hours[day]['open'] = open_time.time()
+            weekly_hours[day]['close'] = close_time.time()
+    return weekly_hours
+
+
 def degrees_to_cardinal(d):
     dirs = ['N', 'NbE', 'NNE', 'NEbN', 'NE', 'NEbE', 'ENE', 'EbN',
             'E', 'EbS', 'ESE', 'SEbE', 'SE', 'SEbS', 'SSE', 'SbE',
@@ -254,7 +272,8 @@ def main():
                         "location_id": brewery_name
                     })
                     if "home" not in brewery_name:
-                        open_hours = parse_hours()
+                        #open_hours = parse_hours(brewery_info['place_details']['openingHours'])
+                        # TODO: Add time_windows to order using ^^^
                         order = {
                             "order_id": brewery_name,
                             "location_id": brewery_name,
@@ -498,6 +517,6 @@ if __name__ == '__main__':
     main()
     logging.info("Run complete.")
     elapsed = time.time() - start_time
-    elapsed = str(datetime.timedelta(seconds=elapsed))
+    elapsed = str(dt.datetime.timedelta(seconds=elapsed))
     logging.info("--- Run time: {} ---".format(elapsed))
     sys.exit(0)
