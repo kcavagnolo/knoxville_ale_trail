@@ -29,6 +29,15 @@ python3 create_tiles.py -gd data/geojson -td data/tiles --mbtiles --upload -vv
 
 ## Maintenance
 
+### Mapbox Credentials
+
+If you're working with multiple Mapbox accounts, the scripts assume you have standard env vars like this:
+
+```bash
+export MAPBOX_USERNAME=$MAPBOX_USER_PERSONAL
+export MAPBOX_ACCESS_TOKEN=$MAPBOX_ACCESS_TOKEN_PERSONAL
+```
+
 ### Local Tileserver
 
 To inspect the tiles locally, I use [TileServer GL](https://tileserver.readthedocs.io):

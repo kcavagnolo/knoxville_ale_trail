@@ -19,6 +19,7 @@ import polyline
 import pyproj
 import requests
 from colour import Color
+from geopy.distance import distance
 from tqdm import tqdm
 
 
@@ -50,12 +51,12 @@ def iso_time(intime, time_format="%Y-%m-%d %H:%M:%S"):
 
 
 def here_geocoder(address):
-    url = 'https://geocoder.ls.hereapi.com/6.2/geocode.json?apiKey={}&searchtext={}'
+    geocode_url = 'https://geocoder.ls.hereapi.com/6.2/geocode.json?apiKey={}&searchtext={}'
     apikey = os.getenv("HERE_APIKEY")
     address = address.lower().replace(" ", "+")
-    lat, lng = 0.0, 0.0
+    lat, lng = 0, 0
     try:
-        response = requests.request('GET', url.format(apikey, address))
+        response = requests.request('GET', geocode_url.format(apikey, address))
         response = response.json()
         if len(response['Response']['View']) > 0:
             loc_data = response['Response']['View'][0]['Result'][0]['Location']
@@ -71,6 +72,26 @@ def here_geocoder(address):
         logging.exception(traceback.format_exc())
     finally:
         return lat, lng, address
+
+
+def here_places(lat, lng, name):
+    places_url = 'https://places.ls.hereapi.com/places/v1/discover/search?apiKey={}&at={},{}&q={}'
+    apikey = os.getenv("HERE_APIKEY")
+    try:
+        response = requests.request('GET', places_url.format(apikey, lat, lng, name))
+        response = response.json()
+        if len(response['results']['items']) > 0:
+            coords = response['results']['items'][0]['position']
+            d = distance((lat, lng), (coords[0], coords[1])).miles
+            if d < 0.5:
+                return response['results']['items'][0]
+            else:
+                return {}
+        else:
+            return {}
+    except Exception as e:
+        logging.exception(e)
+        logging.exception(traceback.format_exc())
 
 
 def mapanything_geocoder(address):
@@ -179,6 +200,10 @@ def main():
                 brewery_name = clean_string(row[1])
                 address = clean_string(' '.join(row))
                 lat, lng, address = here_geocoder(address)
+                if lat != 0 and lng != 0:
+                    place_details = here_places(lat, lng, brewery_name)
+                else:
+                    place_details = {}
                 csv_lines.append(','.join([
                     visited,
                     str(lat),
@@ -191,6 +216,7 @@ def main():
                 json_lines[brewery_name]['address'] = address
                 json_lines[brewery_name]['latitude'] = lat
                 json_lines[brewery_name]['longitude'] = lng
+                json_lines[brewery_name]['place_details'] = place_details
         with open(geocoded_breweries, 'w') as f:
             json.dump(json_lines, f, indent=4)
 
@@ -228,6 +254,7 @@ def main():
                         "location_id": brewery_name
                     })
                     if "home" not in brewery_name:
+                        open_hours = parse_hours()
                         order = {
                             "order_id": brewery_name,
                             "location_id": brewery_name,

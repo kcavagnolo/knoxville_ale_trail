@@ -3,138 +3,977 @@
         "visited": "no",
         "address": "100 Lockett Rd, Knoxville, TN 37919, United States",
         "latitude": 35.93154,
-        "longitude": -84.01588
+        "longitude": -84.01588,
+        "place_details": {
+            "position": [
+                35.93167,
+                -84.01561
+            ],
+            "distance": 28,
+            "title": "Abridged Beer Company",
+            "averageRating": 0.0,
+            "category": {
+                "id": "restaurant",
+                "title": "Restaurant",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/restaurant?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/03.icon",
+            "vicinity": "100 Lockett Rd<br/>Knoxville, TN 37919",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkk2-be3971e7d07b4849ae183ce082e4ee4d;context=Zmxvdy1pZD04ZjM3OTg4NC03YWU4LTU4YzUtOTQzZi00MTBlN2RjZjZhMDRfMTU4Mjc0NTEwOTAxOF8xODI1XzkzNTMmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "id": "840dnkk2-be3971e7d07b4849ae183ce082e4ee4d",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Tue-Thu: 16:00 - 22:00<br/>Fri, Sat: 12:00 - 23:00",
+                "label": "Opening hours",
+                "isOpen": false,
+                "structured": [
+                    {
+                        "start": "T160000",
+                        "duration": "PT06H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:TU,WE,TH"
+                    },
+                    {
+                        "start": "T120000",
+                        "duration": "PT11H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:FR,SA"
+                    }
+                ]
+            }
+        }
     },
     "albright grove brewing company": {
         "visited": "no",
         "address": "2924 Sutherland Ave, Knoxville, TN 37919, United States",
         "latitude": 35.95316,
-        "longitude": -83.96377
+        "longitude": -83.96377,
+        "place_details": {}
     },
     "blackberry farm brewery": {
         "visited": "no",
         "address": "108 Everett Ave, Maryville, TN 37804, United States",
         "latitude": 35.76191,
-        "longitude": -83.96586
+        "longitude": -83.96586,
+        "place_details": {}
     },
     "blackhorse brewery": {
         "visited": "no",
         "address": "430 S Gay St, Knoxville, TN 37902, United States",
         "latitude": 35.96543,
-        "longitude": -83.91842
+        "longitude": -83.91842,
+        "place_details": {}
     },
     "clinch river brewing": {
         "visited": "no",
         "address": "2045 Norris Fwy, Norris, TN 37705, United States",
         "latitude": 36.211719,
-        "longitude": -84.0731926
+        "longitude": -84.0731926,
+        "place_details": {
+            "position": [
+                36.211754,
+                -84.073031
+            ],
+            "distance": 15,
+            "title": "Clinch River Brewing",
+            "averageRating": 0.0,
+            "category": {
+                "id": "restaurant",
+                "title": "Restaurant",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/restaurant?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/03.icon",
+            "vicinity": "2045 Norris Fwy<br/>Andersonville, TN 37705",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnknn-2e58d5781edc4d5d855cc06afcddc652;context=Zmxvdy1pZD1lNTQzNjY2Ny1lMzJiLTUyN2ItOTAyNC0wMjA0NDI3OGY5YTlfMTU4Mjc0NTExMDkwMl82MjM1XzY4NjImcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "tags": [
+                {
+                    "id": "american",
+                    "title": "American",
+                    "group": "cuisine"
+                },
+                {
+                    "id": "american-cajun",
+                    "title": "American - Cajun",
+                    "group": "cuisine"
+                },
+                {
+                    "id": "brewpub",
+                    "title": "Brewpub",
+                    "group": "cuisine"
+                }
+            ],
+            "id": "840dnknn-2e58d5781edc4d5d855cc06afcddc652",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Tue, Wed: 16:00 - 21:00<br/>Thu-Sun: 12:00 - 22:00",
+                "label": "Opening hours",
+                "isOpen": false,
+                "structured": [
+                    {
+                        "start": "T160000",
+                        "duration": "PT05H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:TU,WE"
+                    },
+                    {
+                        "start": "T120000",
+                        "duration": "PT10H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:TH,FR,SA,SU"
+                    }
+                ]
+            }
+        }
     },
     "downtown grill brewery": {
         "visited": "no",
         "address": "424 S Gay St, Knoxville, TN 37902, United States",
         "latitude": 35.96557,
-        "longitude": -83.91849
+        "longitude": -83.91849,
+        "place_details": {
+            "position": [
+                35.96571,
+                -83.91811
+            ],
+            "distance": 38,
+            "title": "Downtown Grill and Brewery",
+            "averageRating": 0.0,
+            "category": {
+                "id": "restaurant",
+                "title": "Restaurant",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/restaurant?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/03.icon",
+            "vicinity": "424 S Gay St<br/>Knoxville, TN 37902",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-af88945f3e664b049e07190ebf005982;context=Zmxvdy1pZD1iYjAxMmIxMy05NmMwLTUxNGMtYTllZS04NWM5MTBmOTk1OGFfMTU4Mjc0NTExMTQwMF84MDI3XzMwNjQmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "tags": [
+                {
+                    "id": "american",
+                    "title": "American",
+                    "group": "cuisine"
+                },
+                {
+                    "id": "barbecue",
+                    "title": "Barbecue",
+                    "group": "cuisine"
+                },
+                {
+                    "id": "brewpub",
+                    "title": "Brewpub",
+                    "group": "cuisine"
+                },
+                {
+                    "id": "grill",
+                    "title": "Grill",
+                    "group": "cuisine"
+                }
+            ],
+            "id": "840dnkkd-af88945f3e664b049e07190ebf005982",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Mon-Thu, Sun: 11:00 - 00:00<br/>Fri, Sat: 11:00 - 03:00",
+                "label": "Opening hours",
+                "isOpen": true,
+                "structured": [
+                    {
+                        "start": "T110000",
+                        "duration": "PT13H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:MO,TU,WE,TH,SU"
+                    },
+                    {
+                        "start": "T110000",
+                        "duration": "PT16H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:FR,SA"
+                    }
+                ]
+            },
+            "alternativeNames": [
+                {
+                    "name": "Downtown Grill & Brewery",
+                    "language": "en"
+                }
+            ]
+        }
     },
     "elkmont exchange brewery": {
         "visited": "no",
         "address": "745 N Broadway St, Knoxville, TN 37917, United States",
         "latitude": 35.97776,
-        "longitude": -83.92358
+        "longitude": -83.92358,
+        "place_details": {
+            "position": [
+                35.97777,
+                -83.9239
+            ],
+            "distance": 29,
+            "title": "Elkmont Exchange Brewery & Eating House",
+            "averageRating": 0.0,
+            "category": {
+                "id": "restaurant",
+                "title": "Restaurant",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/restaurant?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/03.icon",
+            "vicinity": "745 N Broadway St<br/>Knoxville, TN 37917",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-424dd940c3714a0d837c250aa97f1ac2;context=Zmxvdy1pZD0wOTllYjZhMy01MjNkLTVmNDktYTQ0ZS0wNDUyNDY5NzZhZjBfMTU4Mjc0NTExMTg3OF83MTU4XzkzMjMmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "tags": [
+                {
+                    "id": "american",
+                    "title": "American",
+                    "group": "cuisine"
+                },
+                {
+                    "id": "brewpub",
+                    "title": "Brewpub",
+                    "group": "cuisine"
+                },
+                {
+                    "id": "international",
+                    "title": "International",
+                    "group": "cuisine"
+                },
+                {
+                    "id": "tapas",
+                    "title": "Tapas",
+                    "group": "cuisine"
+                }
+            ],
+            "id": "840dnkkd-424dd940c3714a0d837c250aa97f1ac2",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Mon-Wed, Sun: 11:00 - 21:00<br/>Thu: 11:00 - 23:00<br/>Fri, Sat: 11:00 - 00:00",
+                "label": "Opening hours",
+                "isOpen": true,
+                "structured": [
+                    {
+                        "start": "T110000",
+                        "duration": "PT10H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:MO,TU,WE,SU"
+                    },
+                    {
+                        "start": "T110000",
+                        "duration": "PT12H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:TH"
+                    },
+                    {
+                        "start": "T110000",
+                        "duration": "PT13H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:FR,SA"
+                    }
+                ]
+            },
+            "alternativeNames": [
+                {
+                    "name": "Elkmont Exchange",
+                    "language": "en"
+                }
+            ]
+        }
     },
     "elst brewing company": {
         "visited": "no",
         "address": "2419 N Central St, Knoxville, TN 37917, United States",
         "latitude": 35.99062,
-        "longitude": -83.94067
+        "longitude": -83.94067,
+        "place_details": {
+            "position": [
+                35.99043,
+                -83.94088
+            ],
+            "distance": 28,
+            "title": "Elst Brewing Company",
+            "averageRating": 0.0,
+            "category": {
+                "id": "wine-and-liquor",
+                "title": "Wine & Spirits",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/wine-and-liquor?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/09.icon",
+            "vicinity": "2419 N Central St<br/>Knoxville, TN 37917",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkk9-e516a9d8ed27410cb001555fe1506eda;context=Zmxvdy1pZD03OWQ0Y2RiMy1mMzMwLTVkM2ItYmViOC02ODcxNjVkMWMwOWNfMTU4Mjc0NTExMjM0NV82MTMyXzQwNjAmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "id": "840dnkk9-e516a9d8ed27410cb001555fe1506eda",
+            "authoritative": true
+        }
     },
     "fanatic brewing co ": {
         "visited": "no",
         "address": "2735 N Central St, Knoxville, TN 37917, United States",
         "latitude": 35.99217,
-        "longitude": -83.94267
+        "longitude": -83.94267,
+        "place_details": {
+            "position": [
+                35.99186,
+                -83.94271
+            ],
+            "distance": 35,
+            "title": "Fanatic Brewing Company",
+            "averageRating": 0.0,
+            "category": {
+                "id": "wine-and-liquor",
+                "title": "Wine & Spirits",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/wine-and-liquor?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/09.icon",
+            "vicinity": "2727 N Central St<br/>Knoxville, TN 37917",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840d408k-0894ab71bbfc081e8cc6c8c52c7346ab;context=Zmxvdy1pZD0yM2U5MWM3ZS03YTViLTU4YjYtOGIyNy1jYjZhYjVkYzMzNTBfMTU4Mjc0NTExMjgxMl84MzA2Xzc2NjcmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "id": "840d408k-0894ab71bbfc081e8cc6c8c52c7346ab",
+            "authoritative": true
+        }
     },
     "hexagon brewing company": {
         "visited": "no",
         "address": "1002 Dutch Valley Dr, Knoxville, TN 37918, United States",
         "latitude": 36.00828,
-        "longitude": -83.94812
+        "longitude": -83.94812,
+        "place_details": {
+            "position": [
+                36.00755,
+                -83.94779
+            ],
+            "distance": 86,
+            "title": "Hexagon Brewing",
+            "averageRating": 0.0,
+            "category": {
+                "id": "bar-pub",
+                "title": "Bar/Pub",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/bar-pub?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/22.icon",
+            "vicinity": "1002 Dutch Valley Dr NE<br/>Knoxville, TN 37918",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkc-ec202862986f42e09a619f64023c0529;context=Zmxvdy1pZD0xOGJhZWE3Mi05NDRhLTU2NGItODIzYy1iNWNlMDI5ZDExMGZfMTU4Mjc0NTExMzI0OV80NjY5XzE5MTQmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "id": "840dnkkc-ec202862986f42e09a619f64023c0529",
+            "authoritative": true
+        }
     },
     "schulz br\u00e4u brewing company": {
         "visited": "no",
         "address": "126 Bernard Ave, Knoxville, TN 37917, United States",
         "latitude": 35.97731,
-        "longitude": -83.92634
+        "longitude": -83.92634,
+        "place_details": {
+            "position": [
+                35.97715,
+                -83.92616
+            ],
+            "distance": 24,
+            "title": "Schulz Br\u00e4u Brewing Company",
+            "averageRating": 0.0,
+            "category": {
+                "id": "wine-and-liquor",
+                "title": "Wine & Spirits",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/wine-and-liquor?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/09.icon",
+            "vicinity": "126 Bernard Ave<br/>Knoxville, TN 37917",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-2c4bf0c09246066194a3549878b219bc;context=Zmxvdy1pZD01OTQwNmRkOC1iZmRlLTU4N2MtOGFhYy1kOTlhZGM2ZjQwNTFfMTU4Mjc0NTExMzcwMV82NzZfNDI4NiZyYW5rPTA?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "tags": [
+                {
+                    "id": "brewpub",
+                    "title": "Brewpub",
+                    "group": "cuisine"
+                }
+            ],
+            "id": "840aabd1-2c4bf0c09246066194a3549878b219bc",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Mon-Thu: 15:00 - 00:00<br/>Fri, Sat: 12:00 - 02:00<br/>Sun: 12:00 - 00:00",
+                "label": "Opening hours",
+                "isOpen": false,
+                "structured": [
+                    {
+                        "start": "T150000",
+                        "duration": "PT09H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:MO,TU,WE,TH"
+                    },
+                    {
+                        "start": "T120000",
+                        "duration": "PT14H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:FR,SA"
+                    },
+                    {
+                        "start": "T120000",
+                        "duration": "PT12H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SU"
+                    }
+                ]
+            },
+            "alternativeNames": [
+                {
+                    "name": "Schulz Brau Brewing Company",
+                    "language": "en"
+                }
+            ]
+        }
     },
     "smoky mountain brewery": {
         "visited": "no",
         "address": "1004 Parkway, Gatlinburg, TN 37738, United States",
         "latitude": 35.7085336,
-        "longitude": -83.521008
+        "longitude": -83.521008,
+        "place_details": {
+            "position": [
+                35.708447,
+                -83.520881
+            ],
+            "distance": 15,
+            "title": "Smoky Mountain Brewery",
+            "averageRating": 0.0,
+            "category": {
+                "id": "restaurant",
+                "title": "Restaurant",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/restaurant?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/03.icon",
+            "vicinity": "1004 Parkway<br/>Gatlinburg, TN 37738",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnke5-cc56fb7cc3dd4db0a9f4426bc4b76c31;context=Zmxvdy1pZD0xOTI5NjUyNS0xYmNjLTViZjEtYTY4Zi0wZjY1Y2JkNzg3OTlfMTU4Mjc0NTExNDIwMV8xMzMzXzU0MTAmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "tags": [
+                {
+                    "id": "american",
+                    "title": "American",
+                    "group": "cuisine"
+                },
+                {
+                    "id": "brewpub",
+                    "title": "Brewpub",
+                    "group": "cuisine"
+                },
+                {
+                    "id": "pizza",
+                    "title": "Pizza",
+                    "group": "cuisine"
+                }
+            ],
+            "id": "840dnke5-cc56fb7cc3dd4db0a9f4426bc4b76c31",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Mon-Sun: 11:30 - 01:00",
+                "label": "Opening hours",
+                "isOpen": true,
+                "structured": [
+                    {
+                        "start": "T113000",
+                        "duration": "PT13H30M",
+                        "recurrence": "FREQ:DAILY;BYDAY:MO,TU,WE,TH,FR,SA,SU"
+                    }
+                ]
+            }
+        }
     },
     "yee haw brewing co ": {
         "visited": "no",
         "address": "131 The Island Dr, Pigeon Forge, TN 37863, United States",
         "latitude": 35.8022648,
-        "longitude": -83.5710745
+        "longitude": -83.5710745,
+        "place_details": {
+            "position": [
+                35.802391,
+                -83.571133
+            ],
+            "distance": 15,
+            "title": "Yee-Haw Brewing Company",
+            "averageRating": 0.0,
+            "category": {
+                "id": "bar-pub",
+                "title": "Bar/Pub",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/bar-pub?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/22.icon",
+            "vicinity": "131 The Island Dr<br/>Pigeon Forge, TN 37863",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnket-c6b58ec6b97146f7ae3859900efae525;context=Zmxvdy1pZD1lZWU1ZmIzNi1iMjEyLTUwZDAtYTdiMC1lZDI2MTNmZTY4OTlfMTU4Mjc0NTExNDY5MF81OTc4Xzc2NjUmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "id": "840dnket-c6b58ec6b97146f7ae3859900efae525",
+            "alternativeNames": [
+                {
+                    "name": "Yee-Haw Brewing",
+                    "language": "en"
+                }
+            ]
+        }
     },
     "alliance brewing co": {
         "visited": "no",
         "address": "1130 Sevier Ave, Knoxville, TN 37920, United States",
         "latitude": 35.95975,
-        "longitude": -83.90311
+        "longitude": -83.90311,
+        "place_details": {
+            "position": [
+                35.95957,
+                -83.90303
+            ],
+            "distance": 21,
+            "title": "Alliance Brewing Company",
+            "averageRating": 0.0,
+            "category": {
+                "id": "wine-and-liquor",
+                "title": "Wine & Spirits",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/wine-and-liquor?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/09.icon",
+            "vicinity": "1130 Sevier Ave<br/>Knoxville, TN 37920",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-077cb580f77d0cb6e92c3cd5a79522cf;context=Zmxvdy1pZD1kODc4MmM0NS1lZWVmLTU1MmYtOTMxNy00YTdhZWRiZmM4ZDFfMTU4Mjc0NTExNTEyMl81OTAwXzg0NTMmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "id": "840aabd1-077cb580f77d0cb6e92c3cd5a79522cf",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Tue-Fri: 16:00 - 23:00<br/>Sat: 12:00 - 23:00<br/>Sun: 12:00 - 21:00",
+                "label": "Opening hours",
+                "isOpen": false,
+                "structured": [
+                    {
+                        "start": "T160000",
+                        "duration": "PT07H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:TU,WE,TH,FR"
+                    },
+                    {
+                        "start": "T120000",
+                        "duration": "PT11H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SA"
+                    },
+                    {
+                        "start": "T120000",
+                        "duration": "PT09H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SU"
+                    }
+                ]
+            }
+        }
     },
     "balter beerworks": {
         "visited": "no",
         "address": "100 Broadway SW, Knoxville, TN 37902, United States",
         "latitude": 35.96658,
-        "longitude": -83.92441
+        "longitude": -83.92441,
+        "place_details": {
+            "position": [
+                35.96657,
+                -83.92388
+            ],
+            "distance": 48,
+            "title": "Balter Beerworks",
+            "averageRating": 0.0,
+            "category": {
+                "id": "restaurant",
+                "title": "Restaurant",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/restaurant?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/03.icon",
+            "vicinity": "100 S Broadway St<br/>Knoxville, TN 37902",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-fc81f04f3874048d90c8be0eb7f37524;context=Zmxvdy1pZD05MDExOGYwOS0zOTcxLTU3MzctODhjMS1mMTRhMmNkNjI2ODhfMTU4Mjc0NTExNTU3MV81MTQ4XzU3MzUmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "tags": [
+                {
+                    "id": "american",
+                    "title": "American",
+                    "group": "cuisine"
+                }
+            ],
+            "id": "840aabd1-fc81f04f3874048d90c8be0eb7f37524",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Mon-Thu: 11:00 - 23:00<br/>Fri: 11:00 - 00:00<br/>Sat: 10:00 - 00:00<br/>Sun: 10:00 - 23:00",
+                "label": "Opening hours",
+                "isOpen": true,
+                "structured": [
+                    {
+                        "start": "T110000",
+                        "duration": "PT12H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:MO,TU,WE,TH"
+                    },
+                    {
+                        "start": "T110000",
+                        "duration": "PT13H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:FR"
+                    },
+                    {
+                        "start": "T100000",
+                        "duration": "PT14H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SA"
+                    },
+                    {
+                        "start": "T100000",
+                        "duration": "PT13H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SU"
+                    }
+                ]
+            },
+            "alternativeNames": [
+                {
+                    "name": "Baiter Beerworks",
+                    "language": "en"
+                }
+            ]
+        }
     },
     "crafty bastard brewery": {
         "visited": "no",
         "address": "6 Emory Pl, Knoxville, TN 37917, United States",
         "latitude": 35.97463,
-        "longitude": -83.9226
+        "longitude": -83.9226,
+        "place_details": {
+            "position": [
+                35.97435,
+                -83.92231
+            ],
+            "distance": 41,
+            "title": "Crafty Bastard",
+            "averageRating": 0.0,
+            "category": {
+                "id": "wine-and-liquor",
+                "title": "Wine & Spirits",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/wine-and-liquor?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/09.icon",
+            "vicinity": "6 Emory Pl<br/>Knoxville, TN 37917",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-55f9829c5067481eacc6a7d744ccb80f;context=Zmxvdy1pZD03NmFjNmI4YS05ZDBlLTUwMWQtOGIwMC05Y2VmNzg5OTA5ZjNfMTU4Mjc0NTExNjAzNF80NTkzXzk3MzUmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "id": "840dnkkd-55f9829c5067481eacc6a7d744ccb80f",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Tue-Fri: 16:00 - 00:00<br/>Sat: 14:00 - 00:00<br/>Sun: 14:00 - 21:00",
+                "label": "Opening hours",
+                "isOpen": false,
+                "structured": [
+                    {
+                        "start": "T160000",
+                        "duration": "PT08H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:TU,WE,TH,FR"
+                    },
+                    {
+                        "start": "T140000",
+                        "duration": "PT10H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SA"
+                    },
+                    {
+                        "start": "T140000",
+                        "duration": "PT07H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SU"
+                    }
+                ]
+            }
+        }
     },
     "geezers brewing co": {
         "visited": "no",
         "address": "225 E 5th Ave, Knoxville, TN 37917, United States",
         "latitude": 35.97432,
-        "longitude": -83.92033
+        "longitude": -83.92033,
+        "place_details": {}
     },
     "home": {
         "visited": "no",
         "address": "10936 Parkside Dr, Knoxville, TN 37934, United States",
         "latitude": 35.9028866,
-        "longitude": -84.1482036
+        "longitude": -84.1482036,
+        "place_details": {
+            "position": [
+                35.90653,
+                -84.15479
+            ],
+            "distance": 718,
+            "title": "At Home",
+            "averageRating": 0.0,
+            "category": {
+                "id": "hardware-house-garden-shop",
+                "title": "DIY/garden centre",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/hardware-house-garden-shop?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/09.icon",
+            "vicinity": "11221 Outlet Dr<br/>Farragut, TN 37932",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840jx7ps-1f3af1ca749a01c6cd1298d2454825d2;context=Zmxvdy1pZD1lMDkyZTY5MC1iZDA4LTU0MTQtYjM5Ni1iNTJiZDZmYzQzMDlfMTU4Mjc0NTExNjk1NF85NDcyXzQ2MDMmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "id": "840jx7ps-1f3af1ca749a01c6cd1298d2454825d2"
+        }
     },
     "last days of autumn brewing": {
         "visited": "no",
         "address": "808 E Magnolia Ave, Knoxville, TN 37917, United States",
         "latitude": 35.9760533,
-        "longitude": -83.9149333
+        "longitude": -83.9149333,
+        "place_details": {
+            "position": [
+                35.97592,
+                -83.91476
+            ],
+            "distance": 22,
+            "title": "Last Days of Autumn Brewing",
+            "averageRating": 0.0,
+            "category": {
+                "id": "restaurant",
+                "title": "Restaurant",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/restaurant?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/03.icon",
+            "vicinity": "808 E Magnolia Ave NE<br/>Knoxville, TN 37917",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-86e3c9428d180d42655388eab392fec0;context=Zmxvdy1pZD04YWExZDM3Yy0zNGFmLTVjMWYtODNmOC0wMjJjMTRmZThkZDlfMTU4Mjc0NTExNzM2OF84MzY4XzUxMjMmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "tags": [
+                {
+                    "id": "brewpub",
+                    "title": "Brewpub",
+                    "group": "cuisine"
+                }
+            ],
+            "id": "840aabd1-86e3c9428d180d42655388eab392fec0",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Mon-Thu: 16:00 - 22:00<br/>Fri: 16:00 - 23:00<br/>Sat: 13:00 - 23:00<br/>Sun: 12:00 - 20:00",
+                "label": "Opening hours",
+                "isOpen": false,
+                "structured": [
+                    {
+                        "start": "T160000",
+                        "duration": "PT06H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:MO,TU,WE,TH"
+                    },
+                    {
+                        "start": "T160000",
+                        "duration": "PT07H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:FR"
+                    },
+                    {
+                        "start": "T130000",
+                        "duration": "PT10H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SA"
+                    },
+                    {
+                        "start": "T120000",
+                        "duration": "PT08H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SU"
+                    }
+                ]
+            }
+        }
     },
     "next level brewing company": {
         "visited": "no",
         "address": "700 N Broadway NE, Knoxville, TN 37917, United States",
         "latitude": 35.97626,
-        "longitude": -83.92371
+        "longitude": -83.92371,
+        "place_details": {}
     },
     "pretentious beer co": {
         "visited": "no",
         "address": "131 S Central St, Knoxville, TN 37902, United States",
         "latitude": 35.96934,
-        "longitude": -83.91802
+        "longitude": -83.91802,
+        "place_details": {
+            "position": [
+                35.96928,
+                -83.9183
+            ],
+            "distance": 26,
+            "title": "Pretentious Beer",
+            "averageRating": 0.0,
+            "category": {
+                "id": "wine-and-liquor",
+                "title": "Wine & Spirits",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/wine-and-liquor?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/09.icon",
+            "vicinity": "131 S Central St<br/>Knoxville, TN 37902",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-1e0b39c9a1f84295aecf5b53775aa2f0;context=Zmxvdy1pZD1kOWI4OTNjMS05ZDM5LTUyNDUtODI5MS01YjAwNmRlNDEwZjZfMTU4Mjc0NTExODM3Nl84NjYwXzg5MTcmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "tags": [
+                {
+                    "id": "american",
+                    "title": "American",
+                    "group": "cuisine"
+                }
+            ],
+            "id": "840dnkkd-1e0b39c9a1f84295aecf5b53775aa2f0",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Mon-Thu: 15:00 - 23:00<br/>Fri: 15:00 - 01:00<br/>Sat: 12:00 - 01:00<br/>Sun: 12:00 - 20:00",
+                "label": "Opening hours",
+                "isOpen": false,
+                "structured": [
+                    {
+                        "start": "T150000",
+                        "duration": "PT08H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:MO,TU,WE,TH"
+                    },
+                    {
+                        "start": "T150000",
+                        "duration": "PT10H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:FR"
+                    },
+                    {
+                        "start": "T120000",
+                        "duration": "PT13H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SA"
+                    },
+                    {
+                        "start": "T120000",
+                        "duration": "PT08H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SU"
+                    }
+                ]
+            }
+        }
     },
     "printshop beer co": {
         "visited": "no",
         "address": "1532 Island Home Ave, Knoxville, TN 37920, United States",
         "latitude": 35.96062,
-        "longitude": -83.89669
+        "longitude": -83.89669,
+        "place_details": {
+            "position": [
+                35.96049,
+                -83.8967
+            ],
+            "distance": 14,
+            "title": "Printshop Beer",
+            "averageRating": 0.0,
+            "category": {
+                "id": "wine-and-liquor",
+                "title": "Wine & Spirits",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/wine-and-liquor?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/09.icon",
+            "vicinity": "1532 Island Home Ave<br/>Knoxville, TN 37920",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-13f085edad69489b834a0fad99b646c1;context=Zmxvdy1pZD1lZGM5Y2RiZi0yZDNjLTU1ZmQtYWQ4MS1hNjEyZjhjNGZjYmZfMTU4Mjc0NTExODgxMl84MjU3XzEyMTImcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "id": "840dnkkd-13f085edad69489b834a0fad99b646c1",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Mon-Thu: 16:00 - 22:00<br/>Fri: 13:00 - 23:00<br/>Sat: 12:00 - 23:00<br/>Sun: 12:00 - 21:00",
+                "label": "Opening hours",
+                "isOpen": false,
+                "structured": [
+                    {
+                        "start": "T160000",
+                        "duration": "PT06H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:MO,TU,WE,TH"
+                    },
+                    {
+                        "start": "T130000",
+                        "duration": "PT10H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:FR"
+                    },
+                    {
+                        "start": "T120000",
+                        "duration": "PT11H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SA"
+                    },
+                    {
+                        "start": "T120000",
+                        "duration": "PT09H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SU"
+                    }
+                ]
+            }
+        }
     },
     "round 6 brewing": {
         "visited": "no",
         "address": "427 Whitecrest Dr, Maryville, TN 37801, United States",
         "latitude": 35.75608,
-        "longitude": -83.99436
+        "longitude": -83.99436,
+        "place_details": {
+            "position": [
+                35.75576,
+                -83.99398
+            ],
+            "distance": 49,
+            "title": "Round 6 Brewing",
+            "averageRating": 0.0,
+            "category": {
+                "id": "wine-and-liquor",
+                "title": "Wine & Spirits",
+                "href": "https://places.ls.hereapi.com/places/v1/categories/places/wine-and-liquor?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+                "type": "urn:nlp-types:category",
+                "system": "places"
+            },
+            "icon": "https://download.vcdn.data.here.com/p/d/places2/icons/categories/09.icon",
+            "vicinity": "427 Whitecrest Dr<br/>Maryville, TN 37801",
+            "having": [],
+            "type": "urn:nlp-types:place",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnk72-de84b073e1a846dcb549911d9ea675ba;context=Zmxvdy1pZD0yNDZiYjgyZi04ZDI0LTViYzgtODQ1ZC0zOTUyMWUxNGFjZTdfMTU4Mjc0NTExOTI2MV80ODNfMjY1MiZyYW5rPTA?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "id": "840dnk72-de84b073e1a846dcb549911d9ea675ba",
+            "authoritative": true,
+            "openingHours": {
+                "text": "Mon, Sun: 15:00 - 21:00<br/>Tue-Thu: 16:00 - 23:00<br/>Fri: 16:00 - 00:00<br/>Sat: 14:00 - 00:00",
+                "label": "Opening hours",
+                "isOpen": false,
+                "structured": [
+                    {
+                        "start": "T150000",
+                        "duration": "PT06H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:MO,SU"
+                    },
+                    {
+                        "start": "T160000",
+                        "duration": "PT07H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:TU,WE,TH"
+                    },
+                    {
+                        "start": "T160000",
+                        "duration": "PT08H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:FR"
+                    },
+                    {
+                        "start": "T140000",
+                        "duration": "PT10H00M",
+                        "recurrence": "FREQ:DAILY;BYDAY:SA"
+                    }
+                ]
+            }
+        }
     }
 }
