@@ -6,14 +6,14 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoia2NhdmFnbm9sbyIsImEiOiJjamtvOWExZHYydm1xM3Bre
 var origin = [-83.924137, 35.961671]
 
 // initialize number of layers
-var num_layers = 0;
+var numLayers = 0;
 
 // load mapbox gl
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/dark-v10?optimize=true',
     center: origin,
-    zoom: 10,
+    zoom: 9,
     attributionControl: false,
     failIfMajorPerformanceCaveat: true
 }).addControl(new mapboxgl.AttributionControl({
@@ -105,7 +105,7 @@ function addTracker() {
 }
 
 // function to add route layers
-function addRoutes(i, random_color) {
+function addRoutes(i, layerColor) {
 
     // set the id
     var routeLayerId = 'route_' + i;
@@ -122,17 +122,17 @@ function addRoutes(i, random_color) {
             'line-cap': 'round'
         },
         'paint': {
-            'line-color': random_color,
+            'line-color': layerColor,
             'line-width': 2
         }
     });
 
     // make visibility toggle
-    toggleVisibility(routeLayerId, random_color);
+    toggleVisibility(routeLayerId, layerColor);
 }
 
 // function to add stop layers
-function addStops(i, random_color) {
+function addStops(i, layerColor) {
 
     // set the id
     var stopLayerId = 'route_' + i + '_stops';
@@ -152,7 +152,7 @@ function addStops(i, random_color) {
                 'case',
                 ['boolean', ['feature-state', 'hover'], false],
                 "#ffffff",
-                random_color
+                layerColor
             ],
             'circle-stroke-color': '#ffffff',
             'circle-stroke-width': 1,
@@ -176,13 +176,13 @@ function addStops(i, random_color) {
         var coordinates = e.features[0].geometry.coordinates.slice();
         var properties = e.features[0].properties;
         var layer = e.features[0].layer;
-        var description_elements = [
+        var descriptionElements = [
             properties.address,
             "arrive: " + new Date(properties.arrival_time).toLocaleString(),
             "depart: " + new Date(properties.departure_time).toLocaleString()
         ]
         var brewery = properties.location_id.toUpperCase();
-        var description = '<h3>' + brewery + '</h3><p>' + description_elements.join('<br>') + '</p>'
+        var description = '<h3>' + brewery + '</h3><p>' + descriptionElements.join('<br>') + '</p>'
 
         // Ensure that if the map is zoomed out such that multiple
         // copies of the feature are visible, the popup appears
@@ -239,18 +239,18 @@ function addStops(i, random_color) {
     });
 
     // make visibility toggle
-    toggleVisibility(stopLayerId, random_color);
+    toggleVisibility(stopLayerId, layerColor);
 }
 
 // toggle layer visibility
-function toggleVisibility(layerId, random_color) {
+function toggleVisibility(layerId, layerColor) {
 
     // test of fetching json data
     var url = `https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/${layerId}.geojson`;
     fetch(url)
         .then(response => response.json())
-        .then(route_data => {
-            var route_name = route_data['metadata']['average_bearing'];
+        .then(routeData => {
+            var routeName = routeData['metadata']['average_bearing'];
         });
 
     // create a clickable button
@@ -259,7 +259,7 @@ function toggleVisibility(layerId, random_color) {
     button.className = 'active';
     button.textContent = layerId;
     button.style.opacity = 1.0;
-    button.style.background = random_color;
+    button.style.background = layerColor;
 
     // toggle visibility when clicked
     button.onclick = function (e) {
@@ -276,45 +276,48 @@ function toggleVisibility(layerId, random_color) {
         } else {
             this.className = 'active';
             map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-            target.style.background = random_color;
+            target.style.background = layerColor;
         }
     };
 
     // add button to menu div
-    var layers = document.getElementById('menu');
+    var layers = document.getElementById('layers');
     layers.appendChild(button);
 }
 
-// add collapsible content
-function addCollapsible() {
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
-    for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function () {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
-            } else {
-                content.style.display = "block";
-            }
-        });
-    }
+// distinct color pallete
+function distinctColors(i) {
+    // Generate colors (as Chroma.js objects)
+    var colors = paletteGenerator.generate(
+        5, // Colors
+        function (color) { // This function filters valid colors
+            var hcl = color.hcl();
+            return hcl[0] >= 0 && hcl[0] <= 360 &&
+                hcl[1] >= 40 && hcl[1] <= 70 &&
+                hcl[2] >= 15 && hcl[2] <= 85;
+        },
+        false, // Using Force Vector instead of k-Means
+        50, // Steps (quality)
+        false, // Ultra precision
+        'Compromise' // Color distance type (colorblindness)
+    );
+    // Sort colors by differenciation first
+    return paletteGenerator.diffSort(colors, 'Compromise');
 }
 
 // function to iteratively add as many layers as in tileset
-function setLayers(new_num_layers) {
-    for (let i = new_num_layers; i < num_layers; ++i) {
+function setLayers(newNumLayers) {
+    var colors = distinctColors(newNumLayers);
+    for (let i = newNumLayers; i < numLayers; ++i) {
         map.removeLayer('route_' + i);
         map.removeLayer('route_' + i + '_stops');
     }
-    for (let i = num_layers; i < new_num_layers; ++i) {
-        // TODO: change random color to... not random
-        var random_color = '#' + Math.random().toString(16).slice(2, 8).toUpperCase();
-        addRoutes(i, random_color);
-        addStops(i, random_color);
+    for (let i = numLayers; i < newNumLayers; ++i) {
+        var layerColor = colors[i].hex();
+        addRoutes(i, layerColor);
+        addStops(i, layerColor);
     }
-    num_layers = new_num_layers;
+    numLayers = newNumLayers;
 };
 
 // function to add map inspection
@@ -470,9 +473,6 @@ map.on('load', function () {
     // add routes
     numRoutes = 5;
     setLayers(numRoutes);
-
-    // add collapsible
-    addCollapsible();
 
     // add animation and controls
     /* addTracker();
