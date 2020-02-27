@@ -40,12 +40,6 @@ map.addControl(
 // Add zoom and rotation controls to the map.
 map.addControl(new mapboxgl.NavigationControl());
 
-// add map inspection
-var inspect = new MapboxInspect({
-    showInspectMap: false,
-    showInspectButton: true,
-});
-
 // A single tracker point that animates along the route.
 // Coordinates are initially set to origin.
 var tracker = {
@@ -71,6 +65,12 @@ var popup = new mapboxgl.Popup({
     closeButton: false,
     closeOnClick: false
 });
+
+/* // test of fetching json data
+var url = `https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/route_0.geojson`;
+let routeData = getData(url);
+console.log("outside func:", routeData);
+var features = geoObject.features; */
 
 // function to add sources
 function addSources() {
@@ -242,16 +242,15 @@ function addStops(i, layerColor) {
     toggleVisibility(stopLayerId, layerColor);
 }
 
+// load geojson data
+async function getData(url) {
+    let response = await fetch(url);
+    let data = await response.json();
+    return data;
+}
+
 // toggle layer visibility
 function toggleVisibility(layerId, layerColor) {
-
-    // test of fetching json data
-    var url = `https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/${layerId}.geojson`;
-    fetch(url)
-        .then(response => response.json())
-        .then(routeData => {
-            var routeName = routeData['metadata']['average_bearing'];
-        });
 
     // create a clickable button
     var button = document.createElement('button');
@@ -322,6 +321,10 @@ function setLayers(newNumLayers) {
 
 // function to add map inspection
 function addInspection() {
+    var inspect = new MapboxInspect({
+        showInspectMap: false,
+        showInspectButton: true,
+    });
     map.addControl(inspect);
     map.on('styledata', function () {
         var layerList = document.getElementById('layerList');
