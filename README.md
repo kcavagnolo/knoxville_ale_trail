@@ -103,7 +103,8 @@ bumpversion minor --verbose
 - Add `time_windows` to each location for hours of operation.
 - Display itinerary as Gantt.
 - Add animation to markers on arrival.
-- Dig into this [awesome viz](https://github.com/chriswhong/nyctaxi)
+- Dig into [this awesome viz](https://github.com/chriswhong/nyctaxi)
+- Seek inspiration from [this design](https://demos.mapbox.com/vt_polygons)
 - Add minify of css and js
 
 ## Mapbox Styling HowTo's

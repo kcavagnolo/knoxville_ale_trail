@@ -21,6 +21,10 @@ var map = new mapboxgl.Map({
     customAttribution: "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>&copy; kcavagnolo</a>"
 }));
 
+// Enable RTL support
+mapboxgl.setRTLTextPlugin("https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js", null, true // Lazy load the plugin
+);
+
 // add geocoder
 map.addControl(
     new MapboxGeocoder({
@@ -34,7 +38,7 @@ map.addControl(
             latitude: origin[1]
         },
         marker: false
-    })
+    }), "top-right"
 );
 
 // Add zoom and rotation controls to the map.
@@ -63,7 +67,11 @@ var hoverId = null;
 // Create a popup, but don't add it to the map yet.
 var popup = new mapboxgl.Popup({
     closeButton: false,
-    closeOnClick: false
+    closeOnClick: false,
+    offset: {
+        "top": [0, 10],
+        "bottom": [0, -10]
+    }
 });
 
 /* // test of fetching json data
@@ -243,10 +251,14 @@ function addStops(i, layerColor) {
 }
 
 // load geojson data
-async function getData(url) {
-    let response = await fetch(url);
-    let data = await response.json();
-    return data;
+function getData(url) {
+
+    fetch(url).then(function (resp) {
+        return resp.json();
+    }).then(function (lookup_data) {
+        initMapCb(lookup_data, level);
+        initLayersCb(level);
+    });
 }
 
 // toggle layer visibility
