@@ -29,6 +29,15 @@ python3 create_tiles.py -gd data/geojson -td data/tiles --mbtiles --upload -vv
 
 ## Maintenance
 
+### Mapbox Credentials
+
+If you're working with multiple Mapbox accounts, the scripts assume you have standard env vars like this:
+
+```bash
+export MAPBOX_USERNAME=$MAPBOX_USER_PERSONAL
+export MAPBOX_ACCESS_TOKEN=$MAPBOX_ACCESS_TOKEN_PERSONAL
+```
+
 ### Local Tileserver
 
 To inspect the tiles locally, I use [TileServer GL](https://tileserver.readthedocs.io):
@@ -94,7 +103,8 @@ bumpversion minor --verbose
 - Add `time_windows` to each location for hours of operation.
 - Display itinerary as Gantt.
 - Add animation to markers on arrival.
-- Dig into this [awesome viz](https://github.com/chriswhong/nyctaxi)
+- Dig into [this awesome viz](https://github.com/chriswhong/nyctaxi)
+- Seek inspiration from [this design](https://demos.mapbox.com/vt_polygons)
 - Add minify of css and js
 
 ## Mapbox Styling HowTo's

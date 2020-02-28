@@ -21,6 +21,10 @@ var map = new mapboxgl.Map({
     customAttribution: "<a href='https://github.com/kcavagnolo/knoxville_ale_trail' target='_blank'>&copy; kcavagnolo</a>"
 }));
 
+// Enable RTL support
+mapboxgl.setRTLTextPlugin("https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js", null, true // Lazy load the plugin
+);
+
 // add geocoder
 map.addControl(
     new MapboxGeocoder({
@@ -34,17 +38,11 @@ map.addControl(
             latitude: origin[1]
         },
         marker: false
-    })
+    }), "top-right"
 );
 
 // Add zoom and rotation controls to the map.
 map.addControl(new mapboxgl.NavigationControl());
-
-// add map inspection
-var inspect = new MapboxInspect({
-    showInspectMap: false,
-    showInspectButton: true,
-});
 
 // A single tracker point that animates along the route.
 // Coordinates are initially set to origin.
@@ -69,8 +67,18 @@ var hoverId = null;
 // Create a popup, but don't add it to the map yet.
 var popup = new mapboxgl.Popup({
     closeButton: false,
-    closeOnClick: false
+    closeOnClick: false,
+    offset: {
+        "top": [0, 10],
+        "bottom": [0, -10]
+    }
 });
+
+/* // test of fetching json data
+var url = `https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/route_0.geojson`;
+let routeData = getData(url);
+console.log("outside func:", routeData);
+var features = geoObject.features; */
 
 // function to add sources
 function addSources() {
@@ -242,16 +250,19 @@ function addStops(i, layerColor) {
     toggleVisibility(stopLayerId, layerColor);
 }
 
+// load geojson data
+function getData(url) {
+
+    fetch(url).then(function (resp) {
+        return resp.json();
+    }).then(function (lookup_data) {
+        initMapCb(lookup_data, level);
+        initLayersCb(level);
+    });
+}
+
 // toggle layer visibility
 function toggleVisibility(layerId, layerColor) {
-
-    // test of fetching json data
-    var url = `https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/${layerId}.geojson`;
-    fetch(url)
-        .then(response => response.json())
-        .then(routeData => {
-            var routeName = routeData['metadata']['average_bearing'];
-        });
 
     // create a clickable button
     var button = document.createElement('button');
@@ -322,6 +333,10 @@ function setLayers(newNumLayers) {
 
 // function to add map inspection
 function addInspection() {
+    var inspect = new MapboxInspect({
+        showInspectMap: false,
+        showInspectButton: true,
+    });
     map.addControl(inspect);
     map.on('styledata', function () {
         var layerList = document.getElementById('layerList');

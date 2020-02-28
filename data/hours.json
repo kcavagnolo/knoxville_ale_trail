@@ -1,0 +1,17 @@
+{
+    "text": "Tue-Thu: 16:00 - 22:00<br/>Fri, Sat: 12:00 - 23:00",
+    "label": "Opening hours",
+    "isOpen": false,
+    "structured": [
+        {
+            "start": "T160000",
+            "duration": "PT06H00M",
+            "recurrence": "FREQ:DAILY;BYDAY:TU,WE,TH"
+        },
+        {
+            "start": "T120000",
+            "duration": "PT11H00M",
+            "recurrence": "FREQ:DAILY;BYDAY:FR,SA"
+        }
+    ]
+}
