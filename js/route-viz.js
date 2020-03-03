@@ -323,7 +323,7 @@ if (!mapboxgl.supported()) {
             }];
             console.log(series);
             Highcharts.ganttChart('gantt-container', {
-                /* navigator: {
+                navigator: {
                     enabled: true,
                     liveRedraw: true,
                     series: {
@@ -341,10 +341,6 @@ if (!mapboxgl.supported()) {
                 scrollbar: {
                     enabled: true
                 },
-                rangeSelector: {
-                    enabled: true,
-                    selected: 0
-                }, */
                 series: series,
                 tooltip: {
                     pointFormatter: function () {
@@ -373,9 +369,6 @@ if (!mapboxgl.supported()) {
                         }, '');
                     }
                 },
-                /* title: {
-                    text: 'Knoxville Ale Trail Route'
-                }, */
                 xAxis: {
                     currentDateIndicator: true
                 }
