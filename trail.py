@@ -472,7 +472,7 @@ def main():
 
                 # highcharts compatible details
                 stop['name'] = stop['location_id'].title()
-                stop['id'] = "_stop_{}".format(route_id, str(stop['position_in_route']))
+                stop['id'] = "{}_stop_{}".format(route_id, str(stop['position_in_route']))
                 stop['parent'] = route_id
                 stop['color'] = route_color
                 stop['start'] = stop['abs_arrival_time'] * 1000
