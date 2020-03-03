@@ -39,7 +39,6 @@
     <link rel="preload" href="css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <!-- <link rel="preload" href="https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.css" as="style" onload="this.onload=null;this.rel='stylesheet'"> -->
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -92,22 +91,36 @@
         </div>
     </div>
 
-    <!-- debugging layers
-    <div id="layerList"></div>
-    -->
+    <!-- the gantt -->
+    <div id="gantt-container" class="gantt"></div>
 
-    <!-- javascript -->
-    <script src="https://kit.fontawesome.com/c85fc9b65e.js" crossorigin="anonymous"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
-    <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js" charset="utf-8"></script>
+    <!-- mapbox javascript -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-language/v0.10.1/mapbox-gl-language.js'></script>
+    <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+
+    <!-- es6 javascript -->
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
-    <!-- <script src='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.js'></script> -->
+
+    <!-- chroma -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
+    <script src="js/chroma.palette-gen.js"></script>
+
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/c85fc9b65e.js" crossorigin="anonymous"></script>
+
+    <!-- highcharts -->
+    <script src="https://code.highcharts.com/gantt/highcharts-gantt.js"></script>
+    <script src="https://code.highcharts.com/gantt/modules/exporting.js"></script>
+
+    <!-- google -->
     <script src="js/goptimize.js"></script>
     <script src="js/ganalytics.js"></script>
-    <script src="js/chroma.palette-gen.js"></script>
+
+    <!-- local -->
     <script src="js/route-viz.js"></script>
 
 </body>

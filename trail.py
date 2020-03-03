@@ -383,17 +383,32 @@ def main():
         # parse the routes
         routes = solution['routes']
 
+        # colors to style stops and routes
+        n_routes = len(routes)
+        color_start = Color("red")
+        color_end = Color("violet")
+        colors = list(color_start.range_to(color_end, n_routes))
+
         # due to empty routes, enumerate can get out of sync
         route_num = 0
         for route in routes:
-
-            # define a geodetic for calculations
-            geodesic = pyproj.Geod(ellps='WGS84')
 
             # check for no where routes
             if route['route_distance'] == 0:
                 logging.warning('Empty route; unused shift {}, skipping'.format(route['shift_id']))
                 continue
+
+            # define a route id
+            route_id = "route_{}".format(route_num)
+
+            # define a geodetic for calculations
+            geodesic = pyproj.Geod(ellps='WGS84')
+
+            # highcharts compatible details
+            route_color = colors[route_num].hex_l
+            route['name'] = 'Route {}'.format(route_num)
+            route['id'] = route_id
+            route['color'] = route_color
 
             # store desirable geo features and remove globally
             route_polylines = route['polylines']
@@ -405,7 +420,7 @@ def main():
 
             # initialize route params
             routefile = os.path.join(
-                datadir, "geojson/route_{}.geojson".format(route_num))
+                datadir, "geojson/{}.geojson".format(route_id))
             route_features = []
 
             # loop over legs in route; note that route is already a nice dict
@@ -428,18 +443,12 @@ def main():
 
             # initialize stop params
             stopsfile = os.path.join(
-                datadir, "geojson/route_{}_stops.geojson".format(route_num))
+                datadir, "geojson/{}_stops.geojson".format(route_id))
             stop_features = []
 
             # get the saved brewery data
             with open(geocoded_breweries) as f:
                 breweries_data = json.load(f)
-
-            # colors to style stops
-            n_stops = len(route_stops)
-            color_start = Color("red")
-            color_end = Color("violet")
-            colors = list(color_start.range_to(color_end, n_stops))
 
             # loop over stops; note: a stop is already a nice dict
             stop_geoid = 0
@@ -459,7 +468,15 @@ def main():
                 stop['description'] = stop['location_id']
                 stop['marker-size'] = "small"
                 stop['marker-symbol'] = "beer"
-                stop['marker-color'] = colors[n].hex_l
+                stop['marker-color'] = route_color
+
+                # highcharts compatible details
+                stop['name'] = stop['location_id'].title()
+                stop['id'] = "_stop_{}".format(route_id, str(stop['position_in_route']))
+                stop['parent'] = route_id
+                stop['color'] = route_color
+                stop['start'] = stop['abs_arrival_time'] * 1000
+                stop['end'] = stop['abs_departure_time'] * 1000
 
                 # convert point to geom
                 lat = stop['latitude']
@@ -517,6 +534,6 @@ if __name__ == '__main__':
     main()
     logging.info("Run complete.")
     elapsed = time.time() - start_time
-    elapsed = str(dt.datetime.timedelta(seconds=elapsed))
+    elapsed = str(dt.timedelta(seconds=elapsed))
     logging.info("--- Run time: {} ---".format(elapsed))
     sys.exit(0)

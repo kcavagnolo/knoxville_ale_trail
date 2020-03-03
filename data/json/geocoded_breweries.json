@@ -23,7 +23,7 @@
             "vicinity": "100 Lockett Rd<br/>Knoxville, TN 37919",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkk2-be3971e7d07b4849ae183ce082e4ee4d;context=Zmxvdy1pZD04ZjM3OTg4NC03YWU4LTU4YzUtOTQzZi00MTBlN2RjZjZhMDRfMTU4Mjc0NTEwOTAxOF8xODI1XzkzNTMmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkk2-be3971e7d07b4849ae183ce082e4ee4d;context=Zmxvdy1pZD03Y2VhYjFmNS1hMmVmLTUyY2EtYTRmNC04NDUxOTQ0YzRjNThfMTU4MzI1OTA4ODkzOF8zNTlfMTg1NSZyYW5rPTA?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "id": "840dnkk2-be3971e7d07b4849ae183ce082e4ee4d",
             "authoritative": true,
             "openingHours": {
@@ -90,7 +90,7 @@
             "vicinity": "2045 Norris Fwy<br/>Andersonville, TN 37705",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnknn-2e58d5781edc4d5d855cc06afcddc652;context=Zmxvdy1pZD1lNTQzNjY2Ny1lMzJiLTUyN2ItOTAyNC0wMjA0NDI3OGY5YTlfMTU4Mjc0NTExMDkwMl82MjM1XzY4NjImcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnknn-2e58d5781edc4d5d855cc06afcddc652;context=Zmxvdy1pZD1mOTM4YmRhYy1kZDA2LTUxNzgtYmQ3Ni04ZDNmYWY2ZTdlOWNfMTU4MzI1OTA5Mjg0MV85MTVfMjQzMSZyYW5rPTA?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "tags": [
                 {
                     "id": "american",
@@ -153,7 +153,7 @@
             "vicinity": "424 S Gay St<br/>Knoxville, TN 37902",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-af88945f3e664b049e07190ebf005982;context=Zmxvdy1pZD1iYjAxMmIxMy05NmMwLTUxNGMtYTllZS04NWM5MTBmOTk1OGFfMTU4Mjc0NTExMTQwMF84MDI3XzMwNjQmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-af88945f3e664b049e07190ebf005982;context=Zmxvdy1pZD0wOTVkNWExZi03MzBmLTUxZDctOGE3Mi1iMjE0NDc2MzQ2YjJfMTU4MzI1OTA5MzgzOF8zNjA4XzQ5NzAmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "tags": [
                 {
                     "id": "american",
@@ -227,7 +227,7 @@
             "vicinity": "745 N Broadway St<br/>Knoxville, TN 37917",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-424dd940c3714a0d837c250aa97f1ac2;context=Zmxvdy1pZD0wOTllYjZhMy01MjNkLTVmNDktYTQ0ZS0wNDUyNDY5NzZhZjBfMTU4Mjc0NTExMTg3OF83MTU4XzkzMjMmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-424dd940c3714a0d837c250aa97f1ac2;context=Zmxvdy1pZD1kZDI0ZjQ1NS04YjMzLTUyYjQtYmI4Ny0yZGU1ODhjZDFkZmRfMTU4MzI1OTA5NDgwM185NjA0XzQzNjgmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "tags": [
                 {
                     "id": "american",
@@ -306,7 +306,7 @@
             "vicinity": "2419 N Central St<br/>Knoxville, TN 37917",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkk9-e516a9d8ed27410cb001555fe1506eda;context=Zmxvdy1pZD03OWQ0Y2RiMy1mMzMwLTVkM2ItYmViOC02ODcxNjVkMWMwOWNfMTU4Mjc0NTExMjM0NV82MTMyXzQwNjAmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkk9-e516a9d8ed27410cb001555fe1506eda;context=Zmxvdy1pZD00NzNjMzk2ZS1jOTQwLTUwMzEtYjIwNi0zM2ZhM2Y0NGJhZTdfMTU4MzI1OTA5NTc0OV82ODYwXzk4MDImcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "id": "840dnkk9-e516a9d8ed27410cb001555fe1506eda",
             "authoritative": true
         }
@@ -335,7 +335,7 @@
             "vicinity": "2727 N Central St<br/>Knoxville, TN 37917",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840d408k-0894ab71bbfc081e8cc6c8c52c7346ab;context=Zmxvdy1pZD0yM2U5MWM3ZS03YTViLTU4YjYtOGIyNy1jYjZhYjVkYzMzNTBfMTU4Mjc0NTExMjgxMl84MzA2Xzc2NjcmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840d408k-0894ab71bbfc081e8cc6c8c52c7346ab;context=Zmxvdy1pZD0xYTEyOTE5My1lNmRmLTUzZjgtODZlMC1hYzQ0NTcwZmQ1ZTNfMTU4MzI1OTA5NjcxMF80NTk3Xzc0NjUmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "id": "840d408k-0894ab71bbfc081e8cc6c8c52c7346ab",
             "authoritative": true
         }
@@ -364,7 +364,7 @@
             "vicinity": "1002 Dutch Valley Dr NE<br/>Knoxville, TN 37918",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkc-ec202862986f42e09a619f64023c0529;context=Zmxvdy1pZD0xOGJhZWE3Mi05NDRhLTU2NGItODIzYy1iNWNlMDI5ZDExMGZfMTU4Mjc0NTExMzI0OV80NjY5XzE5MTQmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkc-ec202862986f42e09a619f64023c0529;context=Zmxvdy1pZD05N2FiYmZkYS0xMzM2LTU5NjYtYmM2Yi1mZTUyYzQyM2IzOGRfMTU4MzI1OTA5NzYyOF8zNTMyXzU2NCZyYW5rPTA?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "id": "840dnkkc-ec202862986f42e09a619f64023c0529",
             "authoritative": true
         }
@@ -393,7 +393,7 @@
             "vicinity": "126 Bernard Ave<br/>Knoxville, TN 37917",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-2c4bf0c09246066194a3549878b219bc;context=Zmxvdy1pZD01OTQwNmRkOC1iZmRlLTU4N2MtOGFhYy1kOTlhZGM2ZjQwNTFfMTU4Mjc0NTExMzcwMV82NzZfNDI4NiZyYW5rPTA?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-2c4bf0c09246066194a3549878b219bc;context=Zmxvdy1pZD1iYWJkNDRkYi04YmM1LTVkYzgtYjIwMy05MDgxNzRjYmE5ODdfMTU4MzI1OTA5ODU2OV8yMTcyXzQ3MjImcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "tags": [
                 {
                     "id": "brewpub",
@@ -457,7 +457,7 @@
             "vicinity": "1004 Parkway<br/>Gatlinburg, TN 37738",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnke5-cc56fb7cc3dd4db0a9f4426bc4b76c31;context=Zmxvdy1pZD0xOTI5NjUyNS0xYmNjLTViZjEtYTY4Zi0wZjY1Y2JkNzg3OTlfMTU4Mjc0NTExNDIwMV8xMzMzXzU0MTAmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnke5-cc56fb7cc3dd4db0a9f4426bc4b76c31;context=Zmxvdy1pZD0wYWY2NmE2ZC0zYzZkLTUwNzUtOTg4ZS00YTZmOWViMGM0MjRfMTU4MzI1OTA5OTU1OV81NzU1XzI4MDImcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "tags": [
                 {
                     "id": "american",
@@ -494,14 +494,14 @@
     "yee haw brewing co ": {
         "visited": "no",
         "address": "131 The Island Dr, Pigeon Forge, TN 37863, United States",
-        "latitude": 35.8022648,
-        "longitude": -83.5710745,
+        "latitude": 35.80219,
+        "longitude": -83.57124,
         "place_details": {
             "position": [
                 35.802391,
                 -83.571133
             ],
-            "distance": 15,
+            "distance": 24,
             "title": "Yee-Haw Brewing Company",
             "averageRating": 0.0,
             "category": {
@@ -515,7 +515,7 @@
             "vicinity": "131 The Island Dr<br/>Pigeon Forge, TN 37863",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnket-c6b58ec6b97146f7ae3859900efae525;context=Zmxvdy1pZD1lZWU1ZmIzNi1iMjEyLTUwZDAtYTdiMC1lZDI2MTNmZTY4OTlfMTU4Mjc0NTExNDY5MF81OTc4Xzc2NjUmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnket-c6b58ec6b97146f7ae3859900efae525;context=Zmxvdy1pZD03YmVlZWY2ZS0wYzMzLTVhNDEtODY1Ny1lNzk1NmUxYTMzZmZfMTU4MzI1OTEwMDUzN184ODM4XzQ2MTUmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "id": "840dnket-c6b58ec6b97146f7ae3859900efae525",
             "alternativeNames": [
                 {
@@ -549,7 +549,7 @@
             "vicinity": "1130 Sevier Ave<br/>Knoxville, TN 37920",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-077cb580f77d0cb6e92c3cd5a79522cf;context=Zmxvdy1pZD1kODc4MmM0NS1lZWVmLTU1MmYtOTMxNy00YTdhZWRiZmM4ZDFfMTU4Mjc0NTExNTEyMl81OTAwXzg0NTMmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-077cb580f77d0cb6e92c3cd5a79522cf;context=Zmxvdy1pZD00MzlhNDgwMC04NjJjLTVjYTgtYTQyNS1hYTYzYzdhZWY2NjlfMTU4MzI1OTEwMTQzNF84ODFfMjU0MCZyYW5rPTA?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "id": "840aabd1-077cb580f77d0cb6e92c3cd5a79522cf",
             "authoritative": true,
             "openingHours": {
@@ -600,7 +600,7 @@
             "vicinity": "100 S Broadway St<br/>Knoxville, TN 37902",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-fc81f04f3874048d90c8be0eb7f37524;context=Zmxvdy1pZD05MDExOGYwOS0zOTcxLTU3MzctODhjMS1mMTRhMmNkNjI2ODhfMTU4Mjc0NTExNTU3MV81MTQ4XzU3MzUmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-fc81f04f3874048d90c8be0eb7f37524;context=Zmxvdy1pZD0yNDYyYTMzMy00OTM3LTU3NGItOWNjNi1jYzlkYjlhODBjNzZfMTU4MzI1OTEwMjM1Nl82NjY2XzI0NTgmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "tags": [
                 {
                     "id": "american",
@@ -669,7 +669,7 @@
             "vicinity": "6 Emory Pl<br/>Knoxville, TN 37917",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-55f9829c5067481eacc6a7d744ccb80f;context=Zmxvdy1pZD03NmFjNmI4YS05ZDBlLTUwMWQtOGIwMC05Y2VmNzg5OTA5ZjNfMTU4Mjc0NTExNjAzNF80NTkzXzk3MzUmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-55f9829c5067481eacc6a7d744ccb80f;context=Zmxvdy1pZD0xOTA4YTY5Yy0zM2U1LTVlNTAtOGM4ZS1mOGNjYzU4YTExYjFfMTU4MzI1OTEwMzI3OV82NjYxXzQyNCZyYW5rPTA?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "id": "840dnkkd-55f9829c5067481eacc6a7d744ccb80f",
             "authoritative": true,
             "openingHours": {
@@ -727,7 +727,7 @@
             "vicinity": "11221 Outlet Dr<br/>Farragut, TN 37932",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840jx7ps-1f3af1ca749a01c6cd1298d2454825d2;context=Zmxvdy1pZD1lMDkyZTY5MC1iZDA4LTU0MTQtYjM5Ni1iNTJiZDZmYzQzMDlfMTU4Mjc0NTExNjk1NF85NDcyXzQ2MDMmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840jx7ps-1f3af1ca749a01c6cd1298d2454825d2;context=Zmxvdy1pZD1hNzc1NmQwNS1iMDFlLTU3YzQtOGMzNy00OGFiZjliM2MzZDNfMTU4MzI1OTEwNTE1Nl8xMjk1XzcxNDAmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "id": "840jx7ps-1f3af1ca749a01c6cd1298d2454825d2"
         }
     },
@@ -755,7 +755,7 @@
             "vicinity": "808 E Magnolia Ave NE<br/>Knoxville, TN 37917",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-86e3c9428d180d42655388eab392fec0;context=Zmxvdy1pZD04YWExZDM3Yy0zNGFmLTVjMWYtODNmOC0wMjJjMTRmZThkZDlfMTU4Mjc0NTExNzM2OF84MzY4XzUxMjMmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840aabd1-86e3c9428d180d42655388eab392fec0;context=Zmxvdy1pZD03M2RmZjhjZS01ZTNkLTVkYWMtOGNkMy0zNDg1MzU4ZDdhOGVfMTU4MzI1OTEwNjA4MV80NTQyXzU3NzgmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "tags": [
                 {
                     "id": "brewpub",
@@ -825,7 +825,7 @@
             "vicinity": "131 S Central St<br/>Knoxville, TN 37902",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-1e0b39c9a1f84295aecf5b53775aa2f0;context=Zmxvdy1pZD1kOWI4OTNjMS05ZDM5LTUyNDUtODI5MS01YjAwNmRlNDEwZjZfMTU4Mjc0NTExODM3Nl84NjYwXzg5MTcmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-1e0b39c9a1f84295aecf5b53775aa2f0;context=Zmxvdy1pZD0yOTkwOGZjOC0wOTA0LTVkZTItODhhYS0yZjcwMzYzMDUzZmVfMTU4MzI1OTEwODEwN182NDk0XzI0NjcmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "tags": [
                 {
                     "id": "american",
@@ -888,7 +888,7 @@
             "vicinity": "1532 Island Home Ave<br/>Knoxville, TN 37920",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-13f085edad69489b834a0fad99b646c1;context=Zmxvdy1pZD1lZGM5Y2RiZi0yZDNjLTU1ZmQtYWQ4MS1hNjEyZjhjNGZjYmZfMTU4Mjc0NTExODgxMl84MjU3XzEyMTImcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnkkd-13f085edad69489b834a0fad99b646c1;context=Zmxvdy1pZD1hMDMwNmQzMS0zMTNjLTUzODUtOTZjMy01YzQ2NmFmOTBjYTRfMTU4MzI1OTEwOTA0NF80MDkzXzQ4MzAmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "id": "840dnkkd-13f085edad69489b834a0fad99b646c1",
             "authoritative": true,
             "openingHours": {
@@ -944,7 +944,7 @@
             "vicinity": "427 Whitecrest Dr<br/>Maryville, TN 37801",
             "having": [],
             "type": "urn:nlp-types:place",
-            "href": "https://places.ls.hereapi.com/places/v1/places/840dnk72-de84b073e1a846dcb549911d9ea675ba;context=Zmxvdy1pZD0yNDZiYjgyZi04ZDI0LTViYzgtODQ1ZC0zOTUyMWUxNGFjZTdfMTU4Mjc0NTExOTI2MV80ODNfMjY1MiZyYW5rPTA?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
+            "href": "https://places.ls.hereapi.com/places/v1/places/840dnk72-de84b073e1a846dcb549911d9ea675ba;context=Zmxvdy1pZD0wOThmZTEyYy0zMGUzLTVlZWUtYTRjZi05YzRmMmEyMDNjMDNfMTU4MzI1OTEwOTk3Ml83NTg2XzEzODgmcmFuaz0w?app_id=bHQpDC4ydCy9KaPeaVsU&app_code=hoHSf-5D_R3_76tK_YceCA",
             "id": "840dnk72-de84b073e1a846dcb549911d9ea675ba",
             "authoritative": true,
             "openingHours": {

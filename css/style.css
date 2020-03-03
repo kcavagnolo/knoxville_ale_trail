@@ -14,7 +14,7 @@ body {
 }
 
 .overlay {
-    background-color: #565656;
+    background-color: rgb(86,86,86, 0.9);
     color: #fff;
     border-radius: 3px;
     font: 600 14px/20px 'Open Sans', sans-serif;
@@ -22,8 +22,20 @@ body {
     top: 10px;
     left: 10px;
     padding: 10px;
-    position: fixed;
     z-index: 1;
+}
+
+.gantt {
+    background-color: rgb(86,86,86, 0.9);
+    color: #fff;
+    border-radius: 3px;
+    font: 600 14px/20px 'Open Sans', sans-serif;
+    position: absolute;
+    bottom: 0px;
+    padding: 10px;
+    z-index: 1;
+    max-width: 800px;
+    margin: 1em auto;
 }
 
 .overlay-inner {
