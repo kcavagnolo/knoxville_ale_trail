@@ -408,7 +408,6 @@ def main():
             route_color = colors[route_num].hex_l
             route['name'] = 'Route {}'.format(route_num)
             route['id'] = route_id
-            route['color'] = route_color
 
             # store desirable geo features and remove globally
             route_polylines = route['polylines']
@@ -474,7 +473,6 @@ def main():
                 stop['name'] = stop['location_id'].title()
                 stop['id'] = "{}_stop_{}".format(route_id, str(stop['position_in_route']))
                 stop['parent'] = route_id
-                stop['color'] = route_color
                 stop['start'] = stop['abs_arrival_time'] * 1000
                 stop['end'] = stop['abs_departure_time'] * 1000
 

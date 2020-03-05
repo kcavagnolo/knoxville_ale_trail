@@ -416,8 +416,27 @@ var series = [{
 
 console.log(series);
 
+function distinctColors(i) {
+    // Generate colors (as Chroma.js objects)
+    var colors = paletteGenerator.generate(
+        i, // Colors
+        function (color) { // This function filters valid colors
+            var hcl = color.hcl();
+            return hcl[0] >= 0 && hcl[0] <= 360 &&
+                hcl[1] >= 40 && hcl[1] <= 70 &&
+                hcl[2] >= 15 && hcl[2] <= 85;
+        },
+        false, // Using Force Vector instead of k-Means
+        50, // Steps (quality)
+        false, // Ultra precision
+        'Compromise' // Color distance type (colorblindness)
+    );
+    // Sort colors by differenciation first
+    return paletteGenerator.diffSort(colors, 'Compromise');
+}
+
 Highcharts.theme = {
-    "colors": ["#FF2700", "#008FD5", "#77AB43", "#636464", "#C4C4C4"],
+    "colors": distinctColors(10).map(x => x.hex()),
     "chart": {
         "backgroundColor": "#F0F0F0",
         "plotBorderColor": "#606063",

@@ -22,7 +22,7 @@ if (!mapboxgl.supported()) {
     var defined = Highcharts.defined;
     var reduce = Highcharts.reduce;
     Highcharts.theme = {
-        "colors": ["#FF2700", "#008FD5", "#77AB43", "#636464", "#C4C4C4"],
+        "colors": distinctColors(10).map(x => x.hex()),
         "chart": {
             "backgroundColor": "#F0F0F0",
             "plotBorderColor": "#606063",
@@ -395,6 +395,8 @@ if (!mapboxgl.supported()) {
     }
 
     // function to add intin to gantt
+    var routeSchedule = [];
+
     function addItinerary(stopLayerId, layerColor) {
 
         var url = `https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/${stopLayerId}.geojson`;
@@ -405,11 +407,11 @@ if (!mapboxgl.supported()) {
                 return feature.properties;
             });
             stopData.push(routeData.metadata);
-            var series = [{
+            routeSchedule.push({
                 name: stopLayerId + "_gantt",
-                data: stopData
-            }];
-            console.log(series);
+                data: stopData,
+                color: layerColor
+            });
             Highcharts.ganttChart('gantt-container', {
                 navigator: {
                     enabled: true,
@@ -429,7 +431,7 @@ if (!mapboxgl.supported()) {
                 scrollbar: {
                     enabled: true
                 },
-                series: series,
+                series: routeSchedule,
                 tooltip: {
                     pointFormatter: function () {
                         var point = this;
@@ -503,7 +505,7 @@ if (!mapboxgl.supported()) {
     function distinctColors(i) {
         // Generate colors (as Chroma.js objects)
         var colors = paletteGenerator.generate(
-            5, // Colors
+            i, // Colors
             function (color) { // This function filters valid colors
                 var hcl = color.hcl();
                 return hcl[0] >= 0 && hcl[0] <= 360 &&
