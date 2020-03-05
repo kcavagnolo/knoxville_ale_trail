@@ -78,7 +78,8 @@ def here_places(lat, lng, name):
     places_url = 'https://places.ls.hereapi.com/places/v1/discover/search?apiKey={}&at={},{}&q={}'
     apikey = os.getenv("HERE_APIKEY")
     try:
-        response = requests.request('GET', places_url.format(apikey, lat, lng, name))
+        response = requests.request(
+            'GET', places_url.format(apikey, lat, lng, name))
         response = response.json()
         if len(response['results']['items']) > 0:
             coords = response['results']['items'][0]['position']
@@ -165,8 +166,10 @@ def parse_hours(hours):
     for period in periods:
         open_time = dt.datetime.strptime(period['start'][1:], '%H%M%S')
         hours, minutes = period['duration'][2:-1].split('H')
-        close_time = open_time + dt.timedelta(hours=int(hours), minutes=int(minutes))
-        recurrence = dict(x.split(":") for x in period['recurrence'].split(";"))
+        close_time = open_time + \
+                     dt.timedelta(hours=int(hours), minutes=int(minutes))
+        recurrence = dict(x.split(":")
+                          for x in period['recurrence'].split(";"))
         for day in recurrence['BYDAY'].split(','):
             weekly_hours[day]['open'] = open_time.time()
             weekly_hours[day]['close'] = close_time.time()
@@ -180,6 +183,10 @@ def degrees_to_cardinal(d):
             'W', 'WbN', 'WNW', 'NWbW', 'NW', 'NWbN', 'NNW', 'NbW']
     ix = round(d / (360. / len(dirs)))
     return dirs[ix % len(dirs)]
+
+
+def next_day(adate, aday):
+    return adate + dt.timedelta(days=(aday - adate.weekday() + 7) % 7)
 
 
 def main():
@@ -242,19 +249,35 @@ def main():
     if args.optimize:
         logging.info('Solving routing optimization problem')
 
-        # TODO: abstract shift time input
-        # set static shifts
-        shifts = [
-            ["2020-01-24 17:00:00", "2020-01-25 00:00:00"],
-            ["2020-01-25 15:00:00", "2020-01-26 00:00:00"],
-            ["2020-01-26 13:00:00", "2020-01-26 20:00:00"],
-            ["2020-02-14 17:00:00", "2020-02-15 00:00:00"],
-            ["2020-02-15 15:00:00", "2020-02-16 00:00:00"],
-            ["2020-02-16 13:00:00", "2020-02-17 00:00:00"],
-            ["2020-02-17 13:00:00", "2020-02-17 20:00:00"]
-        ]
-        shifts = [[iso_time(shift_time) for shift_time in shift]
-                  for shift in shifts]
+        # get local time right now
+        # utc_offset_sec = time.altzone if time.localtime().tm_isdst else time.timezone
+        # utc_offset = dt.timedelta(seconds=-utc_offset_sec)
+        # now = dt.datetime.now().replace(microsecond=0).replace(tzinfo=dt.timezone(offset=utc_offset))
+
+        # get dates for upcoming weekend
+        shifts = []
+        times = {
+            0: [dt.time(hour=17, minute=30), 4.5],
+            1: [dt.time(hour=17, minute=30), 4.5],
+            2: [dt.time(hour=17, minute=30), 4.5],
+            3: [dt.time(hour=17, minute=30), 4.5],
+            4: [dt.time(hour=17, minute=00), 8],
+            5: [dt.time(hour=13, minute=00), 12],
+            6: [dt.time(hour=14, minute=00), 7]
+        }
+        for x in range(4, 7):
+            d = next_day(dt.date.today(), x)
+            t = times[x]
+
+            # this week
+            s1 = dt.datetime.combine(d, t[0])
+            e1 = s1 + dt.timedelta(hours=t[1])
+
+            # next week same time
+            s2 = s1 + dt.timedelta(days=7)
+            e2 = e1 + dt.timedelta(days=7)
+            shifts.append([s1.isoformat(), e1.isoformat()])
+            shifts.append([s2.isoformat(), e2.isoformat()])
 
         # linger times in hours
         default_linger = 1.5 * 3600
@@ -272,7 +295,7 @@ def main():
                         "location_id": brewery_name
                     })
                     if "home" not in brewery_name:
-                        #open_hours = parse_hours(brewery_info['place_details']['openingHours'])
+                        # open_hours = parse_hours(brewery_info['place_details']['openingHours'])
                         # TODO: Add time_windows to order using ^^^
                         order = {
                             "order_id": brewery_name,
@@ -304,7 +327,6 @@ def main():
                     "shift_id": "crawl_shift_{}".format(i)
                 }
             )
-
         payload['vehicles'] = [
             {
                 "vehicle_id": "uber",
@@ -363,6 +385,11 @@ def main():
         # routing opt solution
         solution = response['Solution']
 
+        # read-off incomplete visits
+        incomplete_visits = solution['orders_incomplete_visits']
+        for icv in incomplete_visits:
+            logging.warning('Did not visit: {}'.format(icv['order_id']))
+
         # bounding box; note: bbox = [min Longitude , min Latitude , max Longitude , max Latitude]
         soln_bbox = solution['bounding_box']
         bbox = [
@@ -395,7 +422,8 @@ def main():
 
             # check for no where routes
             if route['route_distance'] == 0:
-                logging.warning('Empty route; unused shift {}, skipping'.format(route['shift_id']))
+                logging.warning(
+                    'Empty route; unused shift {}, skipping'.format(route['shift_id']))
                 continue
 
             # define a route id
@@ -465,7 +493,8 @@ def main():
                 stop['address'] = breweries_data[loc]['address']
 
                 # mapbox compatible details
-                stop['title'] = "route {} stop {}".format(route_num, str(stop['position_in_route']))
+                stop['title'] = "route {} stop {}".format(
+                    route_num, str(stop['position_in_route']))
                 stop['description'] = stop['location_id']
                 stop['marker-size'] = "small"
                 stop['marker-symbol'] = "beer"
@@ -473,7 +502,8 @@ def main():
 
                 # highcharts compatible details
                 stop['name'] = stop['location_id'].title()
-                stop['id'] = "{}_stop_{}".format(route_id, str(stop['position_in_route']))
+                stop['id'] = "{}_stop_{}".format(
+                    route_id, str(stop['position_in_route']))
                 stop['parent'] = route_id
                 stop['start'] = stop['abs_arrival_time'] * 1000
                 stop['end'] = stop['abs_departure_time'] * 1000
@@ -499,7 +529,8 @@ def main():
             route_bearing = route_bearing[1:-1]
             xs = sum([math.sin(math.radians(x)) for x in route_bearing])
             ys = sum([math.cos(math.radians(x)) for x in route_bearing])
-            route['average_bearing'] = degrees_to_cardinal(math.degrees(math.atan2(xs, ys)))
+            route['average_bearing'] = degrees_to_cardinal(
+                math.degrees(math.atan2(xs, ys)))
 
             # write the route geojson
             write_geojson(routefile, route_features, bbox,
