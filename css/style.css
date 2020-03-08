@@ -31,6 +31,7 @@ body {
     bottom: 4%;
     left: 1%;
     max-height: 40%;
+    /* overflow-y: auto !important; */
 }
 
 .overlay-inner {

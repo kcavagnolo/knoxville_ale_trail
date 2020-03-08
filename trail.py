@@ -41,7 +41,7 @@ def is_dir(dirname):
 
 
 def clean_string(s):
-    pattern = re.compile('[\W_]+', re.UNICODE)
+    pattern = re.compile('[\W]+', re.UNICODE)
     s = pattern.sub(' ', s.lower())
     return s
 
@@ -141,9 +141,10 @@ def mapanything_routing(payload):
         else:
             response = response.json()
     except Exception as e:
+        logging.error('Optimization failed')
         logging.exception(e)
         logging.exception(traceback.format_exc())
-
+        sys.exit(1)
     return response
 
 
@@ -166,8 +167,7 @@ def parse_hours(hours):
     for period in periods:
         open_time = dt.datetime.strptime(period['start'][1:], '%H%M%S')
         hours, minutes = period['duration'][2:-1].split('H')
-        close_time = open_time + \
-                     dt.timedelta(hours=int(hours), minutes=int(minutes))
+        close_time = open_time + dt.timedelta(hours=int(hours), minutes=int(minutes))
         recurrence = dict(x.split(":")
                           for x in period['recurrence'].split(";"))
         for day in recurrence['BYDAY'].split(','):
@@ -504,9 +504,10 @@ def main():
                 stop['name'] = stop['location_id'].title()
                 stop['id'] = "{}_stop_{}".format(
                     route_id, str(stop['position_in_route']))
-                stop['parent'] = route_id
+                # stop['parent'] = route_id  # only needed for collapsible itin
                 stop['start'] = stop['abs_arrival_time'] * 1000
                 stop['end'] = stop['abs_departure_time'] * 1000
+                stop['y'] = route_num
 
                 # convert point to geom
                 lat = stop['latitude']
@@ -514,8 +515,11 @@ def main():
                 geometry = geojson.Point((lng, lat))
 
                 # calculate bearing origin -> stop
-                fwd_azimuth, back_azimuth, distance = geodesic.inv(origin[0], origin[1],
-                                                                   stop['longitude'], stop['latitude'])
+                fwd_azimuth, back_azimuth, pts_distance = geodesic.inv(origin[0],
+                                                                       origin[1],
+                                                                       stop['longitude'],
+                                                                       stop['latitude']
+                                                                       )
                 if fwd_azimuth < 0:
                     fwd_azimuth += 360
                 route_bearing.append(fwd_azimuth)
