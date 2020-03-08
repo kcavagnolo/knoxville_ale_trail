@@ -173,7 +173,7 @@ if (!mapboxgl.supported()) {
                     ["linear"],
                     ["zoom"],
                     12, 24,
-                    22, 60
+                    22, 48
                 ],
                 'symbol-spacing': [
                     "interpolate",
@@ -210,7 +210,13 @@ if (!mapboxgl.supported()) {
                 'visibility': 'visible',
             },
             'paint': {
-                'circle-radius': 6,
+                'circle-radius': [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    12, 6,
+                    22, 12
+                ],
                 'circle-color': [
                     'case',
                     ['boolean', ['feature-state', 'hover'], false],
