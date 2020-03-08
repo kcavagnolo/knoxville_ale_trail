@@ -19,8 +19,9 @@ if (!mapboxgl.supported()) {
     var origin = [-83.924137, 35.961671]
 
     // highcharts
-    var defined = Highcharts.defined;
-    var reduce = Highcharts.reduce;
+    var hcDefined = Highcharts.defined;
+    var hcReduce = Highcharts.reduce;
+    var hcMap = Highcharts.map;
 
     // initialize number of layers
     var numLayers = 0;
@@ -136,11 +137,7 @@ if (!mapboxgl.supported()) {
     }
 
     // function to add route layers
-    function addRoutes(i, layerColor) {
-
-        // set the id
-        var routeLayerId = 'route_' + i;
-        var directionLayerId = routeLayerId + '_arrows';
+    function addRoutes(routeLayerId, stopLayerId, dirLayerId, layerColor) {
 
         // add the route legs as lines
         map.addLayer({
@@ -161,7 +158,7 @@ if (!mapboxgl.supported()) {
 
         // add the routes directionality symbols
         map.addLayer({
-            'id': directionLayerId,
+            'id': dirLayerId,
             'type': 'symbol',
             'source': 'routes_source',
             'source-layer': routeLayerId,
@@ -188,17 +185,6 @@ if (!mapboxgl.supported()) {
                 'text-color': layerColor
             }
         }, 'waterway-label');
-
-        // make visibility toggle
-        toggleVisibility(routeLayerId, layerColor);
-        toggleVisibility(directionLayerId, layerColor);
-    }
-
-    // function to add stop layers
-    function addStops(i, layerColor) {
-
-        // set the id
-        var stopLayerId = 'route_' + i + '_stops';
 
         // add the route stops as circles
         map.addLayer({
@@ -241,7 +227,6 @@ if (!mapboxgl.supported()) {
             map.getCanvas().style.cursor = 'pointer';
 
             // set the html description
-            console.log("the data >>>", e.features[0])
             var coordinates = e.features[0].geometry.coordinates.slice();
             var properties = e.features[0].properties;
             var layer = e.features[0].layer;
@@ -307,31 +292,30 @@ if (!mapboxgl.supported()) {
             popup.remove();
         });
 
-        // make visibility toggle
-        toggleVisibility(stopLayerId, layerColor);
-
         // add route stops to gantt
-        addItinerary(stopLayerId, layerColor);
-
+        addItinerary(routeLayerId, stopLayerId, layerColor);
     }
 
     // function to add intin to gantt
-    function addItinerary(stopLayerId, layerColor) {
+    function addItinerary(routeLayerId, stopLayerId, layerColor) {
         var url = `https://raw.githubusercontent.com/kcavagnolo/knoxville_ale_trail/master/data/geojson/${stopLayerId}.geojson`;
         fetch(url).then(function (resp) {
             return resp.json();
         }).then(function (routeData) {
+            var ganttLabel = routeLayerId.replace("_", " ");
             var stopData = routeData.features.map(function (feature, i) {
+                feature.properties['color'] = layerColor;
                 return feature.properties;
             });
             stopData.push(routeData.metadata);
             routeSchedule.push({
-                name: stopLayerId + "_gantt",
-                data: stopData,
-                // TODO: setting the color in highcharts not working
-                color: layerColor
+                name: ganttLabel.charAt(0).toUpperCase() + ganttLabel.slice(1),
+                data: stopData
             });
+            return routeSchedule;
+        }).then(function (routeSchedule) {
             Highcharts.ganttChart('gantt-container', {
+                series: routeSchedule,
                 navigator: {
                     enabled: true,
                     liveRedraw: true,
@@ -339,38 +323,39 @@ if (!mapboxgl.supported()) {
                         type: 'gantt',
                         pointPlacement: 0.5,
                         pointPadding: 0.25
-                    },
-                    yAxis: {
-                        min: 0,
-                        max: 3,
-                        reversed: true,
-                        categories: []
                     }
                 },
                 scrollbar: {
                     enabled: true
                 },
-                series: routeSchedule,
+                rangeSelector: {
+                    selected: 1
+                },
                 tooltip: {
                     pointFormatter: function () {
                         var point = this;
                         var lines = [{
-                            title: 'Arrive',
-                            value: new Date(point.arrival_time).toLocaleString()
-                        }, {
-                            title: 'Depart',
-                            value: new Date(point.departure_time).toLocaleString()
-                        }];
-                        return reduce(lines, function (str, line) {
+                                title: 'Brewery',
+                                value: point.name
+                            },
+                            {
+                                title: 'Arrive',
+                                value: new Date(point.arrival_time).toLocaleString()
+                            }, {
+                                title: 'Depart',
+                                value: new Date(point.departure_time).toLocaleString()
+                            }
+                        ];
+                        return hcReduce(lines, function (str, line) {
                             var s = '',
                                 style = (
-                                    defined(line.style) ? line.style : 'font-size: 1.0em;'
+                                    hcDefined(line.style) ? line.style : 'font-size: 1.0em;'
                                 );
                             if (line.visible !== false) {
                                 s = (
                                     '<span style="' + style + '">' +
-                                    (defined(line.title) ? line.title + ': ' : '') +
-                                    (defined(line.value) ? line.value : '') +
+                                    (hcDefined(line.title) ? line.title + ': ' : '') +
+                                    (hcDefined(line.value) ? line.value : '') +
                                     '</span><br/>'
                                 );
                             }
@@ -380,37 +365,52 @@ if (!mapboxgl.supported()) {
                 },
                 xAxis: {
                     currentDateIndicator: true
+                },
+                yAxis: {
+                    type: 'category',
+                    grid: {
+                        columns: [{
+                            categories: hcMap(routeSchedule, function (s) {
+                                return s.name;
+                            })
+                        }]
+                    }
                 }
             });
         });
     }
 
     // toggle layer visibility
-    function toggleVisibility(layerId, layerColor) {
+    function toggleVisibility(layerId, allLayers, layerColor) {
 
         // create a clickable button
         var button = document.createElement('button');
-        button.id = layerId + "_toggle";
+        var buttonLabel = layerId.replace("_", " ");
+        button.id = layerId;
         button.className = 'active';
-        button.textContent = layerId;
+        button.textContent = buttonLabel.charAt(0).toUpperCase() + buttonLabel.slice(1);
         button.style.opacity = 1.0;
         button.style.background = layerColor;
 
         // toggle visibility when clicked
         button.onclick = function (e) {
-            var clickedLayer = this.textContent;
+            var clickedLayer = this.id;
             e.preventDefault();
             e.stopPropagation();
             var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-            var target = document.getElementById(button.id);
+            var target = document.getElementById(clickedLayer);
             if (visibility === 'visible') {
-                map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                for (i = 0; i < allLayers.length; i++) {
+                    map.setLayoutProperty(allLayers[i], 'visibility', 'none');
+                }
                 this.className = '';
                 target.style.background = '#808080';
                 target.style.color = '#ffffff';
             } else {
                 this.className = 'active';
-                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                for (i = 0; i < allLayers.length; i++) {
+                    map.setLayoutProperty(allLayers[i], 'visibility', 'visible');
+                }
                 target.style.background = layerColor;
             }
         };
@@ -443,14 +443,14 @@ if (!mapboxgl.supported()) {
     // function to iteratively add as many layers as in tileset
     function setLayers(newNumLayers) {
         var colors = distinctColors(newNumLayers);
-        for (let i = newNumLayers; i < numLayers; ++i) {
-            map.removeLayer('route_' + i);
-            map.removeLayer('route_' + i + '_stops');
-        }
         for (let i = numLayers; i < newNumLayers; ++i) {
             var layerColor = colors[i].hex();
-            addRoutes(i, layerColor);
-            addStops(i, layerColor);
+            var routeLayerId = 'route_' + i;
+            var stopLayerId = routeLayerId + '_stops';
+            var dirLayerId = routeLayerId + '_dirs';
+            var allLayers = [routeLayerId, stopLayerId, dirLayerId];
+            addRoutes(routeLayerId, stopLayerId, dirLayerId, layerColor);
+            toggleVisibility(routeLayerId, allLayers, layerColor);
         }
         numLayers = newNumLayers;
     };
