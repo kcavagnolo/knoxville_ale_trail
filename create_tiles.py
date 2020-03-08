@@ -291,7 +291,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(name)-22s %(levelname)-8s %(message)s',
                         datefmt='%d-%m-%Y %H:%M:%S',
-                        filename=script_name + '.log')
+                        filename='./debug/' + script_name + '.log')
 
     # setup stdout logger
     console = logging.StreamHandler()
