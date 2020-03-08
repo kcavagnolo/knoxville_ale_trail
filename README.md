@@ -2,7 +2,7 @@
 
 So you want to traverse the [Knoxville Ale Trail](https://knoxvillebrewers.com/ale-trail/) but are uncertain of the best route to take? [Here's a solution](https://www.kcavagnolo.com/knoxville_ale_trail/)! Some pre-computed routes are [available here](/data/geojson). Note that raw legs of the routing solution from the Optimization API are encoded polyline which is [easy to parse in JS](https://github.com/mapbox/polyline), but GeoJSON is more portable.
 
-version: v0.4.0
+version: v0.5.0
 
 ## Setup
 
