@@ -254,8 +254,11 @@ def main():
         # utc_offset = dt.timedelta(seconds=-utc_offset_sec)
         # now = dt.datetime.now().replace(microsecond=0).replace(tzinfo=dt.timezone(offset=utc_offset))
 
-        # get dates for upcoming weekend
+        # create a shifts array
         shifts = []
+
+        # set start times and durations for days of week
+        # note: 0=Mon ... 6=Sun
         times = {
             0: [dt.time(hour=17, minute=30), 4.5],
             1: [dt.time(hour=17, minute=30), 4.5],
@@ -265,22 +268,26 @@ def main():
             5: [dt.time(hour=13, minute=00), 12],
             6: [dt.time(hour=14, minute=00), 7]
         }
+
+        # get dates for the upcoming weekend from today
         for x in range(4, 7):
             d = next_day(dt.date.today(), x)
             t = times[x]
 
-            # this week
+            # set shift times for at least this coming weekend
             s1 = dt.datetime.combine(d, t[0])
             e1 = s1 + dt.timedelta(hours=t[1])
-
-            # next week same time
-            s2 = s1 + dt.timedelta(days=7)
-            e2 = e1 + dt.timedelta(days=7)
             shifts.append([s1.isoformat(), e1.isoformat()])
-            shifts.append([s2.isoformat(), e2.isoformat()])
 
-        # linger times in hours
-        default_linger = 1.5 * 3600
+            # set shift times for the next n_weeks
+            n_weeks = 2
+            for week_n in range(n_weeks+1):
+                sn = s1 + dt.timedelta(days=7 + (week_n * 7))
+                en = e1 + dt.timedelta(days=7 + (week_n * 7))
+                shifts.append([sn.isoformat(), en.isoformat()])
+
+        # how long to linger at each stop, in hours
+        default_linger = 2.0 * 3600
 
         # create orders
         with open(geocoded_breweries) as jsonfile:
