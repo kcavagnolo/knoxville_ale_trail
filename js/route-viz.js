@@ -610,7 +610,7 @@ if (!mapboxgl.supported()) {
         addSources();
 
         // add routes
-        numRoutes = 5;
+        numRoutes = 6;
         setLayers(numRoutes);
 
         // add animation and controls
