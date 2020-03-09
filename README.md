@@ -96,28 +96,17 @@ bumpversion minor --verbose
 - Seek inspiration from [this design](https://demos.mapbox.com/vt_polygons)
 - Add minify of css and js
 
-## Mapbox Styling HowTo's
-
-- [Loading options for GeoJSON](https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/)
-- [Add multiple geometries in GeoJSON](https://docs.mapbox.com/mapbox-gl-js/example/multiple-geometries/)
-- [Stylize a GeoJSON line](https://docs.mapbox.com/mapbox-gl-js/example/geojson-line/)
-- [Interactively change a map style](https://docs.mapbox.com/mapbox-gl-js/example/setstyle/)
-- [Toggle visible layers](https://docs.mapbox.com/mapbox-gl-js/example/toggle-layers/)
-- [Display a popup with data](https://docs.mapbox.com/mapbox-gl-js/example/popup-on-click/)
-- [Animate a point along a route](https://docs.mapbox.com/mapbox-gl-js/example/animate-point-along-route/)
-- [Change style on hover](https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/)
-- [Localized search](https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-geocoder-limit-region/)
-
 ## Credits
 
+- [Mapbox](https://www.mapbox.com/about/maps/)
+- [OpenStreetMap](http://www.openstreetmap.org/about/)
+- [Highcharts](https://www.highcharts.com/)
 - [MapAnything routing optimization engine](https://developer.mapanything.com/)
 - [HERE geocoder](https://developer.here.com/documentation/geocoder/dev_guide/topics/what-is.html)
 - [hicsail `polyline` decoder](https://github.com/hicsail/polyline)
 - [jazzband `geojson` utilities](https://github.com/jazzband/geojson)
 - [vaab `colour` library](https://github.com/vaab/colour)
-- [Mapbox](https://www.mapbox.com/about/maps/)
-- [OpenStreetMap](http://www.openstreetmap.org/about/)
-- [lukasmartinelli `mapbox-gl-inspect` plugin](https://github.com/lukasmartinelli/mapbox-gl-inspect)
+- [Mapbox contributor plugins](https://docs.mapbox.com/mapbox-gl-js/plugins/)
 
 ## License
 
