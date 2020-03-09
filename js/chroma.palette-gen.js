@@ -20,8 +20,8 @@
 
 // v0.2
 
-var paletteGenerator = (function (undefined) {
-	ns = {}
+var paletteGenerator = (function (unused) {
+	var ns = {};
 
 	ns.generate = function (colorsCount, checkColor, forceMode, quality, ultra_precision, distanceType) {
 		// Default
@@ -52,7 +52,7 @@ var paletteGenerator = (function (undefined) {
 
 			// Init
 			var vectors = {};
-			for (i = 0; i < colorsCount; i++) {
+			for (let i = 0; i < colorsCount; i++) {
 				// Find a valid Lab color
 				var color = [100 * Math.random(), 100 * (2 * Math.random() - 1), 100 * (2 * Math.random() - 1)];
 				while (!checkLab(color)) {
@@ -67,7 +67,7 @@ var paletteGenerator = (function (undefined) {
 			var steps = quality * 20;
 			while (steps-- > 0) {
 				// Init
-				for (i = 0; i < colors.length; i++) {
+				for (let i = 0; i < colors.length; i++) {
 					vectors[i] = {
 						dl: 0,
 						da: 0,
@@ -75,9 +75,9 @@ var paletteGenerator = (function (undefined) {
 					};
 				}
 				// Compute Force
-				for (i = 0; i < colors.length; i++) {
+				for (let i = 0; i < colors.length; i++) {
 					var colorA = colors[i];
-					for (j = 0; j < i; j++) {
+					for (var j = 0; j < i; j++) {
 						var colorB = colors[j];
 
 						// repulsion force
@@ -104,12 +104,12 @@ var paletteGenerator = (function (undefined) {
 					}
 				}
 				// Apply Force
-				for (i = 0; i < colors.length; i++) {
+				for (let i = 0; i < colors.length; i++) {
 					var color = colors[i];
 					var displacement = speed * Math.sqrt(Math.pow(vectors[i].dl, 2) + Math.pow(vectors[i].da, 2) + Math.pow(vectors[i].db, 2));
 					if (displacement > 0) {
 						var ratio = speed * Math.min(0.1, displacement) / displacement;
-						candidateLab = [color[0] + vectors[i].dl * ratio, color[1] + vectors[i].da * ratio, color[2] + vectors[i].db * ratio];
+						var candidateLab = [color[0] + vectors[i].dl * ratio, color[1] + vectors[i].da * ratio, color[2] + vectors[i].db * ratio];
 						if (checkLab(candidateLab)) {
 							colors[i] = candidateLab;
 						}
@@ -131,7 +131,7 @@ var paletteGenerator = (function (undefined) {
 			}
 
 			var kMeans = [];
-			for (i = 0; i < colorsCount; i++) {
+			for (let i = 0; i < colorsCount; i++) {
 				var lab = [100 * Math.random(), 100 * (2 * Math.random() - 1), 100 * (2 * Math.random() - 1)];
 				var failsafe = 10;
 				while (!checkColor2(lab) && failsafe-- > 0) {
@@ -144,9 +144,9 @@ var paletteGenerator = (function (undefined) {
 			var colorSamples = [];
 			var samplesClosest = [];
 			if (ultra_precision) {
-				for (l = 0; l <= 100; l += 1) {
-					for (a = -100; a <= 100; a += 5) {
-						for (b = -100; b <= 100; b += 5) {
+				for (var l = 0; l <= 100; l += 1) {
+					for (var a = -100; a <= 100; a += 5) {
+						for (var b = -100; b <= 100; b += 5) {
 							if (checkColor2([l, a, b])) {
 								colorSamples.push([l, a, b]);
 								samplesClosest.push(null);
@@ -155,9 +155,9 @@ var paletteGenerator = (function (undefined) {
 					}
 				}
 			} else {
-				for (l = 0; l <= 100; l += 5) {
-					for (a = -100; a <= 100; a += 10) {
-						for (b = -100; b <= 100; b += 10) {
+				for (var l = 0; l <= 100; l += 5) {
+					for (var a = -100; a <= 100; a += 10) {
+						for (var b = -100; b <= 100; b += 10) {
 							if (checkColor2([l, a, b])) {
 								colorSamples.push([l, a, b]);
 								samplesClosest.push(null);
@@ -171,10 +171,10 @@ var paletteGenerator = (function (undefined) {
 			var steps = quality;
 			while (steps-- > 0) {
 				// kMeans -> Samples Closest
-				for (i = 0; i < colorSamples.length; i++) {
+				for (let i = 0; i < colorSamples.length; i++) {
 					var lab = colorSamples[i];
 					var minDistance = Infinity;
-					for (j = 0; j < kMeans.length; j++) {
+					for (var j = 0; j < kMeans.length; j++) {
 						var kMean = kMeans[j];
 						var distance = ns.getColorDistance(lab, kMean, distanceType);
 						if (distance < minDistance) {
@@ -186,10 +186,10 @@ var paletteGenerator = (function (undefined) {
 
 				// Samples -> kMeans
 				var freeColorSamples = colorSamples.slice(0);
-				for (j = 0; j < kMeans.length; j++) {
+				for (var j = 0; j < kMeans.length; j++) {
 					var count = 0;
 					var candidateKMean = [0, 0, 0];
-					for (i = 0; i < colorSamples.length; i++) {
+					for (let i = 0; i < colorSamples.length; i++) {
 						if (samplesClosest[i] == j) {
 							count++;
 							candidateKMean[0] += colorSamples[i][0];
@@ -211,7 +211,7 @@ var paletteGenerator = (function (undefined) {
 							// We just search for the closest FREE color of the candidate kMean
 							var minDistance = Infinity;
 							var closest = -1;
-							for (i = 0; i < freeColorSamples.length; i++) {
+							for (let i = 0; i < freeColorSamples.length; i++) {
 								var distance = ns.getColorDistance(freeColorSamples[i], candidateKMean, distanceType);
 								if (distance < minDistance) {
 									minDistance = distance;
@@ -225,7 +225,7 @@ var paletteGenerator = (function (undefined) {
 							// Then we just search for the closest color of the candidate kMean
 							var minDistance = Infinity;
 							var closest = -1;
-							for (i = 0; i < colorSamples.length; i++) {
+							for (let i = 0; i < colorSamples.length; i++) {
 								var distance = ns.getColorDistance(colorSamples[i], candidateKMean, distanceType)
 								if (distance < minDistance) {
 									minDistance = distance;
@@ -255,9 +255,9 @@ var paletteGenerator = (function (undefined) {
 		while (colorsToSort.length > 0) {
 			var index = -1;
 			var maxDistance = -1;
-			for (candidate_index = 0; candidate_index < colorsToSort.length; candidate_index++) {
+			for (var candidate_index = 0; candidate_index < colorsToSort.length; candidate_index++) {
 				var d = Infinity;
-				for (i = 0; i < diffColors.length; i++) {
+				for (let i = 0; i < diffColors.length; i++) {
 					var colorA = colorsToSort[candidate_index].lab();
 					var colorB = diffColors[i].lab();
 					var d = ns.getColorDistance(colorA, colorB, distanceType);
@@ -433,9 +433,9 @@ var paletteGenerator = (function (undefined) {
 		// Difference between simulated color and neutral grey
 		var diff_X = neutral_X - X;
 		var diff_Z = neutral_Z - Z;
-		diff_r = diff_X * 3.24071 + diff_Z * -0.498571; // XYZ->RGB (sRGB:D65)
-		diff_g = diff_X * -0.969258 + diff_Z * 0.0415557;
-		diff_b = diff_X * 0.0556352 + diff_Z * 1.05707;
+		var diff_r = diff_X * 3.24071 + diff_Z * -0.498571; // XYZ->RGB (sRGB:D65)
+		var diff_g = diff_X * -0.969258 + diff_Z * 0.0415557;
+		var diff_b = diff_X * 0.0556352 + diff_Z * 1.05707;
 		// Convert to RGB color space
 		dr = X * 3.24071 + Y * -1.53726 + Z * -0.498571; // XYZ->RGB (sRGB:D65)
 		dg = X * -0.969258 + Y * 1.87599 + Z * 0.0415557;
