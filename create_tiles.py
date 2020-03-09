@@ -213,7 +213,7 @@ def main():
     """
 
     # parse command line arguments
-    parser = argparse.ArgumentParser(description='Download HPMS data.')
+    parser = argparse.ArgumentParser(description='Create and upload Mapbox vector tiles')
     parser.add_argument(
         "-sd",
         "--shapesdir",

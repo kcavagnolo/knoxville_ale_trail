@@ -1,4 +1,4 @@
-routeData = {
+let routeData = {
     "bbox": [-84.1482036, 35.7085336, -83.521008, 36.211719],
     "crs": {
         "properties": {

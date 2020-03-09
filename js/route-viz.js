@@ -400,7 +400,7 @@ if (!mapboxgl.supported()) {
             var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
             var target = document.getElementById(clickedLayer);
             if (visibility === 'visible') {
-                for (i = 0; i < allLayers.length; i++) {
+                for (let i = 0; i < allLayers.length; i++) {
                     map.setLayoutProperty(allLayers[i], 'visibility', 'none');
                 }
                 this.className = '';
@@ -408,7 +408,7 @@ if (!mapboxgl.supported()) {
                 target.style.color = '#ffffff';
             } else {
                 this.className = 'active';
-                for (i = 0; i < allLayers.length; i++) {
+                for (let i = 0; i < allLayers.length; i++) {
                     map.setLayoutProperty(allLayers[i], 'visibility', 'visible');
                 }
                 target.style.background = layerColor;
@@ -479,10 +479,10 @@ if (!mapboxgl.supported()) {
     }
 
     // function to animate tracker on route
-    function animate() {
+    function animate(counter, leg, steps) {
 
         // debugging
-        //console.log("leg: " + leg, "counter: " + counter, "step: " + steps)
+        console.log("leg: " + leg, "counter: " + counter, "step: " + steps)
 
         // Update tracker geometry to a new position based on counter denoting
         // the index to access the arc.
@@ -492,7 +492,7 @@ if (!mapboxgl.supported()) {
         // Calculate the bearing to ensure the icon is rotated to match the route arc
         // The bearing is calculate between the current point and the next point, except
         // at the end of the arc use the previous point and the current point
-        /* tracker.features[0].properties.bearing = turf.bearing(
+        tracker.features[0].properties.bearing = turf.bearing(
             turf.point(
                 route.features[leg].geometry.coordinates[
                     counter >= steps ? counter - 1 : counter
@@ -503,7 +503,7 @@ if (!mapboxgl.supported()) {
                     counter >= steps ? counter : counter + 1
                 ]
             )
-        ); */
+        );
 
         // Update the source with this new data.
         map.getSource('tracker_source').setData(tracker);
@@ -610,7 +610,7 @@ if (!mapboxgl.supported()) {
         addSources();
 
         // add routes
-        numRoutes = 6;
+        const numRoutes = 6;
         setLayers(numRoutes);
 
         // add animation and controls
