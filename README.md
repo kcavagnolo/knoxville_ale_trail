@@ -76,16 +76,6 @@ bumpversion minor --verbose
 
 ### TODOs
 
-- Add dynamic time handling:
-
-  ```python
-  # set dynamic shift
-  utc_offset_sec = time.altzone if time.localtime().tm_isdst else time.timezone
-  utc_offset = datetime.timedelta(seconds=-utc_offset_sec)
-  now = datetime.datetime.now().replace(tzinfo=datetime.timezone(offset=utc_offset))
-  later = now + datetime.timedelta(hours=168)
-  ```
-
 - Add support for appointments:
 
   ```python
@@ -101,7 +91,6 @@ bumpversion minor --verbose
   ```
 
 - Add `time_windows` to each location for hours of operation.
-- Display itinerary as Gantt.
 - Add animation to markers on arrival.
 - Dig into [this awesome viz](https://github.com/chriswhong/nyctaxi)
 - Seek inspiration from [this design](https://demos.mapbox.com/vt_polygons)
