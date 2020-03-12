@@ -46,10 +46,6 @@ def clean_string(s):
     return s
 
 
-def iso_time(intime, time_format="%Y-%m-%d %H:%M:%S"):
-    return dt.datetime.strptime(intime, time_format).isoformat()
-
-
 def here_geocoder(address):
     geocode_url = 'https://geocoder.ls.hereapi.com/6.2/geocode.json?apiKey={}&searchtext={}'
     apikey = os.getenv("HERE_APIKEY")
@@ -157,22 +153,30 @@ def write_geojson(outfile, features, bbox, crs, metadata=None):
         json.dump(feature_collection, f, separators=(',', ':'), sort_keys=True)
 
 
-def parse_hours(hours):
-    days = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
-    hours_operation = {'open': None, 'close': None}
+def opening_hours(hours):
+    days_map = {
+        "MO": 0,
+        "TU": 1,
+        "WE": 2,
+        "TH": 3,
+        "FR": 4,
+        "SA": 5,
+        "SU": 6
+    }
+    hours_operation = {'open': None, 'duration': None}
     weekly_hours = {}
-    for day in days:
-        weekly_hours[day] = hours_operation.copy()
+    for day, day_num in days_map.items():
+        weekly_hours[day_num] = hours_operation.copy()
     periods = hours['structured']
     for period in periods:
         open_time = dt.datetime.strptime(period['start'][1:], '%H%M%S')
         hours, minutes = period['duration'][2:-1].split('H')
-        close_time = open_time + dt.timedelta(hours=int(hours), minutes=int(minutes))
+        duration = dt.timedelta(hours=int(hours), minutes=int(minutes))# + open_time
         recurrence = dict(x.split(":")
                           for x in period['recurrence'].split(";"))
         for day in recurrence['BYDAY'].split(','):
-            weekly_hours[day]['open'] = open_time.time()
-            weekly_hours[day]['close'] = close_time.time()
+            weekly_hours[days_map[day]]['open'] = open_time
+            weekly_hours[days_map[day]]['duration'] = duration
     return weekly_hours
 
 
@@ -187,6 +191,12 @@ def degrees_to_cardinal(d):
 
 def next_day(adate, aday):
     return adate + dt.timedelta(days=(aday - adate.weekday() + 7) % 7)
+
+
+def add_timezone(atime):
+    utc_offset_sec = time.altzone if time.localtime().tm_isdst else time.timezone
+    utc_offset = dt.timedelta(seconds=-utc_offset_sec)
+    return atime.replace(microsecond=0).replace(tzinfo=dt.timezone(offset=utc_offset))
 
 
 def main():
@@ -249,17 +259,10 @@ def main():
     if args.optimize:
         logging.info('Solving routing optimization problem')
 
-        # get local time right now
-        # utc_offset_sec = time.altzone if time.localtime().tm_isdst else time.timezone
-        # utc_offset = dt.timedelta(seconds=-utc_offset_sec)
-        # now = dt.datetime.now().replace(microsecond=0).replace(tzinfo=dt.timezone(offset=utc_offset))
-
-        # create a shifts array
-        shifts = []
-
-        # set start times and durations for days of week
+        # TODO: Remove hardwired shift_times
+        # set start shift_times and durations for days of week
         # note: 0=Mon ... 6=Sun
-        times = {
+        shift_times = {
             0: [dt.time(hour=17, minute=30), 4.5],
             1: [dt.time(hour=17, minute=30), 4.5],
             2: [dt.time(hour=17, minute=30), 4.5],
@@ -269,46 +272,82 @@ def main():
             6: [dt.time(hour=14, minute=00), 7]
         }
 
-        # get dates for the upcoming weekend from today
-        for x in range(4, 7):
-            d = next_day(dt.date.today(), x)
-            t = times[x]
+        # set days of week to make visits -- Fri to Sun
+        visit_days = range(4, 7)
 
-            # set shift times for at least this coming weekend
+        # create an array of possible shifts
+        shifts = []
+
+        # get dates for the upcoming weekend from today
+        for x in visit_days:
+            d = next_day(dt.date.today(), x)
+            t = shift_times[x]
+
+            # set shift_times for at least this coming weekend
             s1 = dt.datetime.combine(d, t[0])
             e1 = s1 + dt.timedelta(hours=t[1])
-            shifts.append([s1.isoformat(), e1.isoformat()])
+            shifts.append([s1, e1])
 
-            # set shift times for the next n_weeks
+            # TODO: Add n_weeks as a cli param
+            # set shift_times for the next n_weeks
             n_weeks = 2
             for week_n in range(n_weeks+1):
                 sn = s1 + dt.timedelta(days=7 + (week_n * 7))
                 en = e1 + dt.timedelta(days=7 + (week_n * 7))
-                shifts.append([sn.isoformat(), en.isoformat()])
+                shifts.append([sn, en])
 
+        # create array of all dates in range needed for time windows
+        d1 = shifts[0][0]
+        d2 = shifts[-1][1]
+        diff = d2 - d1
+        date_range = [(d1 + dt.timedelta(x)) for x in range(diff.days + 1)]
+
+        # TODO: Allow for user input linger time
         # how long to linger at each stop, in hours
-        default_linger = 2.0 * 3600
+        default_linger = 1.5 * 3600
 
         # create orders
         with open(geocoded_breweries) as jsonfile:
             brewery_data = json.load(jsonfile)
             locations = []
             orders = []
+
+            # loop over all breweries
             for brewery_name, brewery_info in brewery_data.items():
+
+                # only visit new breweries
                 if brewery_info['visited'] == "no":
+
+                    # set the location object
                     locations.append({
                         "latitude": brewery_info['latitude'],
                         "longitude": brewery_info['longitude'],
                         "location_id": brewery_name
                     })
+
+                    # set the order object
                     if "home" not in brewery_name:
-                        # open_hours = parse_hours(brewery_info['place_details']['openingHours'])
-                        # TODO: Add time_windows to order using ^^^
                         order = {
                             "order_id": brewery_name,
                             "location_id": brewery_name,
                             "duration": default_linger
                         }
+
+                        # add open hours if they exist
+                        place_details = brewery_info['place_details']
+                        if 'openingHours' in place_details.keys():
+                            time_windows = []
+                            open_hours = opening_hours(brewery_info['place_details']['openingHours'])
+                            for date in date_range:
+                                date_hours = open_hours[date.weekday()]
+                                if date_hours['open']:
+                                    date_open = date_hours['open'].replace(year=date.year, month=date.month, day=date.day)
+                                    date_close = date_open + date_hours['duration']
+                                    time_windows.append({
+                                        "start_time_window": add_timezone(date_open).isoformat(),
+                                        "end_time_window": add_timezone(date_close).isoformat()
+                                    })
+                            order['time_windows'] = time_windows
                         orders.append(order)
                 else:
                     logging.warning('Skipping {}'.format(brewery_name))
@@ -329,8 +368,8 @@ def main():
                 {
                     "start_location_id": "home",
                     "end_location_id": "home",
-                    "shift_start": shift[0],
-                    "shift_end": shift[-1],
+                    "shift_start": add_timezone(shift[0]).isoformat(),
+                    "shift_end": add_timezone(shift[-1]).isoformat(),
                     "shift_id": "crawl_shift_{}".format(i)
                 }
             )
@@ -346,7 +385,7 @@ def main():
         payload['constraints'] = [
             {
                 "constraint_type": "travel_time",
-                "constraint_name": "Minimize travel time",
+                "constraint_name": "minimize travel time",
                 "violation_increment": 1,
                 "penalty_per_violation": 1,
                 "max_travel_time_seconds": 0
@@ -354,6 +393,12 @@ def main():
             {
                 "constraint_type": "visit_range",
                 "constraint_name": "visit as many orders as possible",
+                "violation_increment": 1,
+                "penalty_per_violation": 10000
+            },
+            {
+                "constraint_type": "time_window",
+                "constraint_name": "honor time windows",
                 "violation_increment": 1,
                 "penalty_per_violation": 10000
             }

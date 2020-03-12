@@ -87,7 +87,7 @@ def shapefile_to_geojson(shapesdir, geojsondir):
             logging.exception(traceback.format_exc())
 
 
-def geojson_to_mbtile(geojsondir, mbtiledir):
+def geojson_to_mbtile(geojsondir, mbtiledir, route_tiles=False):
     """Convert a geojson to a Mapbox tile. See documentation on a tile here:
     https://www.mapbox.com/vector-tiles/
 
@@ -101,6 +101,18 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
         logging.exception(
             'Tippecanoe not detected. Is it installed? https://github.com/mapbox/tippecanoe')
         raise RuntimeError
+
+    # empty the tiles dir
+    for filename in os.listdir(mbtiledir):
+        file_path = os.path.join(mbtiledir, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete {}. Reason: {}'.format(file_path, e))
+        logging.info('Removed {}'.format(filename))
 
     # get files
     geojsonfiles = glob_files(geojsondir, filepattern + '.geojson')
@@ -123,30 +135,31 @@ def geojson_to_mbtile(geojsondir, mbtiledir):
                   "-Q"  # https://github.com/mapbox/tippecanoe#progress-indicator
                   ]
 
-    # iterate over each shapefile
+    # iterate over each geojson
     layers = []
     for geojsonfile in sorted(geojsonfiles):
 
         # check disk space
         disk_check()
 
-        # create output file name
+        # add a layer for this geojson
         outroot = str(os.path.basename(geojsonfile).split('.')[0])
         layers.extend(['-L', '{}:{}'.format(outroot, geojsonfile)])
-        outtile = os.path.join(mbtiledir, outroot + '.mbtiles')
-        logging.debug("Processing {}".format(outroot))
 
-        # convert to tile using tippecanoe
-        unique_tippecanoe = tippecanoe + ["-o", outtile,
-                                          geojsonfile,
-                                          "-l", outroot,
-                                          "-n", outroot]
-        try:
-            logging.debug("Converting geojson to mapbox tile.")
-            subprocess.call(unique_tippecanoe)
-        except Exception as e:
-            logging.exception(e)
-            logging.exception(traceback.format_exc())
+        # create a tile for this geojson
+        if route_tiles:
+            outtile = os.path.join(mbtiledir, outroot + '.mbtiles')
+            logging.debug("Processing {}".format(outroot))
+            unique_tippecanoe = tippecanoe + ["-o", outtile,
+                                              geojsonfile,
+                                              "-l", outroot,
+                                              "-n", outroot]
+            try:
+                logging.debug("Converting geojson to mapbox tile.")
+                subprocess.call(unique_tippecanoe)
+            except Exception as e:
+                logging.exception(e)
+                logging.exception(traceback.format_exc())
 
     # TODO: Abstract master tile filename
     # create a layered master tile
@@ -228,7 +241,9 @@ def main():
                         action="store_true")
     parser.add_argument("--mbtiles", help="create Mapbox vector tiles from geojson files",
                         action="store_true")
-    parser.add_argument("--uploadmb", help="upload Mapbox vector tiles",
+    parser.add_argument("--upload", help="upload Mapbox vector tiles",
+                        action="store_true")
+    parser.add_argument("--routetiles", help="upload Mapbox vector tiles for individual routes",
                         action="store_true")
     parser.add_argument("-p", "--pattern", help="match files with this pattern",
                         required=False)
@@ -278,7 +293,7 @@ def main():
             sys.exit(1)
 
     # upload tiles to mapbox
-    if args.uploadmb:
+    if args.upload:
         try:
             upload_mbtiles(args.tilesdir)
         except Exception as e:
