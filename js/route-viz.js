@@ -298,7 +298,7 @@ if (!mapboxgl.supported()) {
         });
 
         // add route stops to gantt
-        //addItinerary(routeLayerId, stopLayerId, layerColor);
+        addItinerary(routeLayerId, stopLayerId, layerColor);
     }
 
     // function to add intin to gantt
