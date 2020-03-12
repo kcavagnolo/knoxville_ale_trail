@@ -74,6 +74,11 @@ if (!mapboxgl.supported()) {
         new mapboxgl.NavigationControl()
     );
 
+    // add fullscreen mode
+    map.addControl(
+        new mapboxgl.FullscreenControl()
+    );
+
     // A single tracker point that animates along the route.
     // Coordinates are initially set to origin.
     var tracker = {
@@ -412,6 +417,21 @@ if (!mapboxgl.supported()) {
                     map.setLayoutProperty(allLayers[i], 'visibility', 'visible');
                 }
                 target.style.background = layerColor;
+
+                // zoom to bbox
+                var features = map.querySourceFeatures('routes_source', {
+                    sourceLayer: clickedLayer
+                });
+                coordinates = []
+                for (let i = 0; i < features.length; i++) {
+                    coordinates.push(...features[i].geometry.coordinates);
+                }
+                var bounds = coordinates.reduce(function (bounds, coord) {
+                    return bounds.extend(coord);
+                }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+                map.fitBounds(bounds, {
+                    padding: 200
+                });
             }
         };
 

@@ -27,19 +27,11 @@ body {
 
 .gantt .gantt-container {
     border-radius: 3px;
-    /* position: absolute; */
-    bottom: 4%;
-    left: 1%;
-    max-height: 40%;
-    overflow-y: auto !important;
-}
-
-.gantt {
-    border-radius: 3px;
     position: absolute;
     bottom: 4%;
     left: 1%;
     max-height: 40%;
+    overflow-y: auto !important;
 }
 
 .overlay-inner {
